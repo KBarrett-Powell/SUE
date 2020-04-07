@@ -8,13 +8,14 @@ and install with:
 $ sudo apt install nodejs  
 $ sudo apt install npm  
   
-* Python 3.6 and Pip3  
+* Python 3.6 and Pip3 >20.0.2
 Check the above are installed with:  
 $ python3 --version  
 $ pip3 --version  
 and install with:  
 $ sudo apt update  
 $ sudo apt install python3-dev python3-pip  
+$ python3 -m pip install pip
 
 *Recommended to run in a (Ubuntu-based) linux VM*
 
