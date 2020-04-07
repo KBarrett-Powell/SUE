@@ -1,0 +1,15 @@
+{
+  "name": "jsonserver",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node json-server.js",
+    "build": "npm install"
+  },
+  "dependencies": {
+    "express": "^4.16.4"
+  },
+  "description": "server hosting JSON files for dashboard",
+  "main": "json-server.js",
+  "author": "Katie Barrett-Powell",
+  "license": "ISC"
+}

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Tile Server</title>
+
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+        <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="/node_modules/bootstrap-toggle/css/bootstrap-toggle.min.css" />
+        <link rel="stylesheet" href="/node_modules/chart.js/dist/Chart.min.css" />
+        <link rel="stylesheet" href="/node_modules/leaflet/dist/leaflet.css" />
+        <link rel="stylesheet" href="/chatroom/dist/Chatroom.css" />
+        <link rel="stylesheet" href="css/map.css" />
+
+        <script type='text/javascript' src="/node_modules/jquery/dist/jquery.min.js"></script>
+        <script type='text/javascript' src="/node_modules/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
+        <script type='text/javascript' src="/node_modules/chart.js/dist/Chart.min.js"></script>
+        <script type="text/javascript" src="/node_modules/leaflet/dist/leaflet.js"></script>
+
+        <style>
+            html, body, #map {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="wrapper">
+            <div class="sidebar" id="detailsdiv">
+
+                <div class="main-title">
+                    <h1 class="text-center title">Situational Awareness Map</h1>
+                </div>
+
+                <div class="row">
+                    <div class="nav-buttons">
+                        <div class="overlay-page-toggle" id="togglePages">
+                            <div class="toggle-btn">
+                                <button class="btn btn-block btn-list page-btn active" id="toggleList" onclick="togglePage(this)">
+                                    <h4>List</h4>
+                                </button>
+                                <button class="btn btn-block btn-list page-btn" id="toggleSearch" onclick="togglePage(this)">
+                                    <h4>SAM</h4>
+                                </button>
+                                <button class="btn btn-block btn-list page-btn" id="toggleMarker" onclick="togglePage(this)">
+                                    <h4>Marker</h4>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="information">
+                        <div class="overlay-page" id="listpanel">
+
+                            <div class="sidebar-header">
+                                <span><h3>Map Markers</h3></span>
+                            </div>
+        
+                            <div class="sidebar-main maplist">
+                                <div id="fdiv" class="row smllist">
+        
+                                    <div id="sortTimeDiv" class="sortButton">
+                                        <button class="btn btn-block btn-sort selected" id="sortTime" onclick="sortByTime()">
+                                            Time
+                                            <i id="timeArrow" class="fa fa-long-arrow-down float-right"></i>
+                                        </button>
+                                    </div>
+        
+                                    <div class="sortButton" style="display: none;">
+                                        <button class="btn btn-block btn-sort" id="sortPriority" onclick="sortByPriority()">
+                                            Priority
+                                            <i id="priorityArrow" class="fa fa-long-arrow-down float-right"></i>
+                                        </button>
+                                    </div>
+                                </div>
+        
+                                <div id="sdiv" class="smllist">
+        
+                                    <button data-toggle="collapse" data-target="#sensorlist" class="btn btn-block btn-list">
+                                        Sensors
+                                        <span id="slst-badge" class="badge badge-primary badge-pill float-right">0</span>
+                                    </button>
+        
+                                    <div id="sensorlist" class="collapse list-group">
+        
+                                        <div class="list-group-item sml-btn">
+        
+                                            <button data-toggle="collapse" data-target="#sensoralist" class="btn btn-block btn-list">
+                                                All
+                                                <span id="salst-badge" class="badge badge-primary badge-pill float-right">0</span>
+                                            </button>
+        
+                                        </div>
+        
+                                        <div id="sensoralist" class="collapse list-group listitems">
+                                        </div>
+        
+                                        <div class="list-group-item sml-btn">
+        
+                                            <button data-toggle="collapse" data-target="#sensorclist" class="btn btn-block btn-list">
+                                                Camera
+                                                <span id="sclst-badge" class="badge badge-primary badge-pill float-right">0</span>
+                                            </button>
+        
+                                        </div>
+        
+                                        <div id="sensorclist" class="collapse list-group listitems">
+                                        </div>
+        
+                                        <div class="list-group-item sml-btn">
+        
+                                            <button data-toggle="collapse" data-target="#sensorplist" class="btn btn-block btn-list">
+                                                Person
+                                                <span id="splst-badge" class="badge badge-primary badge-pill float-right">0</span>
+                                            </button>
+        
+                                        </div>
+        
+                                        <div id="sensorplist" class="collapse list-group listitems">
+                                        </div>
+        
+                                    </div>
+                                </div>
+                    
+                                <div id="ediv" class="smllist">
+        
+                                    <button data-toggle="collapse" data-target="#eventlist" class="btn btn-block btn-list">
+                                        Events
+                                        <span id="elst-badge" class="badge badge-primary badge-pill float-right">0</span>
+                                    </button>
+        
+                                    <div id="eventlist" class="collapse list-group">
+        
+                                        <div class="list-group-item sml-btn">
+        
+                                            <button data-toggle="collapse" data-target="#eventalist" class="btn btn-block btn-list">
+                                                All
+                                                <span id="ealst-badge" class="badge badge-primary badge-pill float-right">0</span>
+                                            </button>
+        
+                                        </div>
+        
+                                        <div id="eventalist" class="collapse list-group listitems">
+                                        </div>
+        
+                                        <div class="list-group-item sml-btn">
+        
+                                            <button data-toggle="collapse" data-target="#eventplist" class="btn btn-block btn-list">
+                                                Person
+                                                <span id="eplst-badge" class="badge badge-primary badge-pill float-right">0</span>
+                                            </button>
+        
+                                        </div>
+        
+                                        <div id="eventplist" class="collapse list-group listitems">
+                                        </div>
+        
+                                        <div class="list-group-item sml-btn">
+        
+                                            <button data-toggle="collapse" data-target="#eventvlist" class="btn btn-block btn-list">
+                                                Vehicle
+                                                <span id="evlst-badge" class="badge badge-primary badge-pill float-right">0</span>
+                                            </button>
+        
+                                        </div>
+        
+                                        <div id="eventvlist" class="collapse list-group listitems">
+                                        </div>
+        
+                                        <div class="list-group-item sml-btn">
+        
+                                            <button data-toggle="collapse" data-target="#eventllist" class="btn btn-block btn-list">
+                                                Planned
+                                                <span id="ellst-badge" class="badge badge-primary badge-pill float-right">0</span>
+                                            </button>            
+                                        
+                                        </div>
+        
+                                        <div id="eventllist" class="collapse list-group listitems">
+                                        </div>
+        
+                                    </div>
+                                </div>
+        
+                                <div id="cdiv" class="smllist">
+        
+                                    <button data-toggle="collapse" data-target="#complexlist" class="btn btn-block btn-list">
+                                        Complex Events
+                                        <span id="clst-badge" class="badge badge-primary badge-pill float-right">0</span>
+                                    </button>
+        
+                                    <div id="complexlist" class="collapse list-group">
+        
+                                        <div class="list-group-item sml-btn">
+        
+                                            <button data-toggle="collapse" data-target="#complexalist" class="btn btn-block btn-list">
+                                                All
+                                                <span id="calst-badge" class="badge badge-primary badge-pill float-right">0</span>
+                                            </button>
+        
+                                        </div>
+        
+                                        <div id="complexalist" class="collapse list-group listitems">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div class="overlay-page hidden" id="searchpanel" >
+                            <div class="sidebar-header">
+                                <span><h3>Chat With SAM</h3></span>
+                            </div>
+        
+                            <div class="sidebar-main">
+                                <div class="chat-container cnlChat"></div>
+                            </div>
+                        </div>
+
+                        <div class="overlay-page hidden" id="detailspanel" >
+                            <div class="sidebar-header">
+                                <h3 id="detailsID" class="hidden"></h3>
+                                <span><h3 id="detailsName"></h3></span>
+                            </div>
+        
+                            <div class="sidebar-main" id="side-main">
+                                <p id="detailsText"></p>
+
+                                <div class="timeline" id="eventTimeline" style="display: none"></div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div id="analysisCarousel" class="carousel slide" data-interval="false" style="display:none;">
+
+                                            <div class="carousel-inner">
+
+                                                <div class="carousel-item  active">
+                                                    <div id="caroChart" class="chart-container">
+                                                        <h4>Footage Analysis Chart:</h4>
+                                                        <canvas id="carochart"></canvas>
+                                                    </div>
+                                                </div>
+                                            
+                                                <div class="carousel-item ">
+                                                    <div id="objDetVideo" class="chart-container">
+                                                        <h4>Object Detection Video:</h4>
+                                                        <video id="objDetPlayer" controls autoplay loop>
+                                                            <source id="objDetSource" src="" type="video/mp4">
+                                                        </video>
+                                                    </div>
+                                                </div>
+        
+                                            </div>
+                                          
+                                            <a class="carousel-control-prev" href="#analysisCarousel" role="button" data-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                <span class="sr-only">Previous</span>
+                                            </a>
+                                            <a class="carousel-control-next" href="#analysisCarousel" role="button" data-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                <span class="sr-only">Next</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="analysisChart" class="chart-container" style="display:none;">
+                                    <h4>Footage Analysis:</h4>
+                                    <canvas id="analysischart"></canvas>
+                                </div>
+                    
+                                <div id="analysisVideo" class="chart-container" style="display:none;">
+                                    <h4>Footage Analysis:</h4>
+                                    <video id="videoAPlayer" controls autoplay loop>
+                                        <source id="videoASource" src="" type="video/mp4">
+                                    </video>
+                                </div>
+                                    
+                                <div id="mainVideo" style="display:none;">
+                                    <h4 id="videoDesc">Captured Footage:</h4>
+                                    <video id="videoPlayer" controls autoplay loop>
+                                        <source id="videoSource" src="" type="video/mp4">
+                                    </video>                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>         
+
+            <div class="outer-wrap" id="maindiv">
+
+                    <div id="mapdiv">
+                        <div id="map"></div>
+                    </div>
+
+                    <div class="overlay-skip">
+                        <label class="switch">
+                            <input id="skipSwitch" type="checkbox" onclick="changeTime(this)">
+                            <span class="slider round"></span>
+                        </label>
+                        <label>Real Time</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="/node_modules/leaflet-semicircle/Semicircle.js"></script>
+
+        <script src='js/map-connect.js'></script>
+        <script src='js/getmarkers.js'></script>
+        <script src='js/layers.js'></script>
+        <script src='js/graph.js'></script>
+        <script src="js/complex.js"></script>
+        <script src='js/details.js'></script>
+        <script src='js/lists.js'></script>
+        <script src='js/time.js'></script>
+
+        <script src="/chatroom/dist/Chatroom.js"></script>
+        <script type="text/javascript">
+            window.chatroom = new window.Chatroom({
+            host: "http://localhost:5052",
+            container: document.querySelector(".chat-container"),
+            welcomeMessage: "Hi, I am SAM. How may I help you?",
+            speechRecognition: "en-US"
+            });
+            window.chatroom.openChat();
+        </script>
+    </body>
+</html>

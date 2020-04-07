@@ -1,0 +1,99 @@
+intents:
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - thank
+  - help
+  - mood_great
+  - mood_unhappy
+  - bot_challenge
+  - add_camera_sensor_ranges
+  - remove_camera_sensor_ranges
+  - add_person_sensor_ranges
+  - remove_person_sensor_ranges
+  - add_sensor_ranges
+  - remove_sensor_ranges
+  - add_camera_sensors
+  - remove_camera_sensors
+  - add_person_sensors
+  - remove_person_sensors
+  - add_sensors
+  - remove_sensors
+  - add_person_events
+  - remove_person_events
+  - add_planned_events
+  - remove_planned_events
+  - add_vehicle_events
+  - remove_vehicle_events
+  - add_complex_event_ranges
+  - remove_complex_event_ranges
+  - add_complex_events
+  - remove_complex_events
+  - add_events
+  - remove_events
+  - vague_change
+  - out_of_scope
+
+responses:
+  utter_greet:
+  - text: "Hey! How can I help you today?"
+
+  utter_noworries:
+  - text: "No Worries!"
+
+  utter_happy:
+  - text: "Great, carry on!"
+
+  utter_help:
+  - text: "You can use this chat to change the map view. Enter \"Add Sensors\" or \"Show Me Complex Event Calculations\" to see different information displayed on the map."
+
+  utter_goodbye:
+  - text: "Bye"
+
+  utter_iamabot:
+  - text: "I am a bot, powered by Rasa."
+
+  utter_changed:
+  - text: "Successfully changed map view."
+
+  utter_vague_change:
+  - text: Sorry, that request was a little vague, could you be a bit more specific?
+
+  utter_out_of_scope:
+  - text: Sorry, I can’t handle that request.
+
+actions:
+  - action_add_sensors
+  - action_remove_sensors
+  - action_add_camera_sensors
+  - action_remove_camera_sensors
+  - action_add_camera_sensor_ranges
+  - action_remove_camera_sensor_ranges
+  - action_add_person_sensors
+  - action_remove_person_sensors
+  - action_add_person_sensor_ranges
+  - action_remove_person_sensor_ranges
+  - action_add_sensor_ranges
+  - action_remove_sensor_ranges
+  - action_add_events
+  - action_remove_events
+  - action_add_person_events
+  - action_remove_person_events
+  - action_add_vehicle_events
+  - action_remove_vehicle_events
+  - action_add_planned_events
+  - action_remove_planned_events
+  - action_add_event_ranges
+  - action_remove_event_ranges
+  - action_add_complex_events
+  - action_remove_complex_events
+
+slots:
+  layers:
+    type: list
+    initial_value: [True, True, True, True, True, True, True, True, True, True, True]
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

@@ -1,0 +1,43 @@
+{ 
+    "connections": [
+        {   
+            "properties": {
+                "id": "Complex1",
+                "type": "Complex",
+                "events": [
+                    "Event2",
+                    "Event3"
+                ],
+                "name": "Complex Event 1",
+                "times": [
+                    "2020-03-04T16:10:20Z",
+                    "2020-03-04T16:10:25Z"
+                ],
+                "block": "<div class='tcontainer left'><div class='content'><h2>2020-03-04T16:10:20Z</h2><p>Abuse On Windsor Lane</p><p>Person - Abuse</p><p>[51.4836435, -3.1729213]</p></div></div><div class='tcontainer right'><div class='content'><h2>2020-03-04T16:10:25Z</h2><p>Fighting On Dumfries Place</p><p>Person - Fighting</p><p>[51.4837725, -3.1717944]</p></div></div>",
+                "datetime": "2020-03-04T16:10:30Z",
+                "skip": 5
+            }
+        },
+
+        {
+            "properties": {
+                "id": "Complex2",
+                "type": "Complex",
+                "events": [
+                    "Event2",
+                    "Event3",
+                    "Event4"
+                ],
+                "name": "Complex Event 2",
+                "times": [
+                    "2020-03-04T16:10:20Z",
+                    "2020-03-04T16:10:25Z",
+                    "2020-03-04T16:10:30Z"
+                ],
+                "block": "<div class='tcontainer left'><div class='content'><h2>2020-03-04T16:10:20Z</h2><p>Abuse On Windsor Lane</p><p>Person - Abuse</p><p>[51.4836435, -3.1729213]</p></div></div><div class='tcontainer right'><div class='content'><h2>2020-03-04T16:10:25Z</h2><p>Fighting On Dumfries Place</p><p>Person - Fighting</p><p>[51.4837725, -3.1717944]</p></div></div><div class='tcontainer left'><div class='content'><h2>2020-03-04T16:10:35Z</h2><p>Road Accident On Queen Street</p><p>Vehicle - Road Accident</p><p>[51.4830199, -3.1716695]</p></div></div>",
+                "datetime": "2020-03-04T16:10:40Z",
+                "skip": 5
+            }
+        }
+    ]
+}
