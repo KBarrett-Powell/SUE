@@ -4,6 +4,6 @@ sudo docker run -p 8081:80 -v openstreetmap-data:/var/lib/postgresql/12/main -v 
 cd ../ &&
 npm run dev-build &&
 cd Rasa/venv &&
-source ./venv/bin/activate &&
+source ./bin/activate &&
 pip3 install -r dependencies.txt &&
 echo 'Build Complete'
