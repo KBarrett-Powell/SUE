@@ -5,5 +5,6 @@ cd ../ &&
 npm run dev-build &&
 cd Rasa/venv &&
 source ./bin/activate &&
+pip3 install setuptools &&
 pip3 install -r dependencies.txt &&
 echo 'Build Complete'
