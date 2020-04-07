@@ -29,7 +29,7 @@ $ sudo apt install docker.io
 ### Linux
 Open a termial in the SAMap folder and run  
 $ bash linux-build.sh  
-*This may take a while*  
+*This may take a while, and you may need to close with Ctrl-C when it stops installing*  
 
 ## Running
 ### Linux
