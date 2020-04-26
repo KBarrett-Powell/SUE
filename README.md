@@ -29,11 +29,11 @@ $ sudo apt install docker.io
 ### Linux
 Open a termial in the SAMap folder and run  
 $ bash linux-build.sh  
-*This may take a while*  
+*This may take a while, and you may need to close with Ctrl-C when it stops installing*  
 
 ## Running
 ### Linux
 Open a terminal in the SAMap folder and run  
 $ bash linux-run.sh  
-*These scripts have set ports (8000, 8080, and 8081), so please make sure no other programs are using these*  
-Now you should be able to view the dashboard by opening a web browser and going to **http://localhost:8080/map.html**
+*These scripts have set ports (8000, 8080, 8081, and 8082), so please make sure no other programs are using these*  
+Now you should be able to view the dashboard by opening a web browser and going to **http://localhost:8082/map.html**
