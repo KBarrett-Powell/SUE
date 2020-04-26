@@ -40,7 +40,11 @@
 - help me
 - please help
 - i need help
+- information
+- info
+- h
 - give me information
+- who are you?
 
 ## intent:bot_challenge
 - are you a bot?
@@ -175,6 +179,70 @@
 - conceal camera sensor ranges layer
 - cut camera sensor ranges
 - cut camera sensor ranges layer
+
+## intent:add_microphone_sensors
+- add microphone sensors
+- add microphone sensors layer
+- plus microphone sensors
+- plus microphone sensors layer
+- show microphone sensors
+- show microphone sensors layer
+- show me microphone sensors
+- show me microphone sensors layer
+- let me see microphone sensors
+- let me see microphone sensors layer
+- display microphone sensors
+- display microphone sensors layer
+- bring back microphone sensors
+- bring back microphone sensors layer
+
+## intent:remove_microphone_sensors
+- remove microphone sensors
+- remove microphone sensors layer
+- leave microphone sensors
+- leave microphone sensors layer
+- hide microphone sensors
+- hide microphone sensors layer
+- take away microphone sensors
+- take away microphone sensors layer
+- get rid of microphone sensors
+- get rid of microphone sensors layer
+- conceal microphone sensors
+- conceal microphone sensors layer
+- cut microphone sensors
+- cut microphone sensors layer
+
+## intent:add_microphone_sensor_ranges
+- add microphone sensor ranges
+- add microphone sensor ranges layer
+- plus microphone sensor ranges
+- plus microphone sensor ranges layer
+- show microphone sensor ranges
+- show microphone sensor ranges layer
+- show me microphone sensor ranges
+- show me microphone sensor ranges layer
+- let me see microphone sensor ranges
+- let me see microphone sensor ranges layer
+- display microphone sensor ranges
+- display microphone sensor ranges layer
+- bring back microphone sensor ranges
+- bring back microphone sensor ranges layer
+
+## intent:remove_microphone_sensor_ranges
+- remove microphone sensor ranges
+- remove microphone sensor ranges layer
+- leave microphone sensor ranges
+- leave microphone sensor ranges layer
+- hide microphone sensor ranges
+- hide microphone sensor ranges layer
+- take away microphone sensor ranges
+- take away microphone sensor ranges layer
+- get rid of microphone sensor ranges
+- get rid of microphone sensor ranges layer
+- conceal microphone sensor ranges
+- conceal microphone sensor ranges layer
+- cut microphone sensor ranges
+- cut microphone sensor ranges layer
 
 ## intent:add_person_sensors
 - add person sensors

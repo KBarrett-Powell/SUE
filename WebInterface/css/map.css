@@ -29,14 +29,14 @@ body {
     z-index: 1;
 }
 
-#map, div.overlay-title, div.sidebar, div.overlay-skip, div.overlay-page-toggle {
+#map, div.overlay-title, div.sidebar, div.overlay-skip {
     position: absolute;
     top: 0;
     bottom: 0; 
     right: 0;
 }
 
-#map, div.overlay-title, div.sidebar, div.overlay-page-toggle {    
+#map, div.overlay-title, div.sidebar {    
     left: 0;
 }
 
@@ -57,6 +57,11 @@ div.overlay-title {
     width: 500px;
     margin-left: 5px;
     color: hsl(210, 90%, 30%);
+}
+
+.text-center {
+    max-height: 58px;
+    font-size: 2.5vw;
 }
 
 .sidebar {
@@ -88,18 +93,19 @@ div.overlay-skip {
 }
 
 .nav-buttons {
-    width: 4vw;
-    max-width: 4vw;
+    width: 3.5vw;
+    max-width: 3.5vw;
+    margin-left: 1vw;
+    z-index: 3;
 }
 
 .information {
-    margin-left: 4.5vw;
     z-index: 3;
 }
 
 div.overlay-page-toggle {
     width: 4vw;
-    margin-top: 89px;
+    /* margin-top: 5.95vw; */
 }
 /* ******* END Overlay Styles ******* */
 
@@ -290,18 +296,19 @@ div.hidden div.maplist {
 
 .toggle-btn button.active {
     width: 4vw;
+    border-radius: 0px;
 }
 
 .toggle-btn h4 {
     color: hsl(210, 90%, 25%);
-    font-size: 18px;
+    font-size: 1.5vw;
     margin-bottom: 0px;
 }
 
 .page-btn {
     margin: 5px 0px;
     padding: 5px;
-    height: 10vh;
+    height: 12vh;
 }
 
 .page-btn h4 {
@@ -314,7 +321,7 @@ div.hidden div.maplist {
 
 /* ******* Details Left Overlay ******* */
 .main-title {
-    padding: 5px 0px 10px 0px;
+    padding: 5px 0px 1vw 0px;
     border-bottom-style: groove;
     border-color: hsl(210, 60%, 95%);
     color: hsl(210, 60%, 95%);
@@ -326,6 +333,12 @@ div.hidden div.maplist {
     border-radius: 1px;
     height: 87vh;
     background-color: hsl(210, 20%, 99%);
+    overflow: hidden;
+}
+
+.overlay-page-toggle {
+    margin: 5px 0px 0px 0px;
+    height: 87vh;
     overflow: hidden;
 }
 
@@ -407,6 +420,11 @@ video#videoPlayer.sensorVideo {
 .hidden #videoPlayer, .hidden #videoAPlayer, .hidden #objDetPlayer {
     width: 0%;
     transition: width 1s;
+}
+
+audio#audioPlayer {
+    width: 33vw;
+    margin-left: 0.4vw;
 }
 /* ******* END Video Details ******* */
 
@@ -617,3 +635,10 @@ video#videoPlayer.sensorVideo {
     }
 }
 /* ******* END Timeline ******** */
+
+/* ******* Different media size texts ******** */
+@media screen and (min-width: 1000px) {
+    .toggle-btn h4 {
+       font-size: 18px;
+    }
+}

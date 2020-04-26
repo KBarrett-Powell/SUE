@@ -23,8 +23,10 @@ function alterLayers(dict) {
 
 function removeAllLayers() {
     window.leafletmap.removeLayer(window.sensorCamera);
+    window.leafletmap.removeLayer(window.sensorMicrophone);
     window.leafletmap.removeLayer(window.sensorPerson);
     window.leafletmap.removeLayer(window.sensorCameraRange);
+    window.leafletmap.removeLayer(window.sensorMicrophoneRange);
     window.leafletmap.removeLayer(window.sensorPersonRange);
 
     window.leafletmap.removeLayer(window.eventPerson);
@@ -41,29 +43,20 @@ function removeAllLayers() {
 function clearMap() {
 
     const details = document.getElementById("detailspanel");
-    const id = document.getElementById("detailsID");
-    const name = document.getElementById("detailsName");
-    const block = document.getElementById("detailsText");
-
-    const videodesc = document.getElementById("videoDesc");
-    const video = document.getElementById("videoPlayer");
-    const vsource = document.getElementById("videoSource");
 
     if (details.classList.contains('hidden') === false) {
 
         details.classList.add('hidden');
 
-        id.innerHTML = "";
-        name.innerHTML = "";
-        block.innerHTML = "";
-        videodesc.innerHTML = "";
-        vsource.setAttribute('src', '');
-        video.load();
+        clearDetailsMedia()
     }
 
     window.sensorCamera.clearLayers();
+    window.sensorMicrophone.clearLayers();
     window.sensorPerson.clearLayers();
+
     window.sensorCameraRange.clearLayers();
+    window.sensorMicrophoneRange.clearLayers();
     window.sensorPersonRange.clearLayers();
 
     window.eventPerson.clearLayers();
@@ -78,6 +71,7 @@ function clearMap() {
 
     slstbadge.innerHTML = "0";
     salstbadge.innerHTML = "0";
+    smlstbadge.innerHTML = "0";
     sclstbadge.innerHTML = "0";
     splstbadge.innerHTML = "0";
 

@@ -10,12 +10,16 @@ intents:
   - bot_challenge
   - add_camera_sensor_ranges
   - remove_camera_sensor_ranges
+  - add_microphone_sensor_ranges
+  - remove_microphone_sensor_ranges
   - add_person_sensor_ranges
   - remove_person_sensor_ranges
   - add_sensor_ranges
   - remove_sensor_ranges
   - add_camera_sensors
   - remove_camera_sensors
+  - add_microphone_sensors
+  - remove_microphone_sensors
   - add_person_sensors
   - remove_person_sensors
   - add_sensors
@@ -46,7 +50,29 @@ responses:
   - text: "Great, carry on!"
 
   utter_help:
-  - text: "You can use this chat to change the map view. Enter \"Add Sensors\" or \"Show Me Complex Event Calculations\" to see different information displayed on the map."
+  - text: "SUE, a Situational Understanding Explorer\n\
+      \ ***** \n Description\n\
+      \ This chat bot is designed to help users of SUE to control the information displayed to them, to encourage better knowledge discovery and situational understanding.\n\
+      \ ***** \n Commands\n\
+      \ -help >>> Displays information about SUE along with a list of accepted commands\n\
+      \ -add {Object Type} >>> Allows user to add an object type to the current map view\n\
+      \ -remove {Object Type} >>> Allows user to remove an object type from the current map view\n\
+      \ -Object Type >>> Objects shown on the map, like sensors and events\n\
+      \ List of objects:\n\
+      \ - Sensors\n\
+      \ -- Camera Sensors\n\
+      \ ---- Camera Sensor Ranges\n\
+      \ -- Microphone Sensors\n\
+      \ ---- Microphone Sensor Ranges\n\
+      \ -- Person Sensors\n\
+      \ ---- Person Sensor Ranges\n\
+      \ -- Sensor Ranges\n\
+      \ - Events\n\
+      \ -- Planned Events\n\
+      \ -- Person Events\n\
+      \ -- Vehicle Events\n\
+      \ -- Event Ranges\n\
+      \ - Complex Events"
 
   utter_goodbye:
   - text: "Bye"
@@ -70,6 +96,10 @@ actions:
   - action_remove_camera_sensors
   - action_add_camera_sensor_ranges
   - action_remove_camera_sensor_ranges
+  - action_add_microphone_sensors
+  - action_remove_microphone_sensors
+  - action_add_microphone_sensor_ranges
+  - action_remove_microphone_sensor_ranges
   - action_add_person_sensors
   - action_remove_person_sensors
   - action_add_person_sensor_ranges
@@ -92,7 +122,7 @@ actions:
 slots:
   layers:
     type: list
-    initial_value: [True, True, True, True, True, True, True, True, True, True, True]
+    initial_value: [True, True, True, True, True, True, True, True, True, True, True, True, True]
 
 session_config:
   session_expiration_time: 60

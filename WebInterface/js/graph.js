@@ -1,39 +1,23 @@
-const video = document.getElementById("videoPlayer");
-const analysisCarousel = document.getElementById("analysisCarousel");
-const analysisChart = document.getElementById("analysisChart");
+function plotChartPoints(){
+    let duration = (mainAudio.style.display === "none" ? videoPlayer.duration : audioPlayer.duration);
+    let interval = (mainAudio.style.display === "none" ? 270 : 1000);
+    let chartChoice = (analysisCarousel.style.display === "none" ? false : true);
 
-video.onplay = function() {
-    if (analysisCarousel.style.display != "none") {
-        let dur = video.duration;
+    let refreshInterval = setInterval( function() { 
 
-        let refreshInterval = setInterval( function() { 
-            refreshChart(true);
-            if (analysisCarousel.style.display === "none") {
-                clearInterval(refreshInterval);
-                clearTimeout(refreshTimeout);
-            }
-        }, 270);
-        
-        let refreshTimeout = setTimeout( function() { 
-            clearInterval(refreshInterval); 
-        }, dur * 1000);
+        refreshChart(chartChoice);
 
-    } else if (analysisChart.style.display != "none") {
-        let dur = video.duration;
+        if ((chartChoice && analysisCarousel.style.display === "none") || (!chartChoice && analysisChart.style.display === "none")) {
+            clearInterval(refreshInterval);
+            clearTimeout(refreshTimeout);
+        }
 
-        let refreshInterval = setInterval( function() { 
-            refreshChart(false);
-            if (analysisChart.style.display === "none") {
-                clearInterval(refreshInterval);
-                clearTimeout(refreshTimeout);
-            }
-        }, 270);
-        
-        let refreshTimeout = setTimeout( function() { 
-            clearInterval(refreshInterval); 
-        }, dur * 1000);
-    }
-}
+    }, interval);
+            
+    let refreshTimeout = setTimeout( function() { 
+        clearInterval(refreshInterval); 
+    }, duration * 1000);
+};
 
 function refreshChart(isCarousel) {
     if (isCarousel === true) {
@@ -57,6 +41,14 @@ function refreshChart(isCarousel) {
                 });
                 
                 window.videoAndObjDet.shift();
+
+            } else if (dataset.label === "audioOnly" && window.audioOnly.length > 0) {
+                dataset.data.push({
+                    x: window.audioOnly[0].x,
+                    y: window.audioOnly[0].y
+                });
+                
+                window.audioOnly.shift();
             }
         });
 
@@ -83,6 +75,14 @@ function refreshChart(isCarousel) {
                 });
                 
                 window.videoAndObjDet.shift();
+
+            } else if (dataset.label === "audioOnly" && window.audioOnly.length > 0) {
+                dataset.data.push({
+                    x: window.audioOnly[0].x,
+                    y: window.audioOnly[0].y
+                });
+                
+                window.audioOnly.shift();
             }
         });
 
@@ -98,9 +98,14 @@ function clearChart(isCarousel) {
                 window.videoOnly = [];
                 dataset.data = [];
 
-            } else {
+            } else if (dataset.label == "videoAndObjDet") {
                 window.videoAndObjDet.unshift(dataset.data);
                 window.videoAndObjDet = [];
+                dataset.data = [];
+
+            } else {
+                window.audioOnly.unshift(dataset.data);
+                window.audioOnly = [];
                 dataset.data = [];
             }
         });
@@ -113,9 +118,14 @@ function clearChart(isCarousel) {
                 window.videoOnly = [];
                 dataset.data = [];
 
-            } else {
+            } else if (dataset.label == "videoAndObjDet") {
                 window.videoAndObjDet.unshift(dataset.data);
                 window.videoAndObjDet = [];
+                dataset.data = [];
+
+            } else {
+                window.audioOnly.unshift(dataset.data);
+                window.audioOnly = [];
                 dataset.data = [];
             }
         });
@@ -145,15 +155,21 @@ function createChart(chartData, isCarousel) {
         let val = Object.values(chartData[i])[0];
         let colour = "";
 
-        if (key == "videoOnly") {
+        if (key === "videoOnly") {
             window.videoOnly = val;
             colour = 'rgb(54, 162, 235)';
-        } else {
+            max = Math.ceil((val[val.length-1].x)/100)*100;
+
+        } else if (key === "videoAndObjDet") {
             window.videoAndObjDet = val;
             colour = 'rgb(255, 159, 64)';
-        }
+            max = Math.ceil((val[val.length-1].x)/100)*100;
 
-        max = Math.ceil((val[val.length-1].x)/100)*100;
+        } else if (key === "audioOnly") {
+            window.audioOnly = val;
+            colour = 'rgb(255, 159, 64)';
+            max = 15;
+        }
 
         let dataset = {
             label: key,

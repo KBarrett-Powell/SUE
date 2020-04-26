@@ -26,7 +26,13 @@ function activeTime() {
             if (skipSwitch.checked == true) {
                 clearInterval(refreshId);
             } else {
-                addMarker(sensor, cameraIcon);
+                if (sensor.properties.sensorType === "Camera") {
+                    addMarker(sensor, cameraIcon);
+                } else if (sensor.properties.sensorType === "Camera") {
+                    addMarker(sensor, personIcon);
+                } else {
+                    addMarker(sensor, microphoneIcon);
+                }
 
                 addListItem(sensor, "sensor", sensor.properties.sensorType);
             }
@@ -107,7 +113,13 @@ function skipTime() {
         for ( let i in sensorlist ) {
             let sensor = sensorlist[i];
 
-            addMarker(sensor, cameraIcon);
+            if (sensor.properties.sensorType === "Camera") {
+                addMarker(sensor, cameraIcon);
+            } else if (sensor.properties.sensorType === "Camera") {
+                addMarker(sensor, personIcon);
+            } else {
+                addMarker(sensor, microphoneIcon);
+            }
 
             addListItem(sensor, "sensor", sensor.properties.sensorType);
         } 
@@ -142,8 +154,11 @@ function skipTime() {
     });
 
     window.sensorCamera.addTo(window.leafletmap);
+    window.sensorMicrophone.addTo(window.leafletmap);
     window.sensorPerson.addTo(window.leafletmap);
+
     window.sensorCameraRange.addTo(window.leafletmap);
+    window.sensorMicrophoneRange.addTo(window.leafletmap);
     window.sensorPersonRange.addTo(window.leafletmap);
 
     window.eventPerson.addTo(window.leafletmap);
@@ -155,5 +170,4 @@ function skipTime() {
     window.plannedEventRange.addTo(window.leafletmap);
 
     window.complexEvent.addTo(window.leafletmap);
-
 }

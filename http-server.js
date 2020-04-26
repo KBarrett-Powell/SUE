@@ -1,7 +1,7 @@
-const http = require('http');
+var http = require('http');
 
-const express = require('express');
-const app = express();
+var express = require('express');
+var app = express();
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", 'http://localhost:8000');
@@ -19,7 +19,7 @@ app.use('/chatroom', express.static(__dirname + '/chatroom'));
 app.use(express.static(__dirname + '/WebInterface'));
 
 const server = http.createServer(app);
-const port = 8080;
+const port = 8082;
 
 server.listen(port);
 

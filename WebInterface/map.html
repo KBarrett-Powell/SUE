@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Tile Server</title>
+        <title>Situational Understanding Explorer</title>
 
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -34,7 +34,7 @@
             <div class="sidebar" id="detailsdiv">
 
                 <div class="main-title">
-                    <h1 class="text-center title">Situational Awareness Map</h1>
+                    <h1 class="text-center title">Situational Understanding Explorer</h1>
                 </div>
 
                 <div class="row">
@@ -45,7 +45,7 @@
                                     <h4>List</h4>
                                 </button>
                                 <button class="btn btn-block btn-list page-btn" id="toggleSearch" onclick="togglePage(this)">
-                                    <h4>SAM</h4>
+                                    <h4>SUE</h4>
                                 </button>
                                 <button class="btn btn-block btn-list page-btn" id="toggleMarker" onclick="togglePage(this)">
                                     <h4>Marker</h4>
@@ -110,6 +110,18 @@
                                         </div>
         
                                         <div id="sensorclist" class="collapse list-group listitems">
+                                        </div>
+
+                                        <div class="list-group-item sml-btn">
+        
+                                            <button data-toggle="collapse" data-target="#sensorclist" class="btn btn-block btn-list">
+                                                Microphone
+                                                <span id="smlst-badge" class="badge badge-primary badge-pill float-right">0</span>
+                                            </button>
+        
+                                        </div>
+        
+                                        <div id="sensormlist" class="collapse list-group listitems">
                                         </div>
         
                                         <div class="list-group-item sml-btn">
@@ -214,7 +226,7 @@
         
                         <div class="overlay-page hidden" id="searchpanel" >
                             <div class="sidebar-header">
-                                <span><h3>Chat With SAM</h3></span>
+                                <span><h3>Chat With SUE</h3></span>
                             </div>
         
                             <div class="sidebar-main">
@@ -270,7 +282,7 @@
                                 </div>
 
                                 <div id="analysisChart" class="chart-container" style="display:none;">
-                                    <h4>Footage Analysis:</h4>
+                                    <h4 id="chartTitle">Footage Analysis:</h4>
                                     <canvas id="analysischart"></canvas>
                                 </div>
                     
@@ -283,9 +295,16 @@
                                     
                                 <div id="mainVideo" style="display:none;">
                                     <h4 id="videoDesc">Captured Footage:</h4>
-                                    <video id="videoPlayer" controls autoplay loop>
+                                    <video id="videoPlayer" controls autoplay loop onplay="plotChartPoints()">
                                         <source id="videoSource" src="" type="video/mp4">
                                     </video>                
+                                </div>
+
+                                <div id="mainAudio" style="display:none;">
+                                    <h4 id="audioDesc">Captured Audio:</h4>
+                                    <audio id="audioPlayer" controls autoplay loop onplay="plotChartPoints()" >
+                                        <source id="audioSource" src="" type="audio/wav">
+                                    </audio>                
                                 </div>
                             </div>
                         </div>
@@ -315,22 +334,14 @@
 
         <script src='js/map-connect.js'></script>
         <script src='js/getmarkers.js'></script>
+        <script src='js/details.js'></script>
         <script src='js/layers.js'></script>
         <script src='js/graph.js'></script>
         <script src="js/complex.js"></script>
-        <script src='js/details.js'></script>
         <script src='js/lists.js'></script>
         <script src='js/time.js'></script>
 
         <script src="/chatroom/dist/Chatroom.js"></script>
-        <script type="text/javascript">
-            window.chatroom = new window.Chatroom({
-            host: "http://localhost:5052",
-            container: document.querySelector(".chat-container"),
-            welcomeMessage: "Hi, I am SAM. How may I help you?",
-            speechRecognition: "en-US"
-            });
-            window.chatroom.openChat();
-        </script>
+        <script src="js/main.js"></script>
     </body>
 </html>

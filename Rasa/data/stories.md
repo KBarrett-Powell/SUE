@@ -58,6 +58,28 @@
   - utter_changed
 
 
+## add microphone sensors
+* add_microphone_sensors
+  - action_add_microphone_sensors
+  - utter_changed
+
+## remove microphone sensors
+* remove_microphone_sensors
+  - action_remove_microphone_sensors
+  - utter_changed
+
+
+## add microphone sensor ranges
+* add_microphone_sensor_ranges
+  - action_add_microphone_sensor_ranges
+  - utter_changed
+
+## remove microphone sensor ranges
+* remove_microphone_sensor_ranges
+  - action_remove_microphone_sensor_ranges
+  - utter_changed
+
+
 ## add person sensors
 * add_person_sensors
   - action_add_person_sensors

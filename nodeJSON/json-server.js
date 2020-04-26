@@ -7,9 +7,10 @@ const sensors = require('./js/getSensors.js');
 const events = require('./js/getEvents.js');
 const complex = require('./js/getComplex.js');
 const video = require('./js/getVideo.js');
+const audio = require('./js/getAudio.js');
 
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", 'http://localhost:8080');
+  res.header("Access-Control-Allow-Origin", 'http://localhost:8082');
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
@@ -25,6 +26,7 @@ app.use('/sensors', sensors);
 app.use('/events', events);
 app.use('/complex', complex);
 app.use('/video', video);
+app.use('/audio', video);
 
 const server = http.createServer(app);
 const port = 8000;

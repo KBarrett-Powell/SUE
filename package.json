@@ -3,9 +3,7 @@
   "version": "1.1.0",
   "scripts": {
     "start": "node http-server.js",
-    "build": "npm install",
-    "dev-start": "(cd chatroom && npm run start) & (cd nodeJSON && npm run start) & npm run start",
-    "dev-build": "(cd chatroom && npm run setup) & (cd nodeJSON && npm run build) & npm run build"
+    "dev-start": "(cd nodeJSON && npm run start) && npm run start"
   },
   "dependencies": {
     "bootstrap": "^4.4.1",

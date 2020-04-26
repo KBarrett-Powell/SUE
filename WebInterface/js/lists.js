@@ -69,15 +69,6 @@ function sortByTime() {
     const pbutton = document.getElementById("sortPriority");
     const arrow = document.getElementById("timeArrow");
 
-    const list1 = document.getElementById("sensoralist");
-    const list2 = document.getElementById("sensorclist");
-    const list3 = document.getElementById("sensorplist");
-    const list4 = document.getElementById("eventalist");
-    const list5 = document.getElementById("eventplist");
-    const list6 = document.getElementById("eventvlist");
-    const list7 = document.getElementById("eventllist");
-    const list8 = document.getElementById("complexalist");
-
     if (tbutton.classList.contains("selected") == false) {
         tbutton.classList.add("selected");  
         pbutton.classList.remove("selected");
@@ -94,29 +85,21 @@ function sortByTime() {
         arrow.classList.add("fa-long-arrow-down")
     }
 
-    sortlist(list1, direction, "time");
-    sortlist(list2, direction, "time");
-    sortlist(list3, direction, "time");
-    sortlist(list4, direction, "time");
-    sortlist(list5, direction, "time");
-    sortlist(list6, direction, "time");
-    sortlist(list7, direction, "time");
-    sortlist(list8, direction, "time");
+    sortlist(sensoralist, direction, "time");
+    sortlist(sensorclist, direction, "time");
+    sortlist(sensormlist, direction, "time");
+    sortlist(sensorplist, direction, "time");
+    sortlist(eventalist, direction, "time");
+    sortlist(eventplist, direction, "time");
+    sortlist(eventvlist, direction, "time");
+    sortlist(eventllist, direction, "time");
+    sortlist(complexalist, direction, "time");
 }
 
 function sortByPriority() {
     const tbutton = document.getElementById("sortTime");
     const pbutton = document.getElementById("sortPriority");
     const arrow = document.getElementById("priorityArrow");
-
-    const list1 = document.getElementById("sensoralist");
-    const list2 = document.getElementById("sensorclist");
-    const list3 = document.getElementById("sensorplist");
-    const list4 = document.getElementById("eventalist");
-    const list5 = document.getElementById("eventplist");
-    const list6 = document.getElementById("eventvlist");
-    const list7 = document.getElementById("eventllist");
-    const list8 = document.getElementById("complexalist");
 
     if (tbutton.classList.contains("selected") == false) {
         tbutton.classList.add("selected");  
@@ -134,14 +117,15 @@ function sortByPriority() {
         arrow.classList.add("fa-long-arrow-down")
     }
 
-    sortlist(list1, direction, "priority");
-    sortlist(list2, direction, "priority");
-    sortlist(list3, direction, "priority");
-    sortlist(list4, direction, "priority");
-    sortlist(list5, direction, "priority");
-    sortlist(list6, direction, "priority");
-    sortlist(list7, direction, "priority");
-    sortlist(list8, direction, "priority");
+    sortlist(sensoralist, direction, "priority");
+    sortlist(sensorclist, direction, "priority");
+    sortlist(sensormlist, direction, "priority");
+    sortlist(sensorplist, direction, "priority");
+    sortlist(eventalist, direction, "priority");
+    sortlist(eventplist, direction, "priority");
+    sortlist(eventvlist, direction, "priority");
+    sortlist(eventllist, direction, "priority");
+    sortlist(complexalist, direction, "priority");
 }
 
 function sortlist(list, order, type){

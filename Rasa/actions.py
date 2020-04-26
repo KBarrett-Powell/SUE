@@ -12,11 +12,13 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 
-def defineDict(setCamera, setPerson, setCameraR, setPersonR, setEPerson, setEVehicle, setEPlanned, setComplex, setEPersonRange, setEVehicleRange, setEPlannedRange):
+def defineDict(setCamera, setMicrophone, setPerson, setCameraR, setMicrophoneR, setPersonR, setEPerson, setEVehicle, setEPlanned, setEPersonRange, setEVehicleRange, setEPlannedRange, setComplex):
     jsdict = {
         "sensorCamera": setCamera,
+        "sensorMicrophone": setMicrophone,
         "sensorPerson": setPerson,
         "sensorCameraRange": setCameraR,
+        "sensorMicrophoneRange": setMicrophoneR,
         "sensorPersonRange": setPersonR,
         "eventPerson": setEPerson,
         "eventVehicle": setEVehicle,
@@ -28,40 +30,6 @@ def defineDict(setCamera, setPerson, setCameraR, setPersonR, setEPerson, setEVeh
 
     }
     return jsdict
-
-# class ActionChangeBasic(Action):
-
-#     def name(self) -> Text:
-#         return "action_change_basic"
-
-#     def run(self, dispatcher: CollectingDispatcher,
-#             tracker: Tracker,
-#             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-
-#         dispatcher.utter_message(text="Changing map view...")
-
-#         jsdict = defineDict(True, True, True, True, True, True, True, True, False)
-#         jsontxt = "JSON;" + json.dumps(jsdict)
-#         dispatcher.utter_message(text=jsontxt)
-
-#         return [SlotSet("layers", [True, True, True, True, True, True, True, True, False])]
-
-# class ActionChangeComplex(Action):
-
-#     def name(self) -> Text:
-#         return "action_change_complex"
-
-#     def run(self, dispatcher: CollectingDispatcher,
-#             tracker: Tracker,
-#             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-
-#         dispatcher.utter_message(text="Changing map view...")
-#         jsdict = defineDict(False, False, False, False, True, True, True, True, True)
-#         jsontxt = "JSON;" + json.dumps(jsdict)
-#         dispatcher.utter_message(text=jsontxt)
-
-#         return [SlotSet("layers", [False, False, False, False, True, True, True, True, True])]
-
 
 # **** SENSORS ****
 class ActionAddSensors(Action):
@@ -80,8 +48,10 @@ class ActionAddSensors(Action):
         layerlst[1] = True
         layerlst[2] = True    
         layerlst[3] = True    
+        layerlst[4] = True    
+        layerlst[5] = True  
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 
@@ -102,9 +72,11 @@ class ActionRemoveSensors(Action):
         layerlst[0] = False
         layerlst[1] = False
         layerlst[2] = False 
-        layerlst[3] = False        
+        layerlst[3] = False      
+        layerlst[4] = False 
+        layerlst[5] = False   
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 
@@ -124,9 +96,9 @@ class ActionAddCameraSensors(Action):
 
         layerlst = tracker.get_slot("layers")
         layerlst[0] = True
-        layerlst[2] = True      
+        layerlst[3] = True      
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 
@@ -145,9 +117,9 @@ class ActionRemoveCameraSensors(Action):
 
         layerlst = tracker.get_slot("layers")
         layerlst[0] = False
-        layerlst[2] = False    
+        layerlst[3] = False    
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 
@@ -166,9 +138,9 @@ class ActionAddCameraSensorRanges(Action):
         dispatcher.utter_message(text="Changing map view...")
 
         layerlst = tracker.get_slot("layers")
-        layerlst[2] = True      
+        layerlst[3] = True      
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 
@@ -186,9 +158,93 @@ class ActionRemoveCameraSensorRanges(Action):
         dispatcher.utter_message(text="Changing map view...")
 
         layerlst = tracker.get_slot("layers")
-        layerlst[2] = False      
+        layerlst[3] = False      
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
+        jsontxt = "JSON;" + json.dumps(jsdict)
+        dispatcher.utter_message(text=jsontxt)
+
+        return [SlotSet("layers", layerlst)]
+
+# **** MICROPHONE SENSORS ****
+class ActionAddMicrophoneSensors(Action):
+    
+    def name(self) -> Text:
+        return "action_add_microphone_sensors"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        dispatcher.utter_message(text="Changing map view...")
+
+        layerlst = tracker.get_slot("layers")
+        layerlst[1] = True
+        layerlst[4] = True      
+        
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
+        jsontxt = "JSON;" + json.dumps(jsdict)
+        dispatcher.utter_message(text=jsontxt)
+
+        return [SlotSet("layers", layerlst)]
+
+class ActionRemoveMicrophoneSensors(Action):
+    
+    def name(self) -> Text:
+        return "action_remove_microphone_sensors"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        dispatcher.utter_message(text="Changing map view...")
+
+        layerlst = tracker.get_slot("layers")
+        layerlst[1] = False
+        layerlst[4] = False    
+        
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
+        jsontxt = "JSON;" + json.dumps(jsdict)
+        dispatcher.utter_message(text=jsontxt)
+
+        return [SlotSet("layers", layerlst)]
+
+# **** MICROPHONE SENSOR RANGES ****
+class ActionAddMicrophoneSensorRanges(Action):
+    
+    def name(self) -> Text:
+        return "action_add_microphone_sensor_ranges"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        dispatcher.utter_message(text="Changing map view...")
+
+        layerlst = tracker.get_slot("layers")
+        layerlst[4] = True      
+        
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
+        jsontxt = "JSON;" + json.dumps(jsdict)
+        dispatcher.utter_message(text=jsontxt)
+
+        return [SlotSet("layers", layerlst)]
+
+class ActionRemoveMicrophoneSensorRanges(Action):
+    
+    def name(self) -> Text:
+        return "action_remove_microphone_sensor_ranges"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        dispatcher.utter_message(text="Changing map view...")
+
+        layerlst = tracker.get_slot("layers")
+        layerlst[4] = False      
+        
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 
@@ -207,10 +263,10 @@ class ActionAddPersonSensors(Action):
         dispatcher.utter_message(text="Changing map view...")
 
         layerlst = tracker.get_slot("layers")
-        layerlst[1] = True  
-        layerlst[3] = True    
+        layerlst[2] = True  
+        layerlst[5] = True    
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 
@@ -228,10 +284,10 @@ class ActionRemovePersonSensors(Action):
         dispatcher.utter_message(text="Changing map view...")
 
         layerlst = tracker.get_slot("layers")
-        layerlst[1] = False
-        layerlst[3] = False        
+        layerlst[2] = False
+        layerlst[5] = False        
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 
@@ -250,9 +306,9 @@ class ActionAddPersonSensorRanges(Action):
         dispatcher.utter_message(text="Changing map view...")
 
         layerlst = tracker.get_slot("layers")   
-        layerlst[3] = True    
+        layerlst[5] = True    
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 
@@ -270,9 +326,9 @@ class ActionRemovePersonSensorRanges(Action):
         dispatcher.utter_message(text="Changing map view...")
 
         layerlst = tracker.get_slot("layers")
-        layerlst[3] = False        
+        layerlst[5] = False        
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 
@@ -291,10 +347,11 @@ class ActionAddSensorRanges(Action):
         dispatcher.utter_message(text="Changing map view...")
 
         layerlst = tracker.get_slot("layers")
-        layerlst[2] = True    
         layerlst[3] = True    
+        layerlst[4] = True   
+        layerlst[5] = True    
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 
@@ -312,10 +369,11 @@ class ActionRemoveSensorRanges(Action):
         dispatcher.utter_message(text="Changing map view...")
 
         layerlst = tracker.get_slot("layers")
-        layerlst[2] = False 
-        layerlst[3] = False        
+        layerlst[3] = False 
+        layerlst[4] = False        
+        layerlst[5] = False 
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 
@@ -334,14 +392,14 @@ class ActionAddEvents(Action):
         dispatcher.utter_message(text="Changing map view...")
 
         layerlst = tracker.get_slot("layers")
-        layerlst[4] = True
-        layerlst[5] = True
-        layerlst[6] = True   
-        layerlst[8] = True
+        layerlst[6] = True
+        layerlst[7] = True
+        layerlst[8] = True   
         layerlst[9] = True
-        layerlst[10] = True     
+        layerlst[10] = True
+        layerlst[11] = True     
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 
@@ -359,14 +417,14 @@ class ActionRemoveEvents(Action):
         dispatcher.utter_message(text="Changing map view...")
 
         layerlst = tracker.get_slot("layers")
-        layerlst[4] = False
-        layerlst[5] = False
-        layerlst[6] = False   
-        layerlst[8] = False
-        layerlst[9] = False     
-        layerlst[10] = False
+        layerlst[6] = False
+        layerlst[7] = False
+        layerlst[8] = False   
+        layerlst[9] = False
+        layerlst[10] = False     
+        layerlst[11] = False
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 
@@ -385,10 +443,10 @@ class ActionAddPersonEvents(Action):
         dispatcher.utter_message(text="Changing map view...")
 
         layerlst = tracker.get_slot("layers")
-        layerlst[4] = True   
-        layerlst[8] = True  
+        layerlst[6] = True   
+        layerlst[9] = True  
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 
@@ -406,10 +464,10 @@ class ActionRemovePersonEvents(Action):
         dispatcher.utter_message(text="Changing map view...")
 
         layerlst = tracker.get_slot("layers")
-        layerlst[4] = False     
-        layerlst[8] = False
+        layerlst[6] = False     
+        layerlst[9] = False
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 
@@ -428,10 +486,10 @@ class ActionAddVehicleEvents(Action):
         dispatcher.utter_message(text="Changing map view...")
 
         layerlst = tracker.get_slot("layers")
-        layerlst[5] = True   
-        layerlst[9] = True
+        layerlst[7] = True   
+        layerlst[10] = True
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 
@@ -449,10 +507,10 @@ class ActionRemoveVehicleEvents(Action):
         dispatcher.utter_message(text="Changing map view...")
 
         layerlst = tracker.get_slot("layers")
-        layerlst[5] = False  
-        layerlst[9] = False    
+        layerlst[7] = False  
+        layerlst[10] = False    
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 
@@ -471,10 +529,10 @@ class ActionAddPlannedEvents(Action):
         dispatcher.utter_message(text="Changing map view...")
 
         layerlst = tracker.get_slot("layers")
-        layerlst[6] = True    
-        layerlst[10] = True    
+        layerlst[8] = True    
+        layerlst[11] = True    
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 
@@ -492,10 +550,10 @@ class ActionRemovePlannedEvents(Action):
         dispatcher.utter_message(text="Changing map view...")
 
         layerlst = tracker.get_slot("layers")
-        layerlst[6] = False 
-        layerlst[10] = False       
+        layerlst[8] = False 
+        layerlst[11] = False       
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 
@@ -514,11 +572,11 @@ class ActionAddEventRanges(Action):
         dispatcher.utter_message(text="Changing map view...")
 
         layerlst = tracker.get_slot("layers")
-        layerlst[8] = True 
-        layerlst[9] = True
-        layerlst[10] = True    
+        layerlst[9] = True 
+        layerlst[10] = True
+        layerlst[11] = True    
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 
@@ -536,11 +594,11 @@ class ActionRemoveEventRanges(Action):
         dispatcher.utter_message(text="Changing map view...")
 
         layerlst = tracker.get_slot("layers")
-        layerlst[8] = False  
-        layerlst[9] = False
-        layerlst[10] = False    
+        layerlst[9] = False  
+        layerlst[10] = False
+        layerlst[11] = False    
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 
@@ -559,9 +617,9 @@ class ActionAddComplexEvents(Action):
         dispatcher.utter_message(text="Changing map view...")
 
         layerlst = tracker.get_slot("layers")
-        layerlst[7] = True     
+        layerlst[12] = True     
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 
@@ -579,9 +637,9 @@ class ActionRemoveComplexEvents(Action):
         dispatcher.utter_message(text="Changing map view...")
 
         layerlst = tracker.get_slot("layers")
-        layerlst[7] = False      
+        layerlst[12] = False      
         
-        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10])
+        jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12])
         jsontxt = "JSON;" + json.dumps(jsdict)
         dispatcher.utter_message(text=jsontxt)
 

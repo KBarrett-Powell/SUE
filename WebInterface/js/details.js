@@ -1,3 +1,37 @@
+const details = document.getElementById("detailspanel");
+const mainBar = document.getElementById("side-main");
+
+const id = document.getElementById("detailsID");
+const name = document.getElementById("detailsName");
+const block = document.getElementById("detailsText");
+
+const timeline = document.getElementById("eventTimeline");
+
+const analysisCarousel = document.getElementById("analysisCarousel");
+
+const analysisChart = document.getElementById("analysisChart");
+const chartTitle = document.getElementById("chartTitle");
+
+const objDetSource = document.getElementById("objDetSource");
+const objDetPlayer = document.getElementById("objDetPlayer");
+
+const analysisVideo = document.getElementById("analysisVideo");
+const analysisSource = document.getElementById("videoASource");
+const analysisPlayer = document.getElementById("videoAPlayer");
+
+const mainVideo = document.getElementById("mainVideo");
+const videoDesc = document.getElementById("videoDesc");
+const videoSource = document.getElementById("videoSource");
+const videoPlayer = document.getElementById("videoPlayer");
+
+const mainAudio = document.getElementById("mainAudio");
+const audioDesc = document.getElementById("audioDesc");
+const audioSource = document.getElementById("audioSource");
+const audioPlayer = document.getElementById("audioPlayer");
+
+const videoLink = "http://localhost:8000/video/";
+const audioLink = "http://localhost:8000/audio/";
+
 function toggleDetailsFromMap(e){
     let info = JSON.parse(this.options.properties);
     let layer = e.target;
@@ -18,7 +52,13 @@ function toggleDetailsFromMap(e){
             }
             
         } else {
-            window.prvClickedMarker.setIcon(cameraIcon);
+            if (window.prvClickedMarker.options.properties.search("\"sensorType\":\"Camera\"")!= -1) {
+                window.prvClickedMarker.setIcon(cameraIcon);
+            } else if (window.prvClickedMarker.options.properties.search("\"sensorType\":\"Person\"")!= -1) {
+                window.prvClickedMarker.setIcon(personIcon);
+            } else {
+                window.prvClickedMarker.setIcon(microphoneIcon);
+            }
         }
     }
 
@@ -37,12 +77,18 @@ function toggleDetailsFromMap(e){
         }
 
     } else {
-        layer.setIcon(layer.options.icon == cameraIcon ? cameraIconLarge : cameraIcon);
+        if (layer.options.properties.search("\"sensorType\":\"Camera\"")!= -1) {
+            layer.setIcon(layer.options.icon == cameraIcon ? cameraIconLarge : cameraIcon);
+        } else if (layer.options.properties.search("\"sensorType\":\"Person\"")!= -1) {
+            layer.setIcon(layer.options.icon == personIcon ? personIconLarge : personIcon);
+        } else {
+            layer.setIcon(layer.options.icon == microphoneIcon ? microphoneIconLarge : microphoneIcon);
+        }
     }
     
     window.prvClickedMarker = layer;
-    
-    if (layer.options.icon === cameraIcon || layer.options.icon === markerNormal || layer.options.icon === markerComplex || layer.options.icon === markerRed || layer.options.icon === markerYellow  || layer.options.icon === markerOrange) {
+
+    if (layer.options.icon.options.iconSize[0] === 25) {
         toggleDetails(info, e.latlng.toString().slice(7, -1));
         showListPanel();
     } else {
@@ -98,82 +144,45 @@ function showDetailsPanel() {
 }
 
 function toggleDetails(json, coordinates){
-    const details = document.getElementById("detailspanel");
-    const mainBar = document.getElementById("side-main");
-
-    const id = document.getElementById("detailsID");
-    const name = document.getElementById("detailsName");
-    const block = document.getElementById("detailsText");
-    
-    const timeline = document.getElementById("eventTimeline");
-
-    const analysisCarousel = document.getElementById("analysisCarousel");
-
-    const analysisChart = document.getElementById("analysisChart");
-
-    const objDetSource = document.getElementById("objDetSource");
-    const objDetPlayer = document.getElementById("objDetPlayer");
-
-    const analysisVideo = document.getElementById("analysisVideo");
-    const analysisSource = document.getElementById("videoASource");
-    const analysisPlayer = document.getElementById("videoAPlayer");
-
-    const mainVideo = document.getElementById("mainVideo");
-    const videodesc = document.getElementById("videoDesc");
-    const videoSource = document.getElementById("videoSource");
-    const video = document.getElementById("videoPlayer");
 
     let idtext = "" + json.id + "";
     let nametext = "" + json.name + "";
     let type = "" + json.type;
     let blocktext = compileBlockText(json, coordinates);
     let chartdata = json.chartPoints;
-    let file = "http://localhost:8000/video/" + json.video;
-    let saliencyfile = "http://localhost:8000/video/" + json.saliencyVideo;
-    let objdetfile = "http://localhost:8000/video/" + json.objDetVideo;
+    let file = ((json.video != null) ? videoLink + json.video : null);
+    let saliencyfile = ((json.saliencyVideo != null) ? videoLink + json.saliencyVideo : null);
+    let objdetfile = ((json.objDetVideo != null) ? videoLink + json.objDetVideo : null);
+    let audiofile = ((json.audio != null) ? audioLink + json.audio : null);
+    let timelineBlock = json.block;
 
     if (id.innerHTML != idtext && details.classList.contains('hidden') === false) {
-
-        id.innerHTML = idtext;
-        name.innerHTML = nametext;
-        block.innerHTML = blocktext;
        
-        clearDetailsMedia(timeline, mainBar, analysisCarousel, analysisChart, objDetSource, objDetPlayer, analysisVideo, analysisSource, analysisPlayer)
+        clearDetailsMedia()
 
-        AddDetailsMedia(json, timeline, mainBar, type, videodesc, video, chartdata, file, objdetfile, saliencyfile, analysisCarousel, analysisChart, mainVideo, videoSource, objDetSource, objDetPlayer, analysisVideo, analysisSource, analysisPlayer)
-
+        AddDetailsMedia(idtext, nametext, blocktext, type, audiofile, objdetfile, chartdata, saliencyfile, file, timelineBlock)
 
     } else if (details.classList.contains('hidden') === false) {
 
         details.classList.add('hidden');
 
-        id.innerHTML = "";
-        name.innerHTML = "";
-        block.innerHTML = "";
-        videodesc.innerHTML = "";
-        if (video.classList.contains("sensorVideo")) { video.classList.remove("sensorVideo"); }
-
-        clearDetailsMedia(timeline, mainBar, analysisCarousel, analysisChart, objDetSource, objDetPlayer, analysisVideo, analysisSource, analysisPlayer)
-
-        mainVideo.style.display = "none";
-        videoSource.setAttribute('src', '');
-        video.load();
+        clearDetailsMedia()
 
     } else {
 
         details.classList.remove('hidden');
 
-        id.innerHTML = idtext;
-        name.innerHTML = nametext;
-        block.innerHTML = blocktext;
+        clearDetailsMedia()
 
-        clearDetailsMedia(timeline, mainBar, analysisCarousel, analysisChart, objDetSource, objDetPlayer, analysisVideo, analysisSource, analysisPlayer)
-
-        AddDetailsMedia(json, timeline, mainBar, type, videodesc, video, chartdata, file, objdetfile, saliencyfile, analysisCarousel, analysisChart, mainVideo, videoSource, objDetSource, objDetPlayer, analysisVideo, analysisSource, analysisPlayer)
+        AddDetailsMedia(idtext, nametext, blocktext, type, audiofile, objdetfile, chartdata, saliencyfile, file, timelineBlock)
     }
 }
 
-function clearDetailsMedia(timeline, mainBar, analysisCarousel, analysisChart, objDetSource, objDetPlayer, analysisVideo, analysisSource, analysisPlayer) {
+function clearDetailsMedia() {
+    id.innerHTML = "";
+    name.innerHTML = "";
+    block.innerHTML = "";
+
     if (analysisCarousel.style.display != "none") {
         analysisCarousel.style.display = "none";
         clearChart(true);
@@ -194,18 +203,48 @@ function clearDetailsMedia(timeline, mainBar, analysisCarousel, analysisChart, o
         timeline.style.display = "none";
         mainBar.style.overflow = "hidden";
     }
+    if (mainVideo.style.display != "none") {
+        mainVideo.style.display = "none";
+        videoSource.setAttribute('src', '');
+        videoPlayer.load();
+        if (videoPlayer.classList.contains("sensorVideo")) { videoPlayer.classList.remove("sensorVideo"); }
+    }
+    if (mainAudio.style.display != "none") {
+        mainAudio.style.display = "none";
+        audioSource.setAttribute('src', '');
+        audioPlayer.load();
+        if (audioPlayer.classList.contains("sensorAudio")) { videoPlayer.classList.remove("sensorAudio"); }
+    }
 }
 
-function AddDetailsMedia(json, timeline, mainBar, type, videodesc, video, chartdata, file, objdetfile, saliencyfile, analysisCarousel, analysisChart, mainVideo, videoSource, objDetSource, objDetPlayer, analysisVideo, analysisSource, analysisPlayer) {
+function AddDetailsMedia(idtext, nametext, blocktext, type, audiofile, objdetfile, chartdata, saliencyfile, file, timelineBlock) {
+    id.innerHTML = idtext;
+    name.innerHTML = nametext;
+    block.innerHTML = blocktext;
+
     if (type === "Sensor") {
-        videodesc.innerHTML = "Captured Footage :";
-        if (!video.classList.contains("sensorVideo")) { video.classList.add("sensorVideo"); }
 
+        if (audiofile != null) {
+            audioDesc.innerHTML = "Captured Audio :";
+            if (!audioPlayer.classList.contains("sensorAudio")) { audioPlayer.classList.add("sensorAudio"); }
+
+        } else {
+            videoDesc.innerHTML = "Captured Footage :";
+            if (!videoPlayer.classList.contains("sensorVideo")) { videoPlayer.classList.add("sensorVideo"); }
+        }
+    
     } else { 
-        videodesc.innerHTML = "Footage From CCTV :";
-        if (video.classList.contains("sensorVideo")) { video.classList.remove("sensorVideo"); }
 
-        if (chartdata != null && json.objDetVideo != null) {
+        if (audiofile != null) {
+            audioDesc.innerHTML = "Audio From Microphone :";
+            if (audioPlayer.classList.contains("sensorAudio")) { audioPlayer.classList.remove("sensorAudio"); }
+
+        } else {
+            videoDesc.innerHTML = "Footage From CCTV :";
+            if (videoPlayer.classList.contains("sensorVideo")) { videoPlayer.classList.remove("sensorVideo"); }
+        }
+
+        if (chartdata != null && objdetfile != null) {
             analysisCarousel.style.display = "block";
             createChart(chartdata, true);
 
@@ -216,12 +255,12 @@ function AddDetailsMedia(json, timeline, mainBar, type, videodesc, video, chartd
             analysisChart.style.display = "block";
             createChart(chartdata, false);
 
-        } else if (json.objDetVideo != null) {
+        } else if (objdetfile != null) {
             analysisVideo.style.display = "block";
             analysisSource.setAttribute('src', objdetfile);
             analysisPlayer.load();
 
-        } else if (json.saliencyVideo != null) {
+        } else if (saliencyfile != null) {
             analysisVideo.style.display = "block";
             analysisSource.setAttribute('src', saliencyfile);
             analysisPlayer.load();
@@ -229,14 +268,26 @@ function AddDetailsMedia(json, timeline, mainBar, type, videodesc, video, chartd
     }
 
     if (type != "Complex") {
-        mainVideo.style.display = "block";
-        videoSource.setAttribute('src', file);
-        video.load();
+
+        if (audiofile != null) {
+            mainVideo.style.display = "none";
+            mainAudio.style.display = "block";
+            audioSource.setAttribute('src', audiofile);
+            audioPlayer.load();
+
+        } else {
+            mainAudio.style.display = "none";
+            mainVideo.style.display = "block";
+            videoSource.setAttribute('src', file);
+            videoPlayer.load();
+        }
+
     } else {
         mainBar.style.overflow = "auto";
-        timeline.innerHTML = json.block;
+        timeline.innerHTML = timelineBlock;
         timeline.style.display = "block";
         mainVideo.style.display = "none";
+        mainAudio.style.display = "none";
     }
 }
 
@@ -247,8 +298,8 @@ function compileBlockText(text, coordinates) {
     if (type === "Event") { string += "Description: " + text.description; }
     if (type === "Event") { string += "<br>Datetime: " + text.datetime; }
 
-    if (type === "Sensor" || type === "Complex") { string += "Lat/Long: " + coordinates; }
-    else { string += "<br>Lat/Long: " + coordinates; }
+    if (type === "Sensor") { string += "Lat/Long: " + coordinates; }
+    else if (type === "Event") { string += "<br>Lat/Long: " + coordinates; }
 
     return string;
 }

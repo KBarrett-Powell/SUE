@@ -4,6 +4,7 @@ const complexurl = "http://localhost:8000/complex";
 
 const sensoralist = document.getElementById("sensoralist");
 const sensorclist = document.getElementById("sensorclist");
+const sensormlist = document.getElementById("sensormlist");
 const sensorplist = document.getElementById("sensorplist");
 const eventalist = document.getElementById("eventalist");
 const eventplist = document.getElementById("eventplist");
@@ -14,6 +15,7 @@ const complexalist = document.getElementById("complexalist");
 const slstbadge = document.getElementById("slst-badge");
 const salstbadge = document.getElementById("salst-badge");
 const sclstbadge = document.getElementById("sclst-badge");
+const smlstbadge = document.getElementById("smlst-badge");
 const splstbadge = document.getElementById("splst-badge");
 
 const elstbadge = document.getElementById("elst-badge");
@@ -26,8 +28,10 @@ const clstbadge = document.getElementById("clst-badge");
 const calstbadge = document.getElementById("calst-badge");
 
 window.sensorCamera = L.layerGroup();
+window.sensorMicrophone = L.layerGroup();
 window.sensorPerson = L.layerGroup();
 window.sensorCameraRange = L.layerGroup();
+window.sensorMicrophoneRange = L.layerGroup();
 window.sensorPersonRange = L.layerGroup();
 
 window.eventPerson = L.layerGroup();
@@ -44,6 +48,7 @@ window.id = "";
 
 window.prvClickedMarker = null;
 
+// Define blue marker
 const markerNormal = L.icon({
     iconUrl: 'images/marker-icon.png',
     shadowUrl: "images/marker-shadow.png",
@@ -57,6 +62,28 @@ const markerNormal = L.icon({
 // Define camera icon
 const cameraIcon = L.icon({
     iconUrl: 'images/grey_camera_marker.png',
+    shadowUrl: "images/marker-shadow.png",
+
+    iconSize:     [25, 41],
+    shadowSize:   [41, 41],
+    iconAnchor:   [12, 40],
+    popupAnchor:  [1, -34] 
+});
+
+// Define microphone icon
+const microphoneIcon = L.icon({
+    iconUrl: 'images/grey_microphone_marker.png',
+    shadowUrl: "images/marker-shadow.png",
+
+    iconSize:     [25, 41],
+    shadowSize:   [41, 41],
+    iconAnchor:   [12, 40],
+    popupAnchor:  [1, -34] 
+});
+
+// Define person icon
+const personIcon = L.icon({
+    iconUrl: 'images/grey_person_marker.png',
     shadowUrl: "images/marker-shadow.png",
 
     iconSize:     [25, 41],
@@ -120,32 +147,8 @@ const markerComplex = L.icon({
     popupAnchor:  [1, -34] 
 });
 
-// Define normal marker large
-const markerLarge = L.icon({
-    iconUrl: 'images/marker-icon.png',
-    shadowUrl: "images/marker-shadow.png",
-
-    iconSize:     [32, 53],
-    shadowSize:   [53, 53],
-    iconAnchor:   [15, 53],
-    shadowAnchor: [17, 53],
-    popupAnchor:  [1, -34] 
-});
-
-// Define camera icon large
-const cameraIconLarge = L.icon({
-    iconUrl: 'images/grey_camera_marker.png',
-    shadowUrl: "images/marker-shadow.png",
-
-    iconSize:     [32, 53],
-    shadowSize:   [53, 53],
-    iconAnchor:   [15, 53],
-    shadowAnchor: [17, 53],
-    popupAnchor:  [1, -34] 
-});
-
-// Define green marker large
-const markerGreenLarge = L.icon({
+// Define selected marker
+const selectedMarker = L.icon({
     iconUrl: 'images/marker-green.png',
     shadowUrl: "images/marker-shadow.png",
 
@@ -156,53 +159,32 @@ const markerGreenLarge = L.icon({
     popupAnchor:  [1, -34] 
 });
 
+// Define blue marker large
+const markerLarge = selectedMarker;
+
+// Define camera icon large
+const cameraIconLarge = selectedMarker;
+
+// Define microphone icon large
+const microphoneIconLarge = selectedMarker;
+
+// Define person icon large
+const personIconLarge = selectedMarker;
+
+// Define green marker large
+const markerGreenLarge = selectedMarker;
+
 // Define yellow marker large
-const markerYellowLarge = L.icon({
-    iconUrl: 'images/marker-yellow.png',
-    shadowUrl: "images/marker-shadow.png",
+const markerYellowLarge = selectedMarker;
 
-    iconSize:     [32, 53],
-    shadowSize:   [53, 53],
-    iconAnchor:   [15, 53],
-    shadowAnchor: [17, 53],
-    popupAnchor:  [1, -34] 
-});
-
-// Define yellow marker large
-const markerOrangeLarge = L.icon({
-    iconUrl: 'images/marker-orange.png',
-    shadowUrl: "images/marker-shadow.png",
-
-    iconSize:     [32, 53],
-    shadowSize:   [53, 53],
-    iconAnchor:   [15, 53],
-    shadowAnchor: [17, 53],
-    popupAnchor:  [1, -34] 
-});
+// Define orange marker large
+const markerOrangeLarge = selectedMarker;
 
 // Define red marker large
-const markerRedLarge = L.icon({
-    iconUrl: 'images/marker-red.png',
-    shadowUrl: "images/marker-shadow.png",
+const markerRedLarge = selectedMarker;
 
-    iconSize:     [32, 53],
-    shadowSize:   [53, 53],
-    iconAnchor:   [15, 53],
-    shadowAnchor: [17, 53],
-    popupAnchor:  [1, -34] 
-});
-
-// Define red marker large
-const markerComplexLarge = L.icon({
-    iconUrl: 'images/marker-complex.png',
-    shadowUrl: "images/marker-shadow.png",
-
-    iconSize:     [32, 53],
-    shadowSize:   [53, 53],
-    iconAnchor:   [15, 53],
-    shadowAnchor: [17, 53],
-    popupAnchor:  [1, -34] 
-});
+// Define complex marker large
+const markerComplexLarge = selectedMarker;
 
 // Add marker function
 function addMarker(json, iconimg) {
@@ -211,27 +193,38 @@ function addMarker(json, iconimg) {
 
     if (type === "Point" && iconimg != null) {
         let sensormarker = L.marker(coordinates, {icon: iconimg, properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap);
-        let rangemarker1 = L.semiCircle(coordinates, {radius: 10, fillColor: '#999', fillOpacity: 0.6, weight: 0, gradient: true}).setDirection(json.properties.direction, 80);
-        let rangemarker2 = L.semiCircle(coordinates, {radius: 15, fillColor: '#999', fillOpacity: 0.5, weight: 0, gradient: true}).setDirection(json.properties.direction, 80);
-        let rangemarker3 = L.semiCircle(coordinates, {radius: 20, fillColor: '#999', fillOpacity: 0.4, weight: 0, gradient: true}).setDirection(json.properties.direction, 80);
-        let rangemarker4 = L.semiCircle(coordinates, {radius: 25, fillColor: '#999', fillOpacity: 0.3, weight: 0, gradient: true}).setDirection(json.properties.direction, 80);
-        let rangemarker5 = L.semiCircle(coordinates, {radius: 30, fillColor: '#999', weight: 0, gradient: true}).setDirection(json.properties.direction, 80);
-
+        
         if (json.properties.sensorType === "Camera") {
             sensormarker.addTo(window.sensorCamera);
-            rangemarker1.addTo(window.sensorCameraRange);
-            rangemarker2.addTo(window.sensorCameraRange);
-            rangemarker3.addTo(window.sensorCameraRange);
-            rangemarker4.addTo(window.sensorCameraRange);
-            rangemarker5.addTo(window.sensorCameraRange);
+            L.semiCircle(coordinates, {radius: 10, fillColor: '#999', fillOpacity: 0.6, weight: 0, gradient: true}).setDirection(json.properties.direction, 90).addTo(window.sensorCameraRange);
+            L.semiCircle(coordinates, {radius: 15, fillColor: '#999', fillOpacity: 0.5, weight: 0, gradient: true}).setDirection(json.properties.direction, 90).addTo(window.sensorCameraRange);
+            L.semiCircle(coordinates, {radius: 20, fillColor: '#999', fillOpacity: 0.4, weight: 0, gradient: true}).setDirection(json.properties.direction, 90).addTo(window.sensorCameraRange);
+            L.semiCircle(coordinates, {radius: 25, fillColor: '#999', fillOpacity: 0.3, weight: 0, gradient: true}).setDirection(json.properties.direction, 90).addTo(window.sensorCameraRange);
+            L.semiCircle(coordinates, {radius: 30, fillColor: '#999', weight: 0, gradient: true}).setDirection(json.properties.direction, 90).addTo(window.sensorCameraRange);
         
         } else {
-            sensormarker.addTo(window.sensorPerson);
-            rangemarker1.addTo(window.sensorPersonRange);
-            rangemarker2.addTo(window.sensorPersonRange);
-            rangemarker3.addTo(window.sensorPersonRange);
-            rangemarker4.addTo(window.sensorPersonRange);
-            rangemarker5.addTo(window.sensorPersonRange);
+            let fullrange1 = L.circle(coordinates, {radius: 10, fillColor: '#999', fillOpacity: 0.6, weight: 0, gradient: true});
+            let fullrange2 = L.circle(coordinates, {radius: 15, fillColor: '#999', fillOpacity: 0.5, weight: 0, gradient: true});
+            let fullrange3 = L.circle(coordinates, {radius: 20, fillColor: '#999', fillOpacity: 0.4, weight: 0, gradient: true});
+            let fullrange4 = L.circle(coordinates, {radius: 25, fillColor: '#999', fillOpacity: 0.3, weight: 0, gradient: true});
+            let fullrange5 = L.circle(coordinates, {radius: 30, fillColor: '#999', weight: 0, gradient: true});
+
+            if (json.properties.sensorType === "Microphone") {
+                sensormarker.addTo(window.sensorMicrophone);
+                fullrange1.addTo(window.sensorMicrophoneRange);
+                fullrange2.addTo(window.sensorMicrophoneRange);
+                fullrange3.addTo(window.sensorMicrophoneRange);
+                fullrange4.addTo(window.sensorMicrophoneRange);
+                fullrange5.addTo(window.sensorMicrophoneRange);
+        
+            } else {
+                sensormarker.addTo(window.sensorPerson);
+                fullrange1.addTo(window.sensorPersonRange);
+                fullrange2.addTo(window.sensorPersonRange);
+                fullrange3.addTo(window.sensorPersonRange);
+                fullrange4.addTo(window.sensorPersonRange);
+                fullrange5.addTo(window.sensorPersonRange);
+            }
         }
     
     } else {
@@ -300,6 +293,9 @@ function addListItem(json, type, specificType) {
         if (specificType === "Camera") {
             sensorclist.appendChild(listitem);
             sclstbadge.innerHTML = (parseInt(sclstbadge.innerHTML) + 1).toString();
+        } else if (specificType === "Microphone") {
+            sensormlist.appendChild(listitem);
+            smlstbadge.innerHTML = (parseInt(smlstbadge.innerHTML) + 1).toString();
         } else {
             sensorplist.appendChild(listitem);
             splstbadge.innerHTML = (parseInt(splstbadge.innerHTML) + 1).toString();
