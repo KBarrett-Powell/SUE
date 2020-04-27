@@ -51,9 +51,9 @@ responses:
 
   utter_help:
   - text: "SUE, a Situational Understanding Explorer\n\
-      \ ***** \n Description\n\
+      \ ***** \n Description ***** \n\
       \ This chat bot is designed to help users of SUE to control the information displayed to them, to encourage better knowledge discovery and situational understanding.\n\
-      \ ***** \n Commands\n\
+      \ ***** \n Commands ***** \n\
       \ -help >>> Displays information about SUE along with a list of accepted commands\n\
       \ -add {Object Type} >>> Allows user to add an object type to the current map view\n\
       \ -remove {Object Type} >>> Allows user to remove an object type from the current map view\n\
