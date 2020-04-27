@@ -15,7 +15,6 @@ gnome-terminal -- python -m rasa run --m ./models --endpoints endpoints.yml --po
 # Running chatroom processing and server on port 8080
 deactivate &&
 cd ../chatroom &&
-gnome-terminal -- yarn watch
 gnome-terminal -- yarn serve
 
 # Running JSON server on port 8000
