@@ -5,7 +5,7 @@
 
 ## Installation
 ### Linux
-Open a termial in the SAMap folder and run  
+Clone this git repository and open a termial in the SAMap folder, run  
 $ bash linux-build.sh  
 *This may take a while*  
 
