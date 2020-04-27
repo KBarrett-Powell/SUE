@@ -11,7 +11,7 @@ $ bash linux-build.sh
 
 ## Running
 ### Linux
-In a terminal in the SAMap folder, run
+In a terminal in the SAMap folder, run  
 $ bash linux-run.sh  
 *These scripts have set ports (8000, 8080, 8081, and 8082)*  
 
