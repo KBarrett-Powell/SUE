@@ -1,12 +1,12 @@
 #!/bin/bash
 # Installing basic requirements
 sudo apt update &&
-sudo apt install python3-dev python3-pip python3-venv &&
-sudo apt install nodejs npm &&
+sudo apt install -y python3-dev python3-pip python3-venv &&
+sudo apt install -y nodejs npm &&
 sudo npm install -g n &&
 sudo n stable &&
 PATH="$PATH" &&
-sudo apt install docker.io &&
+sudo apt install -y docker.io &&
 
 # Installing node modules for Web server
 npm install &&
