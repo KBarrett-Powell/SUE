@@ -7,7 +7,7 @@
 ### Linux
 Clone this git repository and open a termial in the SAMap folder, run  
 $ bash linux-build.sh  
-*This may take a while*  
+*This may take a while. If the installation pauses and asks you to confirm storage space requirements, enter y and it will continue.*  
 
 ## Running
 ### Linux
