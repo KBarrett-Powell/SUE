@@ -26,7 +26,7 @@ app.use('/sensors', sensors);
 app.use('/events', events);
 app.use('/complex', complex);
 app.use('/video', video);
-app.use('/audio', video);
+app.use('/audio', audio);
 
 const server = http.createServer(app);
 const port = 8000;
