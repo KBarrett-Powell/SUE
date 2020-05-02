@@ -23,7 +23,7 @@ function activeTime() {
         for (let i in sensorlist) {
             let sensor = sensorlist[i];
 
-            if (skipSwitch.checked == true) {
+            if (skipSwitch.checked == false) {
                 clearInterval(refreshId);
             } else {
                 if (sensor.properties.sensorType === "Camera") {
@@ -41,7 +41,7 @@ function activeTime() {
 
     let refreshId = setInterval( function() { 
 
-        if (skipSwitch.checked == true) {
+        if (skipSwitch.checked == false) {
             clearInterval(refreshId);
         }
 
@@ -57,7 +57,7 @@ function activeTime() {
                 for ( let i in eventlist ) {
                     let event = eventlist[i];
 
-                    if (skipSwitch.checked == true) {
+                    if (skipSwitch.checked == false) {
                         clearInterval(refreshId);
                     } else {
                         addMarker(event, null);
@@ -85,7 +85,7 @@ function activeTime() {
                     for ( let i in refinedList ) {
                         let complex = refinedList[i];
 
-                        if (skipSwitch.checked == true) {
+                        if (skipSwitch.checked == false) {
                             clearInterval(refreshId);
                         } else {
                             processComplexEvent(complex);
