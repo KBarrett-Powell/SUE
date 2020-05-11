@@ -56,7 +56,7 @@
                 "name": "CCTV On Queen Street",
                 "type" : "Sensor",
                 "sensorType": "Camera",
-                "video": "RoadAccident.mp4",
+                "video": "RoadAccidents.mp4",
                 "direction": 120
             },
             "geometry": {
