@@ -1,5 +1,5 @@
 window.leafletmap = L.map('map', {
-    center: [51.483313, -3.1743],
+    center: [58.1473697, 7.9930261],
     minZoom: 15,
     zoom: 17,
     zoomControl: false

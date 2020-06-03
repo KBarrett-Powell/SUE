@@ -12,16 +12,16 @@ intents:
   - remove_camera_sensor_ranges
   - add_microphone_sensor_ranges
   - remove_microphone_sensor_ranges
-  - add_person_sensor_ranges
-  - remove_person_sensor_ranges
+  - add_human_sensor_ranges
+  - remove_human_sensor_ranges
   - add_sensor_ranges
   - remove_sensor_ranges
   - add_camera_sensors
   - remove_camera_sensors
   - add_microphone_sensors
   - remove_microphone_sensors
-  - add_person_sensors
-  - remove_person_sensors
+  - add_human_sensors
+  - remove_human_sensors
   - add_sensors
   - remove_sensors
   - add_person_events
@@ -64,8 +64,8 @@ responses:
       \ ---- Camera Sensor Ranges\n\
       \ -- Microphone Sensors\n\
       \ ---- Microphone Sensor Ranges\n\
-      \ -- Person Sensors\n\
-      \ ---- Person Sensor Ranges\n\
+      \ -- Human Sensors\n\
+      \ ---- Human Sensor Ranges\n\
       \ -- Sensor Ranges\n\
       \ - Events\n\
       \ -- Planned Events\n\
@@ -100,10 +100,10 @@ actions:
   - action_remove_microphone_sensors
   - action_add_microphone_sensor_ranges
   - action_remove_microphone_sensor_ranges
-  - action_add_person_sensors
-  - action_remove_person_sensors
-  - action_add_person_sensor_ranges
-  - action_remove_person_sensor_ranges
+  - action_add_human_sensors
+  - action_remove_human_sensors
+  - action_add_human_sensor_ranges
+  - action_remove_human_sensor_ranges
   - action_add_sensor_ranges
   - action_remove_sensor_ranges
   - action_add_events

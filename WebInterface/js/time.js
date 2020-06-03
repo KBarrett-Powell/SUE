@@ -12,7 +12,7 @@ function activeTime() {
     clearMap();
 
     window.datetime = new Date("2020-03-04T16:10:10Z");
-    window.cendtime = new Date("2020-03-04T16:10:45Z");
+    window.cendtime = new Date("2020-03-04T16:11:05Z");
 
     const skipSwitch = document.getElementById("skipSwitch");
 
@@ -28,8 +28,8 @@ function activeTime() {
             } else {
                 if (sensor.properties.sensorType === "Camera") {
                     addMarker(sensor, cameraIcon);
-                } else if (sensor.properties.sensorType === "Camera") {
-                    addMarker(sensor, personIcon);
+                } else if (sensor.properties.sensorType === "Human") {
+                    addMarker(sensor, humanIcon);
                 } else {
                     addMarker(sensor, microphoneIcon);
                 }
@@ -102,7 +102,7 @@ function activeTime() {
 function skipTime() {
 
     window.complexTime = 600;
-    window.complexDist = 50;
+    window.complexDist = 90;
 
     clearMap();
      
@@ -115,8 +115,8 @@ function skipTime() {
 
             if (sensor.properties.sensorType === "Camera") {
                 addMarker(sensor, cameraIcon);
-            } else if (sensor.properties.sensorType === "Camera") {
-                addMarker(sensor, personIcon);
+            } else if (sensor.properties.sensorType === "Human") {
+                addMarker(sensor, humanIcon);
             } else {
                 addMarker(sensor, microphoneIcon);
             }
@@ -155,11 +155,11 @@ function skipTime() {
 
     window.sensorCamera.addTo(window.leafletmap);
     window.sensorMicrophone.addTo(window.leafletmap);
-    window.sensorPerson.addTo(window.leafletmap);
+    window.sensorHuman.addTo(window.leafletmap);
 
     window.sensorCameraRange.addTo(window.leafletmap);
     window.sensorMicrophoneRange.addTo(window.leafletmap);
-    window.sensorPersonRange.addTo(window.leafletmap);
+    window.sensorHumanRange.addTo(window.leafletmap);
 
     window.eventPerson.addTo(window.leafletmap);
     window.eventVehicle.addTo(window.leafletmap);

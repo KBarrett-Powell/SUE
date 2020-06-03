@@ -80,25 +80,25 @@
   - utter_changed
 
 
-## add person sensors
-* add_person_sensors
-  - action_add_person_sensors
+## add human sensors
+* add_human_sensors
+  - action_add_human_sensors
   - utter_changed
 
-## remove person sensors
-* remove_person_sensors
-  - action_remove_person_sensors
+## remove human sensors
+* remove_human_sensors
+  - action_remove_human_sensors
   - utter_changed
 
 
-## add person sensor ranges
-* add_person_sensor_ranges
-  - action_add_person_sensor_ranges
+## add human sensor ranges
+* add_human_sensor_ranges
+  - action_add_human_sensor_ranges
   - utter_changed
 
-## remove person sensor ranges
-* remove_person_sensor_ranges
-  - action_remove_person_sensor_ranges
+## remove human sensor ranges
+* remove_human_sensor_ranges
+  - action_remove_human_sensor_ranges
   - utter_changed
 
 

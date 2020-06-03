@@ -33,67 +33,58 @@ const videoLink = "http://localhost:8000/video/";
 const audioLink = "http://localhost:8000/audio/";
 
 function toggleDetailsFromMap(e){
+
     let info = JSON.parse(this.options.properties);
-    let layer = e.target;
+    let mapMarker = e.target;
 
-    if (window.prvClickedMarker != null && window.prvClickedMarker != layer) {
-        if (window.prvClickedMarker.options.properties.search("Complex") != -1) {
-            window.prvClickedMarker.setIcon(markerComplex);
+    // if (window.prvClickedMarker != null && window.prvClickedMarker != mapMarker) {
+    //     console.log("refresh prev marker");
+    //     window.prvClickedMarker.setIcon(toggleMarkerIcon(window.prvClickedMarker));
+    // }
 
-        } else if (window.prvClickedMarker.options.properties.search("Event") != -1) {
-            if (window.prvClickedMarker.options.properties.search("\"color\":\"yellow\"")!= -1) {
-                window.prvClickedMarker.setIcon(markerYellow);
-            } else if (window.prvClickedMarker.options.properties.search("\"color\":\"orange\"")!= -1) {
-                window.prvClickedMarker.setIcon(markerOrange);
-            } else if (window.prvClickedMarker.options.properties.search("\"color\":\"red\"")!= -1) {
-                window.prvClickedMarker.setIcon(markerRed);
-            } else {
-                window.prvClickedMarker.setIcon(markerNormal);
-            }
-            
-        } else {
-            if (window.prvClickedMarker.options.properties.search("\"sensorType\":\"Camera\"")!= -1) {
-                window.prvClickedMarker.setIcon(cameraIcon);
-            } else if (window.prvClickedMarker.options.properties.search("\"sensorType\":\"Person\"")!= -1) {
-                window.prvClickedMarker.setIcon(personIcon);
-            } else {
-                window.prvClickedMarker.setIcon(microphoneIcon);
-            }
-        }
-    }
+    // console.log("refresh marker");
+    // mapMarker.setIcon(toggleMarkerIcon(mapMarker));
 
-    if (layer.options.properties.search("Complex") != -1) {
-        layer.setIcon(layer.options.icon == markerComplex ? markerComplexLarge : markerComplex);
-
-    } else if (layer.options.properties.search("Event") != -1) {
-        if (layer.options.properties.search("\"color\":\"yellow\"")!= -1) {
-            layer.setIcon(layer.options.icon == markerYellow ? markerYellowLarge : markerYellow);
-        } else if (layer.options.properties.search("\"color\":\"orange\"")!= -1) {
-            layer.setIcon(layer.options.icon == markerOrange ? markerOrangeLarge : markerOrange);
-        } else if (layer.options.properties.search("\"color\":\"red\"")!= -1) {
-            layer.setIcon(layer.options.icon == markerRed ? markerRedLarge : markerRed);
-        } else {
-            layer.setIcon(layer.options.icon == markerNormal ? markerLarge : markerNormal);
-        }
-
-    } else {
-        if (layer.options.properties.search("\"sensorType\":\"Camera\"")!= -1) {
-            layer.setIcon(layer.options.icon == cameraIcon ? cameraIconLarge : cameraIcon);
-        } else if (layer.options.properties.search("\"sensorType\":\"Person\"")!= -1) {
-            layer.setIcon(layer.options.icon == personIcon ? personIconLarge : personIcon);
-        } else {
-            layer.setIcon(layer.options.icon == microphoneIcon ? microphoneIconLarge : microphoneIcon);
-        }
-    }
-    
-    window.prvClickedMarker = layer;
-
-    if (layer.options.icon.options.iconSize[0] === 25) {
+    if (mapMarker.isPopupOpen() === true) {
         toggleDetails(info, e.latlng.toString().slice(7, -1));
         showListPanel();
+        window.prvClickedMarker = null;
+
     } else {
         showDetailsPanel();
         toggleDetails(info, e.latlng.toString().slice(7, -1));
+        window.prvClickedMarker = mapMarker;
+    }
+}
+
+function toggleMarkerIcon(marker) {
+    if (marker.options.properties.search("Complex") != -1) {
+        return (marker.options.icon == complexIcon ? complexSelectIcon : complexIcon);
+
+    } else if (marker.options.properties.search("Event") != -1) {
+        if (marker.options.properties.search("\"color\":\"yellow\"")!= -1) {
+            return (marker.options.icon == yellowIcon ? yellowSelectIcon : yellowIcon);
+
+        } else if (marker.options.properties.search("\"color\":\"orange\"")!= -1) {
+            return (marker.options.icon == orangeIcon ? orangeSelectIcon : orangeIcon);
+
+        } else if (marker.options.properties.search("\"color\":\"red\"")!= -1) {
+            return (marker.options.icon == redIcon ? redSelectIcon : redIcon);
+
+        } else {
+            return (marker.options.icon == blueIcon ? blueSelectIcon : blueIcon);
+        }
+        
+    } else {
+        if (marker.options.properties.search("\"sensorType\":\"Camera\"")!= -1) {
+            return (marker.options.icon == cameraIcon ? cameraSelectIcon : cameraIcon);
+
+        } else if (marker.options.properties.search("\"sensorType\":\"Human\"")!= -1) {
+            return (marker.options.icon == humanIcon ? humanSelectIcon : humanIcon);
+
+        } else {
+            return (marker.options.icon == microphoneIcon ? microphoneSelectIcon : microphoneIcon);
+        }
     }
 }
 

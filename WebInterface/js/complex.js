@@ -33,7 +33,8 @@ async function processComplexEvent(complex) {
         }
 
         L.polyline(coordinates, {color: "#ee133b", properties: JSON.stringify(complex.properties)}).addTo(window.complexEvent);
-        L.marker(markerCoordinates, {icon: markerComplex, properties: JSON.stringify(complex.properties)}).on('click', toggleDetailsFromMap).addTo(window.complexEvent);
+        complexevent = L.marker(markerCoordinates, {icon: complexIcon, properties: JSON.stringify(complex.properties)}).on('click', toggleDetailsFromMap).addTo(window.complexEvent);
+        complexevent.bindPopup(complex.properties.name)
     }
 }
 

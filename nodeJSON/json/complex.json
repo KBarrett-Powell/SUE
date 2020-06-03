@@ -10,11 +10,11 @@
                 ],
                 "name": "Complex Event 1",
                 "times": [
-                    "2020-03-04T16:10:20Z",
-                    "2020-03-04T16:10:25Z"
+                    "2020-03-04T16:10:25Z",
+                    "2020-03-04T16:10:35Z"
                 ],
-                "block": "<div class='tcontainer left'><div class='content'><h2>2020-03-04T16:10:20Z</h2><p>Abuse On Windsor Lane</p><p>Person - Abuse</p><p>[51.4836435, -3.1729213]</p></div></div><div class='tcontainer right'><div class='content'><h2>2020-03-04T16:10:25Z</h2><p>Fighting On Dumfries Place</p><p>Person - Fighting</p><p>[51.4837725, -3.1717944]</p></div></div>",
-                "datetime": "2020-03-04T16:10:30Z",
+                "block": "<div class='tcontainer left'><div class='content'><h2>2020-03-04T16:10:25Z</h2><p>Abuse In Kristiansand Cathedral</p><p>Person - Abuse</p><p>[58.1461350, 7.9946980]</p></div></div><div class='tcontainer right'><div class='content'><h2>2020-03-04T16:10:35Z</h2><p>Fighting In NAV Kristiansand</p><p>Person - Fighting</p><p>[58.1475583, 7.9956013]</p></div></div>",
+                "datetime": "2020-03-04T16:10:40Z",
                 "skip": 5
             }
         },
@@ -30,12 +30,12 @@
                 ],
                 "name": "Complex Event 2",
                 "times": [
-                    "2020-03-04T16:10:20Z",
                     "2020-03-04T16:10:25Z",
-                    "2020-03-04T16:10:30Z"
+                    "2020-03-04T16:10:35Z",
+                    "2020-03-04T16:10:50Z"
                 ],
-                "block": "<div class='tcontainer left'><div class='content'><h2>2020-03-04T16:10:20Z</h2><p>Abuse On Windsor Lane</p><p>Person - Abuse</p><p>[51.4836435, -3.1729213]</p></div></div><div class='tcontainer right'><div class='content'><h2>2020-03-04T16:10:25Z</h2><p>Fighting On Dumfries Place</p><p>Person - Fighting</p><p>[51.4837725, -3.1717944]</p></div></div><div class='tcontainer left'><div class='content'><h2>2020-03-04T16:10:35Z</h2><p>Road Accident On Queen Street</p><p>Vehicle - Road Accident</p><p>[51.4830199, -3.1716695]</p></div></div>",
-                "datetime": "2020-03-04T16:10:40Z",
+                "block": "<div class='tcontainer left'><div class='content'><h2>2020-03-04T16:10:25Z</h2><p>Abuse In Kristiansand Cathedral</p><p>Person - Abuse</p><p>[58.1461350, 7.9946980]</p></div></div><div class='tcontainer right'><div class='content'><h2>2020-03-04T16:10:35Z</h2><p>Fighting In NAV Kristiansand</p><p>Person - Fighting</p><p>[58.1475583, 7.9956013]</p></div></div><div class='tcontainer left'><div class='content'><h2>2020-03-04T16:10:50Z</h2><p>Road Accident On Holbergs Gate</p><p>Vehicle - Road Accident</p><p>[58.1485750, 7.9973845]</p></div></div>",
+                "datetime": "2020-03-04T16:10:55Z",
                 "skip": 5
             }
         }

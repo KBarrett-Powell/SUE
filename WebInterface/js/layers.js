@@ -24,10 +24,10 @@ function alterLayers(dict) {
 function removeAllLayers() {
     window.leafletmap.removeLayer(window.sensorCamera);
     window.leafletmap.removeLayer(window.sensorMicrophone);
-    window.leafletmap.removeLayer(window.sensorPerson);
+    window.leafletmap.removeLayer(window.sensorHuman);
     window.leafletmap.removeLayer(window.sensorCameraRange);
     window.leafletmap.removeLayer(window.sensorMicrophoneRange);
-    window.leafletmap.removeLayer(window.sensorPersonRange);
+    window.leafletmap.removeLayer(window.sensorHumanRange);
 
     window.leafletmap.removeLayer(window.eventPerson);
     window.leafletmap.removeLayer(window.eventVehicle);
@@ -53,11 +53,11 @@ function clearMap() {
 
     window.sensorCamera.clearLayers();
     window.sensorMicrophone.clearLayers();
-    window.sensorPerson.clearLayers();
+    window.sensorHuman.clearLayers();
 
     window.sensorCameraRange.clearLayers();
     window.sensorMicrophoneRange.clearLayers();
-    window.sensorPersonRange.clearLayers();
+    window.sensorHumanRange.clearLayers();
 
     window.eventPerson.clearLayers();
     window.eventVehicle.clearLayers();

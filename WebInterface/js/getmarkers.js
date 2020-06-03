@@ -29,10 +29,10 @@ const calstbadge = document.getElementById("calst-badge");
 
 window.sensorCamera = L.layerGroup();
 window.sensorMicrophone = L.layerGroup();
-window.sensorPerson = L.layerGroup();
+window.sensorHuman = L.layerGroup();
 window.sensorCameraRange = L.layerGroup();
 window.sensorMicrophoneRange = L.layerGroup();
-window.sensorPersonRange = L.layerGroup();
+window.sensorHumanRange = L.layerGroup();
 
 window.eventPerson = L.layerGroup();
 window.eventVehicle = L.layerGroup();
@@ -48,143 +48,115 @@ window.id = "";
 
 window.prvClickedMarker = null;
 
-// Define blue marker
-const markerNormal = L.icon({
-    iconUrl: 'images/marker-icon.png',
-    shadowUrl: "images/marker-shadow.png",
-
-    iconSize:     [25, 41],
-    shadowSize:   [41, 41],
-    iconAnchor:   [12, 41],
-    popupAnchor:  [1, -34] 
-});
-
 // Define camera icon
 const cameraIcon = L.icon({
-    iconUrl: 'images/grey_camera_marker.png',
+    iconUrl: 'images/camera pin.svg',
     shadowUrl: "images/marker-shadow.png",
 
-    iconSize:     [25, 41],
-    shadowSize:   [41, 41],
-    iconAnchor:   [12, 40],
-    popupAnchor:  [1, -34] 
+    iconSize:     [28, 49],
+    shadowSize:   [49, 49],
+    iconAnchor:   [14, 48],
+    popupAnchor:  [0, -42] 
 });
 
 // Define microphone icon
 const microphoneIcon = L.icon({
-    iconUrl: 'images/grey_microphone_marker.png',
+    iconUrl: 'images/microphone pin.svg',
     shadowUrl: "images/marker-shadow.png",
 
-    iconSize:     [25, 41],
-    shadowSize:   [41, 41],
-    iconAnchor:   [12, 40],
-    popupAnchor:  [1, -34] 
+    iconSize:     [28, 49],
+    shadowSize:   [49, 49],
+    iconAnchor:   [14, 48],
+    popupAnchor:  [0, -42] 
 });
 
-// Define person icon
-const personIcon = L.icon({
-    iconUrl: 'images/grey_person_marker.png',
+// Define human icon
+const humanIcon = L.icon({
+    iconUrl: 'images/human pin.svg',
     shadowUrl: "images/marker-shadow.png",
 
-    iconSize:     [25, 41],
-    shadowSize:   [41, 41],
-    iconAnchor:   [12, 40],
-    popupAnchor:  [1, -34] 
+    iconSize:     [28, 49],
+    shadowSize:   [49, 49],
+    iconAnchor:   [14, 48],
+    popupAnchor:  [0, -42] 
+});
+
+// Define blue marker
+const blueIcon = L.icon({
+    iconUrl: 'images/blue pin.svg',
+    shadowUrl: "images/marker-shadow.png",
+
+    iconSize:     [28, 49],
+    shadowSize:   [49, 49],
+    iconAnchor:   [14, 48],
+    popupAnchor:  [0, -42] 
 });
 
 // Define green marker
-const markerGreen = L.icon({
+const greenIcon = L.icon({
     iconUrl: 'images/marker-green.png',
     shadowUrl: "images/marker-shadow.png",
 
-    iconSize:     [25, 41],
-    shadowSize:   [41, 41],
-    iconAnchor:   [12, 41],
-    popupAnchor:  [1, -34] 
+    iconSize:     [28, 49],
+    shadowSize:   [49, 49],
+    iconAnchor:   [14, 48],
+    popupAnchor:  [0, -42] 
 });
 
 // Define yellow marker
-const markerYellow = L.icon({
-    iconUrl: 'images/marker-yellow.png',
+const yellowIcon = L.icon({
+    iconUrl: 'images/yellow pin.svg',
     shadowUrl: "images/marker-shadow.png",
 
-    iconSize:     [25, 41],
-    shadowSize:   [41, 41],
-    iconAnchor:   [12, 41],
-    popupAnchor:  [1, -34] 
+    iconSize:     [28, 49],
+    shadowSize:   [49, 49],
+    iconAnchor:   [14, 48],
+    popupAnchor:  [0, -42] 
 });
 
-// Define yellow marker
-const markerOrange = L.icon({
-    iconUrl: 'images/marker-orange.png',
+// Define orange marker
+const orangeIcon = L.icon({
+    iconUrl: 'images/orange pin.svg',
     shadowUrl: "images/marker-shadow.png",
 
-    iconSize:     [25, 41],
-    shadowSize:   [41, 41],
-    iconAnchor:   [12, 41],
-    popupAnchor:  [1, -34] 
-});
-
-// Define red marker
-const markerRed = L.icon({
-    iconUrl: 'images/marker-red.png',
-    shadowUrl: "images/marker-shadow.png",
-
-    iconSize:     [25, 41],
-    shadowSize:   [41, 41],
-    iconAnchor:   [12, 41],
-    popupAnchor:  [1, -34] 
+    iconSize:     [28, 49],
+    shadowSize:   [49, 49],
+    iconAnchor:   [14, 48],
+    popupAnchor:  [0, -42] 
 });
 
 // Define red marker
-const markerComplex = L.icon({
-    iconUrl: 'images/marker-complex.png',
+const redIcon = L.icon({
+    iconUrl: 'images/red pin.svg',
     shadowUrl: "images/marker-shadow.png",
 
-    iconSize:     [25, 41],
-    shadowSize:   [41, 41],
-    iconAnchor:   [12, 41],
-    popupAnchor:  [1, -34] 
+    iconSize:     [28, 49],
+    shadowSize:   [49, 49],
+    iconAnchor:   [14, 48],
+    popupAnchor:  [0, -42] 
 });
 
-// Define selected marker
-const selectedMarker = L.icon({
-    iconUrl: 'images/marker-green.png',
+// Define complex marker
+const complexIcon = L.icon({
+    iconUrl: 'images/complex pin.svg',
     shadowUrl: "images/marker-shadow.png",
 
-    iconSize:     [32, 53],
-    shadowSize:   [53, 53],
-    iconAnchor:   [15, 53],
-    shadowAnchor: [17, 53],
-    popupAnchor:  [1, -34] 
+    iconSize:     [28, 49],
+    shadowSize:   [49, 49],
+    iconAnchor:   [14, 48],
+    popupAnchor:  [0, -42] 
 });
 
-// Define blue marker large
-const markerLarge = selectedMarker;
+// Define selected camera icon
+const cameraSelectIcon = L.icon({
+    iconUrl: 'images/camera select pin.svg',
+    shadowUrl: "images/marker-shadow.png",
 
-// Define camera icon large
-const cameraIconLarge = selectedMarker;
-
-// Define microphone icon large
-const microphoneIconLarge = selectedMarker;
-
-// Define person icon large
-const personIconLarge = selectedMarker;
-
-// Define green marker large
-const markerGreenLarge = selectedMarker;
-
-// Define yellow marker large
-const markerYellowLarge = selectedMarker;
-
-// Define orange marker large
-const markerOrangeLarge = selectedMarker;
-
-// Define red marker large
-const markerRedLarge = selectedMarker;
-
-// Define complex marker large
-const markerComplexLarge = selectedMarker;
+    iconSize:     [31, 52],
+    shadowSize:   [52, 52],
+    iconAnchor:   [15, 50],
+    popupAnchor:  [0, -45] 
+});
 
 // Add marker function
 function addMarker(json, iconimg) {
@@ -193,7 +165,8 @@ function addMarker(json, iconimg) {
 
     if (type === "Point" && iconimg != null) {
         let sensormarker = L.marker(coordinates, {icon: iconimg, properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap);
-        
+        sensormarker.bindPopup(json.properties.name);
+
         if (json.properties.sensorType === "Camera") {
             sensormarker.addTo(window.sensorCamera);
             L.semiCircle(coordinates, {radius: 10, fillColor: '#999', fillOpacity: 0.6, weight: 0, gradient: true}).setDirection(json.properties.direction, 90).addTo(window.sensorCameraRange);
@@ -218,49 +191,63 @@ function addMarker(json, iconimg) {
                 fullrange5.addTo(window.sensorMicrophoneRange);
         
             } else {
-                sensormarker.addTo(window.sensorPerson);
-                fullrange1.addTo(window.sensorPersonRange);
-                fullrange2.addTo(window.sensorPersonRange);
-                fullrange3.addTo(window.sensorPersonRange);
-                fullrange4.addTo(window.sensorPersonRange);
-                fullrange5.addTo(window.sensorPersonRange);
+                sensormarker.addTo(window.sensorHuman);
+                fullrange1.addTo(window.sensorHumanRange);
+                fullrange2.addTo(window.sensorHumanRange);
+                fullrange3.addTo(window.sensorHumanRange);
+                fullrange4.addTo(window.sensorHumanRange);
+                fullrange5.addTo(window.sensorHumanRange);
             }
         }
     
     } else {
         let radius = window.complexDist;
 
-        let eventmarker = "";
-        let rangemarker = "";
+        let iconChoice = null;
+        let colourChoice = "";
 
         if (json.properties.color === null) {
-
-            eventmarker = L.marker(coordinates, {icon: markerNormal, properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap);
-            rangemarker = L.circle(coordinates, {radius: radius, fillOpacity: 0.4, weight: 1, gradient: true});
+            iconChoice = blueIcon;
+            colourChoice = "#3388ff";
 
         } else if (json.properties.color === "yellow") {
-            eventmarker = L.marker(coordinates, {icon: markerYellow, properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap);
-            rangemarker = L.circle(coordinates, {radius: radius, fillColor: "#ffff4d", color: "#ffff4d", fillOpacity: 0.4, weight: 1, gradient: true});
+            iconChoice = yellowIcon;
+            colourChoice = "#ffff4d";
         
         } else if (json.properties.color === "orange") {
-            eventmarker = L.marker(coordinates, {icon: markerOrange, properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap);
-            rangemarker = L.circle(coordinates, {radius: radius, fillColor: "#ff6600", color: "#ff6600", fillOpacity: 0.4, weight: 1, gradient: true});
+            iconChoice = orangeIcon;
+            colourChoice = "#ff6600";
         
         } else if (json.properties.color === "red") {
-            eventmarker = L.marker(coordinates, {icon: markerRed, properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap);
-            rangemarker = L.circle(coordinates, {radius: radius, fillColor: "#ff0000", color: "#ff0000", fillOpacity: 0.4, weight: 1, gradient: true});
-
+            iconChoice = redIcon;
+            colourChoice = "#ff0000";
         }
+
+        let eventmarker = L.marker(coordinates, {icon: iconChoice, properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap);
+        let range1 = L.circle(coordinates, {radius: radius, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.3, weight: 0.3, gradient: true});
+        // let range1 = L.circle(coordinates, {radius: radius/3, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.1, weight: 0.3, gradient: true});
+        // let range2 = L.circle(coordinates, {radius: (radius*2)/3, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.1, weight: 0.5, gradient: true});
+        // let range3 = L.circle(coordinates, {radius: radius, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.1, weight: 0.7, gradient: true});
+
+        eventmarker.bindPopup(json.properties.name)
         
         if (json.properties.eventType === "Person") {
             eventmarker.addTo(window.eventPerson);
-            rangemarker.addTo(window.personEventRange);
+            range1.addTo(window.personEventRange);
+            //range2.addTo(window.personEventRange);
+            //range3.addTo(window.personEventRange);
+
         } else if (json.properties.eventType === "Vehicle") {
             eventmarker.addTo(window.eventVehicle);
-            rangemarker.addTo(window.vehicleEventRange);
+            range1.addTo(window.vehicleEventRange);
+            //range2.addTo(window.vehicleEventRange);
+            //range3.addTo(window.vehicleEventRange);
+
         } else {
             eventmarker.addTo(window.eventPlanned);
-            rangemarker.addTo(window.plannedEventRange);
+            range1.addTo(window.plannedEventRange);
+            //range2.addTo(window.plannedEventRange);
+            //range3.addTo(window.plannedEventRange);
         }
     }
 }

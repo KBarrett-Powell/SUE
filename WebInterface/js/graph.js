@@ -1,22 +1,24 @@
 function plotChartPoints(){
-    let duration = (mainAudio.style.display === "none" ? videoPlayer.duration : audioPlayer.duration);
-    let interval = (mainAudio.style.display === "none" ? 270 : 1000);
-    let chartChoice = (analysisCarousel.style.display === "none" ? false : true);
+    if (analysisCarousel.style.display != "none" || analysisChart.style.display != "none") {
+        let duration = (mainAudio.style.display === "none" ? videoPlayer.duration : audioPlayer.duration);
+        let interval = (mainAudio.style.display === "none" ? 270 : 1000);
+        let chartChoice = (analysisCarousel.style.display === "none" ? false : true);
 
-    let refreshInterval = setInterval( function() { 
+        let refreshInterval = setInterval( function() { 
 
-        refreshChart(chartChoice);
+            refreshChart(chartChoice);
 
-        if ((chartChoice && analysisCarousel.style.display === "none") || (!chartChoice && analysisChart.style.display === "none")) {
-            clearInterval(refreshInterval);
-            clearTimeout(refreshTimeout);
-        }
+            if ((chartChoice && analysisCarousel.style.display === "none") || (!chartChoice && analysisChart.style.display === "none")) {
+                clearInterval(refreshInterval);
+                clearTimeout(refreshTimeout);
+            }
 
-    }, interval);
-            
-    let refreshTimeout = setTimeout( function() { 
-        clearInterval(refreshInterval); 
-    }, duration * 1000);
+        }, interval);
+                
+        let refreshTimeout = setTimeout( function() { 
+            clearInterval(refreshInterval); 
+        }, duration * 1000);
+    }
 };
 
 function refreshChart(isCarousel) {

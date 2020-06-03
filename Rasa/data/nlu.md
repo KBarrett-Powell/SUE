@@ -244,69 +244,69 @@
 - cut microphone sensor ranges
 - cut microphone sensor ranges layer
 
-## intent:add_person_sensors
-- add person sensors
-- add person sensors layer
-- plus person sensors
-- plus person sensors layer
-- show person sensors
-- show person sensors layer
-- show me person sensors
-- show me person sensors layer
-- let me see person sensors
-- let me see person sensors layer
-- display person sensors
-- display person sensors layer
-- bring back person sensors
-- bring back person sensors layer
+## intent:add_human_sensors
+- add human sensors
+- add human sensors layer
+- plus human sensors
+- plus human sensors layer
+- show human sensors
+- show human sensors layer
+- show me human sensors
+- show me human sensors layer
+- let me see human sensors
+- let me see human sensors layer
+- display human sensors
+- display human sensors layer
+- bring back human sensors
+- bring back human sensors layer
 
-## intent:remove_person_sensors
-- remove person sensors
-- remove person sensors layer
-- leave person sensors
-- leave person sensors layer
-- hide person sensors
-- hide person sensors layer
-- take away person sensors
-- take away person sensors layer
-- get rid of person sensors
-- get rid of person sensors layer
-- conceal person sensors
-- conceal person sensors layer
-- cut person sensors
-- cut person sensors layer
+## intent:remove_human_sensors
+- remove human sensors
+- remove human sensors layer
+- leave human sensors
+- leave human sensors layer
+- hide human sensors
+- hide human sensors layer
+- take away human sensors
+- take away human sensors layer
+- get rid of human sensors
+- get rid of human sensors layer
+- conceal human sensors
+- conceal human sensors layer
+- cut human sensors
+- cut human sensors layer
 
-## intent:add_person_sensor_ranges
-- add person sensor ranges
-- add person sensor ranges layer
-- plus person sensor ranges
-- plus person sensor ranges layer
-- show person sensor ranges
-- show person sensor ranges layer
-- show me person sensor ranges
-- show me person sensor ranges layer
-- let me see person sensor ranges
-- let me see person sensor ranges layer
-- display person sensor ranges
-- display person sensor ranges layer
-- bring back person sensor ranges
-- bring back person sensor ranges layer
+## intent:add_human_sensor_ranges
+- add human sensor ranges
+- add human sensor ranges layer
+- plus human sensor ranges
+- plus human sensor ranges layer
+- show human sensor ranges
+- show human sensor ranges layer
+- show me human sensor ranges
+- show me human sensor ranges layer
+- let me see human sensor ranges
+- let me see human sensor ranges layer
+- display human sensor ranges
+- display human sensor ranges layer
+- bring back human sensor ranges
+- bring back human sensor ranges layer
 
-## intent:remove_person_sensor_ranges
-- remove person sensor ranges
-- remove person sensor ranges layer
-- leave person sensor ranges
-- leave person sensor ranges layer
-- hide person sensor ranges
-- hide person sensor ranges layer
-- take away person sensor ranges
-- take away person sensor ranges layer
-- get rid of person sensor ranges
-- get rid of person sensor ranges layer
-- conceal person sensor ranges
-- conceal person sensor ranges layer
-- cut person sensor ranges
-- cut person sensor ranges layer
+## intent:remove_human_sensor_ranges
+- remove human sensor ranges
+- remove human sensor ranges layer
+- leave human sensor ranges
+- leave human sensor ranges layer
+- hide human sensor ranges
+- hide human sensor ranges layer
+- take away human sensor ranges
+- take away human sensor ranges layer
+- get rid of human sensor ranges
+- get rid of human sensor ranges layer
+- conceal human sensor ranges
+- conceal human sensor ranges layer
+- cut human sensor ranges
+- cut human sensor ranges layer
 
 ## intent:add_events
 - add events

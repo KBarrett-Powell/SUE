@@ -12,14 +12,14 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 
-def defineDict(setCamera, setMicrophone, setPerson, setCameraR, setMicrophoneR, setPersonR, setEPerson, setEVehicle, setEPlanned, setEPersonRange, setEVehicleRange, setEPlannedRange, setComplex):
+def defineDict(setCamera, setMicrophone, setHuman, setCameraR, setMicrophoneR, setHumanR, setEPerson, setEVehicle, setEPlanned, setEPersonRange, setEVehicleRange, setEPlannedRange, setComplex):
     jsdict = {
         "sensorCamera": setCamera,
         "sensorMicrophone": setMicrophone,
-        "sensorPerson": setPerson,
+        "sensorHuman": setHuman,
         "sensorCameraRange": setCameraR,
         "sensorMicrophoneRange": setMicrophoneR,
-        "sensorPersonRange": setPersonR,
+        "sensorHumanRange": setHumanR,
         "eventPerson": setEPerson,
         "eventVehicle": setEVehicle,
         "eventPlanned": setEPlanned,
@@ -250,11 +250,11 @@ class ActionRemoveMicrophoneSensorRanges(Action):
 
         return [SlotSet("layers", layerlst)]
 
-# **** PERSON SENSORS ****
-class ActionAddPersonSensors(Action):
+# **** HUMAN SENSORS ****
+class ActionAddHumanSensors(Action):
     
     def name(self) -> Text:
-        return "action_add_person_sensors"
+        return "action_add_human_sensors"
 
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
@@ -272,10 +272,10 @@ class ActionAddPersonSensors(Action):
 
         return [SlotSet("layers", layerlst)]
 
-class ActionRemovePersonSensors(Action):
+class ActionRemoveHumanSensors(Action):
     
     def name(self) -> Text:
-        return "action_remove_person_sensors"
+        return "action_remove_human_sensors"
 
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
@@ -293,11 +293,11 @@ class ActionRemovePersonSensors(Action):
 
         return [SlotSet("layers", layerlst)]
 
-# **** PERSON SENSOR RANGES ****
-class ActionAddPersonSensorRanges(Action):
+# **** HUMAN SENSOR RANGES ****
+class ActionAddHumanSensorRanges(Action):
     
     def name(self) -> Text:
-        return "action_add_person_sensor_ranges"
+        return "action_add_human_sensor_ranges"
 
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
@@ -314,10 +314,10 @@ class ActionAddPersonSensorRanges(Action):
 
         return [SlotSet("layers", layerlst)]
 
-class ActionRemovePersonSensorRanges(Action):
+class ActionRemoveHumanSensorRanges(Action):
     
     def name(self) -> Text:
-        return "action_remove_person_sensor_ranges"
+        return "action_remove_human_sensor_ranges"
 
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
