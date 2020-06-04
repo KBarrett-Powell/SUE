@@ -2,18 +2,12 @@
     "connections": [
         {   
             "properties": {
-                "id": "Complex1",
-                "type": "Complex",
+                "complexID": "Complex1",
+                "complexName": "Complex Event 1",
                 "events": [
                     "Event2",
                     "Event3"
                 ],
-                "name": "Complex Event 1",
-                "times": [
-                    "2020-03-04T16:10:25Z",
-                    "2020-03-04T16:10:35Z"
-                ],
-                "block": "<div class='tcontainer left'><div class='content'><h2>2020-03-04T16:10:25Z</h2><p>Abuse In Kristiansand Cathedral</p><p>Person - Abuse</p><p>[58.1461350, 7.9946980]</p></div></div><div class='tcontainer right'><div class='content'><h2>2020-03-04T16:10:35Z</h2><p>Fighting In NAV Kristiansand</p><p>Person - Fighting</p><p>[58.1475583, 7.9956013]</p></div></div>",
                 "datetime": "2020-03-04T16:10:40Z",
                 "skip": 5
             }
@@ -21,20 +15,13 @@
 
         {
             "properties": {
-                "id": "Complex2",
-                "type": "Complex",
+                "complexID": "Complex2",
+                "complexName": "Complex Event 2",
                 "events": [
                     "Event2",
                     "Event3",
                     "Event4"
                 ],
-                "name": "Complex Event 2",
-                "times": [
-                    "2020-03-04T16:10:25Z",
-                    "2020-03-04T16:10:35Z",
-                    "2020-03-04T16:10:50Z"
-                ],
-                "block": "<div class='tcontainer left'><div class='content'><h2>2020-03-04T16:10:25Z</h2><p>Abuse In Kristiansand Cathedral</p><p>Person - Abuse</p><p>[58.1461350, 7.9946980]</p></div></div><div class='tcontainer right'><div class='content'><h2>2020-03-04T16:10:35Z</h2><p>Fighting In NAV Kristiansand</p><p>Person - Fighting</p><p>[58.1475583, 7.9956013]</p></div></div><div class='tcontainer left'><div class='content'><h2>2020-03-04T16:10:50Z</h2><p>Road Accident On Holbergs Gate</p><p>Vehicle - Road Accident</p><p>[58.1485750, 7.9973845]</p></div></div>",
                 "datetime": "2020-03-04T16:10:55Z",
                 "skip": 5
             }

@@ -34,7 +34,7 @@ function activeTime() {
                     addMarker(sensor, microphoneIcon);
                 }
 
-                addListItem(sensor, "sensor", sensor.properties.sensorType);
+                addListItem(sensor, "Sensor", sensor.properties.sensorType);
             }
         } 
     });
@@ -62,7 +62,7 @@ function activeTime() {
                     } else {
                         addMarker(event, null);
             
-                        addListItem(event, "event", event.properties.eventType);
+                        addListItem(event, "Event", event.properties.eventType);
                     }
                 } 
             }
@@ -71,12 +71,15 @@ function activeTime() {
         if (window.datetime <= window.cendtime) {
             getComplexEvents(function (data) {
 
-                if ( JSON.stringify(data) != JSON.stringify(window.complexlst) ) {
+                console.log(JSON.stringify(data));
+                console.log(JSON.stringify(window.complexlst));
+
+                if ( !compareList(data, window.complexlst) ) {
 
                     window.complexlst = data;
                     let complexlist = window.complexlst;
 
-                    if ( complexlist.length > 1 ) {
+                    if ( complexlist.length > 0 ) {
                         refreshComplex();
                     }
 
@@ -88,9 +91,10 @@ function activeTime() {
                         if (skipSwitch.checked == false) {
                             clearInterval(refreshId);
                         } else {
+
                             processComplexEvent(complex);
 
-                            addListItem(complex, "complex", null);
+                            addListItem(complex, "Complex", null);
                         }
                     } 
                 }
@@ -121,7 +125,7 @@ function skipTime() {
                 addMarker(sensor, microphoneIcon);
             }
 
-            addListItem(sensor, "sensor", sensor.properties.sensorType);
+            addListItem(sensor, "Sensor", sensor.properties.sensorType);
         } 
     });
 
@@ -134,7 +138,7 @@ function skipTime() {
         
             addMarker(event, null);
         
-            addListItem(event, "event", event.properties.eventType);
+            addListItem(event, "Event", event.properties.eventType);
         } 
     });
 
@@ -149,7 +153,7 @@ function skipTime() {
 
             processComplexEvent(complex);
 
-            addListItem(complex, "complex", null);
+            addListItem(complex, "Complex", null);
         } 
     });
 

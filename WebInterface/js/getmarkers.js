@@ -165,15 +165,15 @@ function addMarker(json, iconimg) {
 
     if (type === "Point" && iconimg != null) {
         let sensormarker = L.marker(coordinates, {icon: iconimg, properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap);
-        sensormarker.bindPopup(json.properties.name);
+        sensormarker.bindPopup(json.properties.sensorName);
 
         if (json.properties.sensorType === "Camera") {
             sensormarker.addTo(window.sensorCamera);
-            L.semiCircle(coordinates, {radius: 10, fillColor: '#999', fillOpacity: 0.6, weight: 0, gradient: true}).setDirection(json.properties.direction, 90).addTo(window.sensorCameraRange);
-            L.semiCircle(coordinates, {radius: 15, fillColor: '#999', fillOpacity: 0.5, weight: 0, gradient: true}).setDirection(json.properties.direction, 90).addTo(window.sensorCameraRange);
-            L.semiCircle(coordinates, {radius: 20, fillColor: '#999', fillOpacity: 0.4, weight: 0, gradient: true}).setDirection(json.properties.direction, 90).addTo(window.sensorCameraRange);
-            L.semiCircle(coordinates, {radius: 25, fillColor: '#999', fillOpacity: 0.3, weight: 0, gradient: true}).setDirection(json.properties.direction, 90).addTo(window.sensorCameraRange);
-            L.semiCircle(coordinates, {radius: 30, fillColor: '#999', weight: 0, gradient: true}).setDirection(json.properties.direction, 90).addTo(window.sensorCameraRange);
+            L.semiCircle(coordinates, {radius: 10, fillColor: '#999', fillOpacity: 0.6, weight: 0, gradient: true}).setDirection(json.properties.rangeDirection, 90).addTo(window.sensorCameraRange);
+            L.semiCircle(coordinates, {radius: 15, fillColor: '#999', fillOpacity: 0.5, weight: 0, gradient: true}).setDirection(json.properties.rangeDirection, 90).addTo(window.sensorCameraRange);
+            L.semiCircle(coordinates, {radius: 20, fillColor: '#999', fillOpacity: 0.4, weight: 0, gradient: true}).setDirection(json.properties.rangeDirection, 90).addTo(window.sensorCameraRange);
+            L.semiCircle(coordinates, {radius: 25, fillColor: '#999', fillOpacity: 0.3, weight: 0, gradient: true}).setDirection(json.properties.rangeDirection, 90).addTo(window.sensorCameraRange);
+            L.semiCircle(coordinates, {radius: 30, fillColor: '#999', weight: 0, gradient: true}).setDirection(json.properties.rangeDirection, 90).addTo(window.sensorCameraRange);
         
         } else {
             let fullrange1 = L.circle(coordinates, {radius: 10, fillColor: '#999', fillOpacity: 0.6, weight: 0, gradient: true});
@@ -206,19 +206,19 @@ function addMarker(json, iconimg) {
         let iconChoice = null;
         let colourChoice = "";
 
-        if (json.properties.color === null) {
+        if (json.properties.priority == 4) {
             iconChoice = blueIcon;
             colourChoice = "#3388ff";
 
-        } else if (json.properties.color === "yellow") {
+        } else if (json.properties.priority == 3) {
             iconChoice = yellowIcon;
             colourChoice = "#ffff4d";
         
-        } else if (json.properties.color === "orange") {
+        } else if (json.properties.priority == 2) {
             iconChoice = orangeIcon;
             colourChoice = "#ff6600";
         
-        } else if (json.properties.color === "red") {
+        } else if (json.properties.priority == 1) {
             iconChoice = redIcon;
             colourChoice = "#ff0000";
         }
@@ -229,15 +229,15 @@ function addMarker(json, iconimg) {
         // let range2 = L.circle(coordinates, {radius: (radius*2)/3, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.1, weight: 0.5, gradient: true});
         // let range3 = L.circle(coordinates, {radius: radius, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.1, weight: 0.7, gradient: true});
 
-        eventmarker.bindPopup(json.properties.name)
+        eventmarker.bindPopup(json.properties.eventName)
         
-        if (json.properties.eventType === "Person") {
+        if (json.properties.eventType == "Person") {
             eventmarker.addTo(window.eventPerson);
             range1.addTo(window.personEventRange);
             //range2.addTo(window.personEventRange);
             //range3.addTo(window.personEventRange);
 
-        } else if (json.properties.eventType === "Vehicle") {
+        } else if (json.properties.eventType == "Vehicle") {
             eventmarker.addTo(window.eventVehicle);
             range1.addTo(window.vehicleEventRange);
             //range2.addTo(window.vehicleEventRange);
@@ -255,7 +255,8 @@ function addMarker(json, iconimg) {
 // Add marker function
 function addListItem(json, type, specificType) {
 
-    let name = json.properties.name;
+    let name = (type == "Event") ? json.eventName : ((type == "Sensor") ? json.sensorName : json.complexName);
+    
     let span = document.createElement('span');
     let button = document.createElement('button');
     button.onclick = function(){toggleDetailsFromPage(this)};
@@ -276,7 +277,7 @@ function addListItem(json, type, specificType) {
     button2.appendChild(span2);
     listitem2.appendChild(button2);
 
-    if (type === "sensor") {
+    if (type === "Sensor") {
         if (specificType === "Camera") {
             sensorclist.appendChild(listitem);
             sclstbadge.innerHTML = (parseInt(sclstbadge.innerHTML) + 1).toString();
@@ -292,7 +293,7 @@ function addListItem(json, type, specificType) {
         salstbadge.innerHTML = (parseInt(salstbadge.innerHTML) + 1).toString();
         slstbadge.innerHTML = (parseInt(slstbadge.innerHTML) + 1).toString();
 
-    } else if (type === "event") {
+    } else if (type === "Event") {
         if (specificType === "Person") {
             eventplist.appendChild(listitem);
             eplstbadge.innerHTML = (parseInt(eplstbadge.innerHTML) + 1).toString();
@@ -357,6 +358,14 @@ function getAllEventMarkers(callback) {
 function getAllComplexEvents(callback) {
     $.getJSON(complexurl, function(data) {
         callback(data.connections);
+    });
+}
+
+// Get sensors by id
+function getSensorMarkersByID(callback) {
+    const sensorsurlwithid = sensorsurl + "/" + window.id;
+    $.getJSON(sensorsurlwithid, function(data) {
+        callback(data);
     });
 }
 

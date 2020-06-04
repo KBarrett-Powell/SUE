@@ -54,16 +54,26 @@ router.get('/', function (req, res) {
 router.get('/:id', function (req, res) {
     fs.readFile( sensorsJsonFile, 'utf8', function (err, data) {
         data = JSON.parse( data );
+
+        let found = false;
+
+        for ( i in data.sensors ) {
+
+            let item  = data.sensors[i];
+    
+            if ( item.properties.sensorID == req.params.id) {
+                found = true;
+    
+                let sensor = item;
+    
+                res.status(200).json(sensor);
+                res.end( sensor );
+
+                break;
+            }
+        }
         
-        if ( req.params.id in data ) {
-
-            sensor = data[req.params.id];
-
-            console.log(sensor);
-            res.status(200).json(sensor);
-            res.end( JSON.stringify(sensor));
-
-        } else {
+        if ( found == false ) {
             res.sendStatus(404);
         }
     });

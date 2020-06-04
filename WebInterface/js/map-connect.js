@@ -7,7 +7,7 @@ window.leafletmap = L.map('map', {
 
 L.tileLayer('http://localhost:8081/tile/{z}/{x}/{y}.png', {
     maxZoom: 18,
-    id: 'map-cardiff',
+    id: 'map-kristiansand',
     attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
 }).addTo(window.leafletmap);
 

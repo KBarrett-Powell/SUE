@@ -59,7 +59,7 @@ router.get('/:id', function (req, res) {
 
             let item  = data.events[i];
     
-            if ( item.properties.id == req.params.id) {
+            if ( item.properties.eventID == req.params.id) {
                 found = true;
     
                 let event = item;
@@ -97,9 +97,8 @@ router.post('/', function (req, res) {
                 "coordinates": req.body.coordinates
             },
             "properties": {
-                "name": req.body.name,
-                "type" : "Event",
-                "time": req.body.time
+                "eventName": req.body.name,
+                "datetime": req.body.time
             }
         }
 

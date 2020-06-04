@@ -1,5 +1,6 @@
 async function processComplexEvent(complex) {
     let eventCoordinates = [];
+    let eventDetails = [];
     let y = 0;
     let x = 0;
 
@@ -13,11 +14,14 @@ async function processComplexEvent(complex) {
         });
 
         let coordstr = data.geometry.coordinates;
-
+       
         y += coordstr[0];
         x += coordstr[1];
 
+        let obj = {datetime: data.properties.datetime, name: data.properties.eventName, description: data.properties.eventType + " - " + data.properties.description, coordinates: "[" + coordstr[0] + ", " + coordstr[1] + "]"};
+
         eventCoordinates.push(coordstr);
+        eventDetails.push(obj);
     }
 
     if (complex.properties.events != null && complex.properties.events.length > 0) {
@@ -32,9 +36,12 @@ async function processComplexEvent(complex) {
             coordinates.push([eventCoordinates[i], markerCoordinates]);
         }
 
-        L.polyline(coordinates, {color: "#ee133b", properties: JSON.stringify(complex.properties)}).addTo(window.complexEvent);
-        complexevent = L.marker(markerCoordinates, {icon: complexIcon, properties: JSON.stringify(complex.properties)}).on('click', toggleDetailsFromMap).addTo(window.complexEvent);
-        complexevent.bindPopup(complex.properties.name)
+        let cmplxproperties = complex.properties;
+        cmplxproperties.eventDetails = eventDetails;
+
+        L.polyline(coordinates, {color: "#ee133b"}).addTo(window.complexEvent);
+        complexevent = L.marker(markerCoordinates, {icon: complexIcon, properties: JSON.stringify(cmplxproperties)}).on('click', toggleDetailsFromMap).addTo(window.complexEvent);
+        complexevent.bindPopup(complex.properties.complexName)
     }
 }
 
@@ -42,6 +49,7 @@ function listContains(prevlist, curlist) {
     let match = true;
 
     for ( let i in prevlist ) {
+
         if (!curlist.includes(prevlist[i])) {
             match = false;
         }
@@ -59,10 +67,12 @@ function refineList(list) {
 
         for ( let d in eventsDict ) {
             let val = eventsDict[d];
+
             if ( listContains(val, complex.properties.events) ) {
+
                 delete eventsDict[d];
                 for ( let j in refinedList ) {
-                    if ( refinedList[j].properties.id == d) {
+                    if ( refinedList[j].properties.complexID == d ) {
                         delete refinedList[j];
                         break;
                     }
@@ -71,10 +81,27 @@ function refineList(list) {
             }
         }
 
-        eventsDict[complex.properties.id] = complex.properties.events; 
+        eventsDict[complex.properties.complexID] = complex.properties.events;
         refinedList.push(complex);
     }
     return refinedList;
+}
+
+function compareList(current, previous) { 
+
+    let match = true;
+
+    if (current.length == previous.length) {
+        for (let i in previous) {
+            if ( !current[i].properties.complexID == previous[i].properties.complexID ) {
+                match = false;
+            }
+        }
+    } else {
+        match = false;
+    }
+
+    return match;
 }
 
 // function calculateComplex(events) {

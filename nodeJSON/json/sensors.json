@@ -3,12 +3,10 @@
         {
             "type": "Feature",
             "properties": {
-                "id": "Sensor1",
-                "name": "Microphone On Kristian IVs Gate",
-                "type" : "Sensor",
+                "sensorID": "Sensor1",
+                "sensorName": "Microphone On Kristian IVs Gate",
                 "sensorType": "Microphone",
-                "audio": "Shooting.wav",
-                "direction": 225
+                "audio": "Shooting.wav"
             },
             "geometry": {
                 "type": "Point",
@@ -19,12 +17,11 @@
         {
             "type": "Feature",
             "properties": {
-                "id": "Sensor2",
-                "name": "CCTV In Kristiansand Cathedral",
-                "type" : "Sensor",
+                "sensorID": "Sensor2",
+                "sensorName": "CCTV In Kristiansand Cathedral",
                 "sensorType": "Camera",
                 "video": "Abuse.mp4",
-                "direction": 225
+                "rangeDirection": 225
             },
             "geometry": {
                 "type": "Point",
@@ -36,12 +33,11 @@
         {
             "type": "Feature",
             "properties": {
-                "id": "Sensor3",
-                "name": "CCTV In NAV Kristiansand",
-                "type" : "Sensor",
+                "sensorID": "Sensor3",
+                "sensorName": "CCTV In NAV Kristiansand",
                 "sensorType": "Camera",
                 "video": "Fighting.mp4",
-                "direction": 40
+                "rangeDirection": 40
             },
             "geometry": {
                 "type": "Point",
@@ -52,12 +48,11 @@
         {
             "type": "Feature",
             "properties": {
-                "id": "Sensor4",
-                "name": "CCTV On Holbergs Gate",
-                "type" : "Sensor",
+                "sensorID": "Sensor4",
+                "sensorName": "CCTV On Holbergs Gate",
                 "sensorType": "Camera",
                 "video": "RoadAccidents.mp4",
-                "direction": 270
+                "rangeDirection": 270
             },
             "geometry": {
                 "type": "Point",
@@ -68,12 +63,11 @@
         {
             "type": "Feature",
             "properties": {
-                "id": "Sensor5",
-                "name": "CCTV On Vestre Strandgate",
-                "type" : "Sensor",
+                "sensorID": "Sensor5",
+                "sensorName": "CCTV On Vestre Strandgate",
                 "sensorType": "Camera",
                 "video": "MilitaryParade.mp4",
-                "direction": 220
+                "rangeDirection": 220
             },
             "geometry": {
                 "type": "Point",
@@ -84,12 +78,11 @@
         {
             "type": "Feature",
             "properties": {
-                "id": "Sensor6",
-                "name": "CCTV On Fjellgata",
-                "type" : "Sensor",
+                "sensorID": "Sensor6",
+                "sensorName": "CCTV On Fjellgata",
                 "sensorType": "Camera",
                 "video": "MilitaryParade.mp4",
-                "direction": 180
+                "rangeDirection": 180
             },
             "geometry": {
                 "type": "Point",
@@ -101,12 +94,11 @@
         {
             "type": "Feature",
             "properties": {
-                "id": "Sensor7",
-                "name": "CCTV On Tordenskjolds Gate",
-                "type" : "Sensor",
+                "sensorID": "Sensor7",
+                "sensorName": "CCTV On Tordenskjolds Gate",
                 "sensorType": "Camera",
                 "video": "MilitaryParade.mp4",
-                "direction": 20
+                "rangeDirection": 20
             },
             "geometry": {
                 "type": "Point",
@@ -117,12 +109,11 @@
         {
             "type": "Feature",
             "properties": {
-                "id": "Sensor8",
-                "name": "CCTV On Festningsgata",
-                "type" : "Sensor",
+                "sensorID": "Sensor8",
+                "sensorName": "CCTV On Festningsgata",
                 "sensorType": "Camera",
                 "video": "MilitaryParade.mp4",
-                "direction": 90
+                "rangeDirection": 90
             },
             "geometry": {
                 "type": "Point",
@@ -133,12 +124,11 @@
         {
             "type": "Feature",
             "properties": {
-                "id": "Sensor9",
-                "name": "CCTV On Vestre Strandgate",
-                "type" : "Sensor",
+                "sensorID": "Sensor9",
+                "sensorName": "CCTV On Vestre Strandgate",
                 "sensorType": "Camera",
                 "video": "MilitaryParade.mp4",
-                "direction": 220
+                "rangeDirection": 220
             },
             "geometry": {
                 "type": "Point",
