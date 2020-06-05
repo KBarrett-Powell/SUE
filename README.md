@@ -8,12 +8,12 @@ Currently being used to display sensors and events around a city, with sensors b
 ### Chatbot
 The interface features a chatbot through which users can customise the map, removing objects they don't want to see, to reduce potential clutter and assist in their situational understanding development.  
 
-![](examples/Chatbot-example.png)
+![](examples/Chatbot-example.gif)
 
 ### Real-Time Mode
 The interface also has a feature to allow for a real-time demonstrations, with events appearing on the map as they are 'detected'. This feature assists in demonstrating how data would appear in a live version.
 
-![](examples/Realtime-example.png)
+![](examples/Realtime-example.gif)
 
 ## Recommendations
 It is recommended to run this interface on a:  
