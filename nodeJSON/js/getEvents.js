@@ -1,51 +1,53 @@
 const express = require('express');
 const router = express.Router();
 
-const fs = require('fs');
+const fs = require('fs').promises;
 const url = require('url');
 const path = require('path');
 
 const eventsJsonFile = path.join(__dirname, "../json/events.json");
 
 // GET all
-router.get('/', function (req, res) {
+router.get('/', async function (req, res) {
     var urlparams = url.parse(req.url, true);
     var date = new Date(urlparams.query.iso);
 
+    let data = await fs.readFile( eventsJsonFile, 'utf8', function(err, data){ 
+        return data; 
+    }); 
+    data = JSON.parse( data );
+
     if (date != null && urlparams.query.iso != null) {
-        fs.readFile( eventsJsonFile, 'utf8', function (err, data) {
+        
+        var enddata = "{\"events\": [";
 
-            var parseddata = JSON.parse(data);
-            var enddata = "{\"events\": [";
+        for (d in data.events) {
+            let event = data.events[d];
+            let eventdate = new Date(event.properties.datetime);
 
-            for (d in parseddata.events) {
-                let event = parseddata.events[d];
-                let eventdate = new Date(event.properties.datetime);
-
-                if ( eventdate <= date && Math.abs(date.getTime() - eventdate.getTime()) < 5000) {
-                    enddata += JSON.stringify(event) + ", ";
-                }
+            if ( eventdate <= date && Math.abs(date.getTime() - eventdate.getTime()) < 5000) {
+               enddata += JSON.stringify(event) + ", ";
             }
-            let endofstr = enddata.substring(enddata.length - 2, enddata.length);
+         }
 
-            if (endofstr == ", ") {
-                enddata = enddata.slice(0, -2);
-            }
-            enddata += "]}";
+         let endofstr = enddata.substring(enddata.length - 2, enddata.length);
 
-            data = JSON.parse(enddata);
+         if (endofstr == ", ") {
+             enddata = enddata.slice(0, -2);
+         }
+         enddata += "]}";
 
-            res.status(200).json(data);
-            res.end( data );
-        });
+         data = JSON.parse(enddata);
+
+         res.status(200).json(data);
+         res.end( data );
+
     } else {
-        fs.readFile( eventsJsonFile, 'utf8', function (err, data) {
-            data = JSON.parse( data );
-            
-            res.status(200).json(data);
-            res.end( data );
-        });
+         res.status(200).json(data);
+         res.end( data );
     }
+    // res.status(200).json(data);
+    // res.end( data );
 })
 
 // GET by id
@@ -79,35 +81,11 @@ router.get('/:id', function (req, res) {
 
 // POST
 router.post('/', function (req, res) {
-    fs.readFile( eventsJsonFile, 'utf8', function (err, data) {
-        data = JSON.parse( data );
 
-        let eventIds = data.map(item => item.id);
-        let newId = 0;
-        if (eventIds.length > 0) {
-            newId = "event" + toString(eventIds.length + 1); 
-        } else {
-            newId = "event1";
-        };
+    let newEvent, data = postEvent(req.body);
 
-        let newEvent = {
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": req.body.coordinates
-            },
-            "properties": {
-                "eventName": req.body.name,
-                "datetime": req.body.time
-            }
-        }
-
-        data[newId] = newEvent;
-
-        console.log( data );
-        res.status(201).json(newEvent);
-        res.end( JSON.stringify(data));
-    });
+    res.status(201).json(newEvent);
+    res.end( JSON.stringify(data));
 })
 
 // PUT
@@ -166,4 +144,159 @@ router.delete('/:id', function (req, res) {
     });
 })
 
-module.exports = router;
+module.exports = {
+    router,
+    getEvents: async function getEvents(request) {
+        let data = await fs.readFile( eventsJsonFile, {encoding: 'utf8'});
+        data = JSON.parse( data );
+    
+        if (request.size() < data.events.size()) {
+            
+            for ( let i in request ) {
+                let found = false;
+                let req = request[i];
+        
+                for ( let j in data.events ) {
+        
+                    let event  = data.events[j];
+            
+                    if ( event.properties.eventID == req.eventID ) {
+                        found = true;
+            
+                        return event;
+                    }
+                }
+
+                // if ( found == false ) {
+                //     return "404";
+                // }
+            }
+
+        } else {
+            return data;
+        }
+    }, 
+    postEvent: async function postEvent(request) {
+
+        let data = await fs.readFile( eventsJsonFile, {encoding: 'utf8'});
+        data = JSON.parse( data );
+
+        for (let req in request) {
+
+            let found = false;
+            let maxId = 0;
+            let Id = 0;
+
+            let newEvent = null;
+
+            let event = request[req];
+        
+            for ( i in data.events ) {
+                let item  = data.events[i];
+
+                maxId = parseInt(item.properties.eventID, 10);
+
+                if (event.eventID != null) {
+                    
+                    if ( item.properties.eventID == event.eventID ) {
+                        found = true;
+
+                        if (event.coordinates != null) {
+                            data.events[i].geometry.coordinates = event.coordinates;
+                        }
+                        if (event.eventName != null) {
+                            data.events[i].properties.eventName = event.eventName;
+                        }
+                        if (event.eventType != null) {
+                            data.events[i].properties.eventType = event.eventType;
+                        }
+                        if (event.description != null) {
+                            data.events[i].properties.description = event.description;
+                        }
+                        if (event.sensorID != null) {
+                            data.events[i].properties.sensorID = event.sensorID;
+                        }
+                        if (event.chartPoints != null) {
+                            data.events[i].properties.chartPoints = event.chartPoints;
+                        }
+                        if (event.objDetVideo != null) {
+                            data.events[i].properties.objDetVideo = event.objDetVideo;
+                        }
+                        if (event.saliencyVideo != null) {
+                            data.events[i].properties.saliencyVideo = event.saliencyVideo;
+                        }
+                        if (event.priority != null) {
+                            data.events[i].properties.priority = event.priority;
+                        }
+                        if (event.datetime != null) {
+                            data.events[i].properties.datetime = event.datetime;
+                        }
+
+                        break;
+                    }
+                }
+            }
+        
+            if (found == false) {
+                Id = "" + (maxId + 1); 
+
+                newEvent = {
+                    "type": "Feature",
+                    "properties": {
+                        "eventID": Id,
+                        "eventName": event.eventName,
+                        "eventType": event.eventType,
+                        "description": event.description,
+                        "sensorID": event.sensorID,
+                        "chartPoints": event.chartPoints,
+                        "objDetVideo": event.objDetVideo,
+                        "saliencyVideo": event.saliencyVideo,
+                        "priority": event.priority,
+                        "datetime": event.datetime
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": event.coordinates
+                    }
+                }
+
+                data.events.push(newEvent);
+            }
+        }
+
+        fs.writeFile( eventsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
+            if (err) throw err;
+        });
+    },
+    deleteEvent: async function deleteEvent(request) {
+        let data = await fs.readFile( eventsJsonFile, {encoding: 'utf8'});
+        data = JSON.parse( data );
+        
+        for (let i in request) {
+            
+            let req = request[i];
+            let found = false;
+
+            if (id != null) {
+            
+                for ( let j in data.events ) {
+            
+                    let event = data.events[j];
+                
+                    if ( event.properties.eventID == req.eventID) {
+                        found = true;
+                
+                        data.events.delete(event);
+                    }
+                }
+            }
+            // if ( found == false ) {
+            //     return "404";
+            // }
+        } 
+
+        fs.writeFile( eventsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
+            if (err) throw err;
+        });
+    }
+}

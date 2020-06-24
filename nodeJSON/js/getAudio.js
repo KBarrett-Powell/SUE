@@ -17,4 +17,17 @@ router.get('/:id', function (req, res) {
     fs.createReadStream(audiopath).pipe(res);
 })
 
-module.exports = router;
+module.exports = {
+    router,
+    getAudio: function getAudio(id) { 
+        const audiopath = path.join(__dirname, "../media/" + id);
+
+        const stat = fs.statSync(audiopath);
+        const fileSize = stat.size;
+        
+        res.setHeader('Content-Length', fileSize);
+        res.setHeader('Content-Type', 'audio/wav');
+
+        fs.createReadStream(audiopath).pipe(res);
+    }
+};

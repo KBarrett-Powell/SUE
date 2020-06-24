@@ -3,97 +3,89 @@
         {
             "type": "Feature",
             "properties": {
-                "id": "Sensor1",
-                "name": "Microphone On Queen Street",
-                "type" : "Sensor",
+                "sensorID": "1",
+                "sensorName": "Microphone On Kristian IVs Gate",
                 "sensorType": "Microphone",
-                "audio": "Shooting.wav",
-                "direction": 225
+                "audio": "Shooting.wav"
             },
             "geometry": {
                 "type": "Point",
-                "coordinates": [51.4818733, -3.1778613]
+                "coordinates": [58.1483891, 7.9921463]
             }
         },
 
         {
             "type": "Feature",
             "properties": {
-                "id": "Sensor2",
-                "name": "CCTV On Windsor Lane",
-                "type" : "Sensor",
+                "sensorID": "2",
+                "sensorName": "CCTV In Kristiansand Cathedral",
                 "sensorType": "Camera",
                 "video": "Abuse.mp4",
-                "direction": 225
+                "rangeDirection": 225
             },
             "geometry": {
                 "type": "Point",
-                "coordinates": [51.4838217, -3.1727425]
+                "coordinates": [58.1462350, 7.9948500]
             }
         },
-
 
         {
             "type": "Feature",
             "properties": {
-                "id": "Sensor3",
-                "name": "CCTV On Dumfries Place",
-                "type" : "Sensor",
+                "sensorID": "3",
+                "sensorName": "CCTV In NAV Kristiansand",
                 "sensorType": "Camera",
                 "video": "Fighting.mp4",
-                "direction": 270
+                "rangeDirection": 40
             },
             "geometry": {
                 "type": "Point",
-                "coordinates": [51.4837375, -3.1715727]
+                "coordinates": [58.1473814, 7.9950737]
             }
         },
 
         {
             "type": "Feature",
             "properties": {
-                "id": "Sensor4",
-                "name": "CCTV On Queen Street",
-                "type" : "Sensor",
+                "sensorID": "4",
+                "sensorName": "CCTV On Holbergs Gate",
                 "sensorType": "Camera",
-                "video": "RoadAccident.mp4",
-                "direction": 120
+                "video": "RoadAccidents.mp4",
+                "rangeDirection": 270
             },
             "geometry": {
                 "type": "Point",
-                "coordinates": [51.4830879, -3.1719102]
+                "coordinates": [58.1484550, 7.99798]
             }
         },
 
         {
             "type": "Feature",
             "properties": {
-                "id": "Sensor5",
-                "name": "CCTV On Gorsedd Gardens Road",
-                "type" : "Sensor",
+                "sensorID": "5",
+                "sensorName": "CCTV On Vestre Strandgate",
                 "sensorType": "Camera",
                 "video": "MilitaryParade.mp4",
-                "direction": 130
+                "rangeDirection": 220
             },
             "geometry": {
                 "type": "Point",
-                "coordinates": [51.4849704, -3.1781918]
+                "coordinates": [58.1461430, 7.9888040]
             }
         },
 
         {
             "type": "Feature",
             "properties": {
-                "id": "Sensor6",
-                "name": "CCTV On Queen Street",
-                "type" : "Sensor",
+                "sensorID": "6",
+                "sensorName": "CCTV On Fjellgata",
                 "sensorType": "Camera",
                 "video": "MilitaryParade.mp4",
-                "direction": 180
+                "rangeDirection": 180
             },
             "geometry": {
                 "type": "Point",
-                "coordinates": [51.482229, -3.175264]
+                "coordinates": [58.1483010, 7.9892622]
             }
         },
 
@@ -101,48 +93,45 @@
         {
             "type": "Feature",
             "properties": {
-                "id": "Sensor7",
-                "name": "CCTV On Queen Street",
-                "type" : "Sensor",
+                "sensorID": "7",
+                "sensorName": "CCTV On Tordenskjolds Gate",
                 "sensorType": "Camera",
                 "video": "MilitaryParade.mp4",
-                "direction": 90
+                "rangeDirection": 20
             },
             "geometry": {
                 "type": "Point",
-                "coordinates": [51.482808, -3.173368]
+                "coordinates": [58.1469808, 7.9879347]
             }
         },
 
         {
             "type": "Feature",
             "properties": {
-                "id": "Sensor8",
-                "name": "CCTV On Newport Road",
-                "type" : "Sensor",
+                "sensorID": "8",
+                "sensorName": "CCTV On Festningsgata",
                 "sensorType": "Camera",
                 "video": "MilitaryParade.mp4",
-                "direction": 180
+                "rangeDirection": 90
             },
             "geometry": {
                 "type": "Point",
-                "coordinates": [51.4832426, -3.1705786]
+                "coordinates": [58.1483275, 7.9944433]
             }
         },
 
         {
             "type": "Feature",
             "properties": {
-                "id": "Sensor9",
-                "name": "CCTV On Greyfrairs Road",
-                "type" : "Sensor",
+                "sensorID": "9",
+                "sensorName": "CCTV On Vestre Strandgate",
                 "sensorType": "Camera",
                 "video": "MilitaryParade.mp4",
-                "direction": 170
+                "rangeDirection": 220
             },
             "geometry": {
                 "type": "Point",
-                "coordinates": [51.4834319, -3.1765516]
+                "coordinates": [58.1459030, 7.9892440]
             }
         }
     ]

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>JSON Server WebSocket</title>
+    </head>
+    <body>
+    </body>
+    <script>
+        const ws = new WebSocket('ws://localhost:8000');
+
+        ws.onopen = function() { 
+            console.log('WebSocket Client Connected'); 
+            ws.send('Hi, this is the JSON server\'s web client.');
+        };
+
+        ws.onmessage = function(e) {
+            console.log("Received: '" + e.data + "'");
+        };
+    </script>
+</html>

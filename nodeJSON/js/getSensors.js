@@ -103,7 +103,7 @@ router.post('/', function (req, res) {
                 "type": "Sensor",
                 "sensorType": req.body.sensorType,
                 "time": req.body.time,
-                "linkedToEvent": req.body.eventLink
+                "linkedTosensor": req.body.sensorLink
             }
         }
 
@@ -132,11 +132,11 @@ router.put('/:id', function (req, res) {
                     "type": "Sensor",
                     "sensorType": req.body.sensorType,
                     "time": req.body.time,
-                    "linkedToEvent": req.body.eventLink
+                    "linkedTosensor": req.body.sensorLink
                 }
             }
 
-            data[req.params.id] = updatedEvent;
+            data[req.params.id] = updatedsensor;
 
             console.log( data );
             res.sendStatus(204);
@@ -173,4 +173,147 @@ router.delete('/:id', function (req, res) {
     });
 })
 
-module.exports = router;
+module.exports = {
+    router,
+    getSensors: async function getSensors(request) {
+        let data = await fs.readFile( sensorsJsonFile, {encoding: 'utf8'});
+        data = JSON.parse( data );
+    
+        if (request.size() < data.sensors.size()) {
+            
+            for ( let i in request ) {
+                let found = false;
+                let req = request[i];
+    
+                for ( let j in data.sensors ) {
+        
+                    let sensor  = data.sensors[j];
+            
+                    if ( sensor.properties.sensorID == req.sensorID ) {
+                        found = true;
+            
+                        return sensor;
+                    }
+                }
+            }
+
+            // if ( found == false ) {
+            //     return "404";
+            // }
+
+        } else {
+            return data;
+        }
+    }, 
+    postSensor: async function postSensor(request) {
+
+        let data = await fs.readFile( sensorsJsonFile, {encoding: 'utf8'});
+        data = JSON.parse( data );
+
+        for (let req in request) {
+
+            let found = false;
+            let maxId = 0;
+            let Id = 0;
+
+            let newSensor = null;
+
+            let sensor = request[req];
+        
+            for ( i in data.sensors ) {
+                let item  = data.sensors[i];
+
+                maxId = parseInt(item.properties.sensorID, 10);
+
+                if (sensor.sensorID != null) {
+                    
+                    if ( item.properties.sensorID == sensor.sensorID ) {
+                        found = true;
+
+                        if (sensor.coordinates != null) {
+                            data.sensors[i].geometry.coordinates = sensor.coordinates;
+                        }
+                        if (sensor.sensorName != null) {
+                            data.sensors[i].properties.sensorName = sensor.sensorName;
+                        }
+                        if (sensor.sensorType != null) {
+                            data.sensors[i].properties.sensorType = sensor.sensorType;
+                        }
+                        if (sensor.video != null) {
+                            data.sensors[i].properties.video = sensor.video;
+                        }
+                        if (sensor.audio != null) {
+                            data.sensors[i].properties.audio = sensor.audio;
+                        }
+                        if (sensor.rangeDirection != null) {
+                            data.sensors[i].properties.rangeDirection = sensor.rangeDirection;
+                        }
+                        if (sensor.owner != null) {
+                            data.sensors[i].properties.owner = sensor.owner;
+                        }
+
+                        break;
+                    }
+                }
+            }
+        
+            if (found == false) {
+                Id = "" + (maxId + 1); 
+
+                newSensor = {
+                    "type": "Feature",
+                    "properties": {
+                        "sensorID": Id,
+                        "sensorName": sensor.sensorName,
+                        "sensorType": sensor.sensorType,
+                        "video": sensor.video,
+                        "audio": sensor.audio,
+                        "rangeDirection": sensor.rangeDirection,
+                        "owner": sensor.owner
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": sensor.coordinates
+                    }
+                }
+
+                data.sensors.push(newSensor);
+            }
+        }
+
+        fs.writeFile( sensorsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
+            if (err) throw err;
+        });
+    },
+    deleteSensor: async function deleteSensor(request) {
+        let data = await fs.readFile( sensorsJsonFile, {encoding: 'utf8'});
+        data = JSON.parse( data );
+        
+        for (let i in request) {
+
+            let req = request[i];
+            let found = false;
+                        
+            if (id != null) {
+            
+                for ( let j in data.sensors ) {
+            
+                    let sensor = data.sensors[j];
+                
+                    if ( sensor.properties.sensorID == req.sensorID) {
+                        found = true;
+                
+                        data.sensors.delete(sensor);
+                    }
+                }
+            }
+            // if ( found == false ) {
+            //     return "404";
+            // }
+        } 
+
+        fs.writeFile( sensorsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
+            if (err) throw err;
+        });
+    }
+}

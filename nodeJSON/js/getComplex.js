@@ -8,46 +8,41 @@ const path = require('path');
 const complexJsonFile = path.join(__dirname, "../json/complex.json");
 
 // GET all
-router.get('/', function (req, res) {
+router.get('/', async function (req, res) {
     var urlparams = url.parse(req.url, true);
     var date = new Date(urlparams.query.iso);
 
+    let data = await fs.readFile( complexJsonFile, 'utf8', function(err, data){ 
+        return data; 
+    }); 
+    data = JSON.parse( data );
+
     if (date != null && urlparams.query.iso != null) {
-        fs.readFile( complexJsonFile, 'utf8', function (err, data) {
+        var enddata = "{\"connections\": [";
 
-            var parseddata = JSON.parse(data);
-            var enddata = "{\"connections\": [";
-
-            for (d in parseddata.connections) {
-                let complex = parseddata.connections[d];
-                let complexdate = new Date(complex.properties.datetime);
+        for (d in data.connections) {
+            let complex = data.connections[d];
+            let complexdate = new Date(complex.properties.datetime);
                 
-                if ( complexdate <= date ) {
-                    enddata += JSON.stringify(complex) + ", ";
-                }
+            if ( complexdate <= date ) {
+                enddata += JSON.stringify(complex) + ", ";
             }
+        }
 
-            let endofstr = enddata.substring(enddata.length - 2, enddata.length);
+        let endofstr = enddata.substring(enddata.length - 2, enddata.length);
 
-            if (endofstr == ", ") {
-                enddata = enddata.slice(0, -2);
-            }
+        if (endofstr == ", ") {
+            enddata = enddata.slice(0, -2);
+        }
             
-            enddata += "]}";
+        enddata += "]}";
 
-            data = JSON.parse(enddata);
+        data = JSON.parse(enddata);
 
-            res.status(200).json(data);
-            res.end( data );
-        });
-    } else {
-        fs.readFile( complexJsonFile, 'utf8', function (err, data) {
-            data = JSON.parse( data );
-            
-            res.status(200).json(data);
-            res.end( data );
-        });
     }
+
+    res.status(200).json(data);
+    res.end( data );
 })
 
 // GET by id
@@ -161,4 +156,129 @@ router.delete('/:id', function (req, res) {
     });
 })
 
-module.exports = router;
+module.exports = {
+    router,
+    getComplex: async function getComplex(request) {
+        let data = await fs.readFile( complexJsonFile, {encoding: 'utf8'});
+        data = JSON.parse( data );
+    
+        if (request.size() < data.connections.size()) {
+            
+            for ( let i in request ) {
+                let found = false;
+                let req = request[i];
+
+                for ( let j in data.connections ) {
+        
+                    let complex  = data.connections[j];
+            
+                    if ( complex.properties.complexID == req.complexID ) {
+                        found = true;
+            
+                        return complex;
+                    }
+                }
+
+                // if ( found == false ) {
+                //     return "404";
+                // }
+            }
+
+        } else {
+            return data;
+        }
+    }, 
+    postComplex: async function postComplex(request) {
+
+        let data = await fs.readFile( complexJsonFile, {encoding: 'utf8'});
+        data = JSON.parse( data );
+
+        for (let req in request) {
+
+            let found = false;
+            let maxId = 0;
+            let Id = 0;
+
+            let newComplex = null;
+
+            let complex = request[req];
+        
+            for ( i in data.connections ) {
+                let item  = data.connections[i];
+
+                maxId = parseInt(item.properties.complexID, 10);
+
+                if (complex.complexID != null) {
+                    
+                    if ( item.properties.complexID == complex.complexID ) {
+                        found = true;
+
+                        if (complex.complexName != null) {
+                            data.connections[i].properties.complexName = complex.complexName;
+                        }
+                        if (complex.events != null) {
+                            let a = data.connections[i].properties.events;
+                            let b = complex.events;
+                            data.connections[i].properties.events = a.concat(b.filter((item) => a.indexOf(item) < 0));
+                        }
+                        if (complex.datetime != null) {
+                            data.connections[i].properties.datetime = complex.datetime;
+                        }
+
+                        break;
+                    }
+                }
+            }
+        
+            if (found == false) {
+                Id = "" + (maxId + 1); 
+
+                newComplex = {
+                    "properties": {
+                        "complexID": Id,
+                        "complexName": complex.complexName,
+                        "events": complex.events,
+                        "datetime": complex.datetime
+                    }
+                }
+
+                data.connections.push(newComplex);
+            }
+        }
+
+        fs.writeFile( complexsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
+            if (err) throw err;
+        });
+    },
+    deleteComplex: async function deleteComplex(request) {
+        let data = await fs.readFile( complexJsonFile, {encoding: 'utf8'});
+        data = JSON.parse( data );
+        
+        for (let i in request) {
+            
+            let req = request[i];
+            let found = false;
+
+            if (id != null) {
+            
+                for ( let j in data.connections ) {
+            
+                    let complex = data.connections[j];
+                
+                    if ( complex.properties.complexID == req.complexID) {
+                        found = true;
+                
+                        data.connections.delete(complex);
+                    }
+                }
+            }
+            // if ( found == false ) {
+            //     return "404";
+            // }
+        } 
+
+        fs.writeFile( complexsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
+            if (err) throw err;
+        });
+    }
+}
