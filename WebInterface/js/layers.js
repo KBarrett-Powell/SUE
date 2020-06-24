@@ -69,38 +69,38 @@ function clearMap() {
 
     window.complexEvent.clearLayers();
 
-    slstbadge.innerHTML = "0";
-    salstbadge.innerHTML = "0";
-    smlstbadge.innerHTML = "0";
-    sclstbadge.innerHTML = "0";
-    splstbadge.innerHTML = "0";
+    // slstbadge.innerHTML = "0";
+    // salstbadge.innerHTML = "0";
+    // smlstbadge.innerHTML = "0";
+    // sclstbadge.innerHTML = "0";
+    // splstbadge.innerHTML = "0";
 
-    elstbadge.innerHTML = "0";
-    ealstbadge.innerHTML = "0";
-    eplstbadge.innerHTML = "0";
-    evlstbadge.innerHTML = "0";
-    ellstbadge.innerHTML = "0";
+    // elstbadge.innerHTML = "0";
+    // ealstbadge.innerHTML = "0";
+    // eplstbadge.innerHTML = "0";
+    // evlstbadge.innerHTML = "0";
+    // ellstbadge.innerHTML = "0";
 
-    clstbadge.innerHTML = "0";
-    calstbadge.innerHTML = "0";
+    // clstbadge.innerHTML = "0";
+    // calstbadge.innerHTML = "0";
 
-    sensoralist.innerHTML = "";
-    sensorclist.innerHTML = "";
-    sensorplist.innerHTML = "";
+    // sensoralist.innerHTML = "";
+    // sensorclist.innerHTML = "";
+    // sensorplist.innerHTML = "";
 
-    eventalist.innerHTML = "";
-    eventplist.innerHTML = "";
-    eventvlist.innerHTML = "";
-    eventllist.innerHTML = "";
+    // eventalist.innerHTML = "";
+    // eventplist.innerHTML = "";
+    // eventvlist.innerHTML = "";
+    // eventllist.innerHTML = "";
 
-    complexalist.innerHTML = "";
+    // complexalist.innerHTML = "";
 }
 
 function refreshComplex() {
     window.complexEvent.clearLayers();
 
-    clstbadge.innerHTML = "0";
-    calstbadge.innerHTML = "0";
+    // clstbadge.innerHTML = "0";
+    // calstbadge.innerHTML = "0";
 
-    complexalist.innerHTML = "";
+    //complexalist.innerHTML = "";
 }

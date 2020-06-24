@@ -1,67 +1,28 @@
 function togglePage(e) {
     const toggle = document.getElementById(e.id);
-    let panel = null;
+    //let panel = null;
 
-    if (e.id === "toggleList") {
-        panel = document.getElementById("listpanel");
-
-        if ( !document.getElementById("searchpanel").classList.contains("hidden") ) {
-            document.getElementById("searchpanel").classList.add("hidden")
-        }
-        if ( !document.getElementById("detailspanel").classList.contains("hidden") ) {
-            document.getElementById("detailspanel").classList.add("hidden")
-        }
-        if ( document.getElementById("toggleSearch").classList.contains("active") ) {
-            document.getElementById("toggleSearch").classList.remove("active")
-        }
-        if ( document.getElementById("toggleMarker").classList.contains("active") ) {
-            document.getElementById("toggleMarker").classList.remove("active")
-        }
+    if (e.id === "toggleAnalysis") {
+        showAnalysisPanel();
 
     } else if (e.id === "toggleMarker") {
-        panel = document.getElementById("detailspanel");
-
-        if ( !document.getElementById("listpanel").classList.contains("hidden") ) {
-            document.getElementById("listpanel").classList.add("hidden")
-        }
-        if ( !document.getElementById("searchpanel").classList.contains("hidden") ) {
-            document.getElementById("searchpanel").classList.add("hidden")
-        }
-        if ( document.getElementById("toggleList").classList.contains("active") ) {
-            document.getElementById("toggleList").classList.remove("active")
-        }
-        if ( document.getElementById("toggleSearch").classList.contains("active") ) {
-            document.getElementById("toggleSearch").classList.remove("active")
-        }
+        showDetailsPanel();
 
     } else {
-        panel = document.getElementById("searchpanel");
-
-        if ( !document.getElementById("listpanel").classList.contains("hidden") ) {
-            document.getElementById("listpanel").classList.add("hidden")
-        }
-        if ( !document.getElementById("detailspanel").classList.contains("hidden") ) {
-            document.getElementById("detailspanel").classList.add("hidden")
-        }
-        if ( document.getElementById("toggleList").classList.contains("active") ) {
-            document.getElementById("toggleList").classList.remove("active")
-        }
-        if ( document.getElementById("toggleMarker").classList.contains("active") ) {
-            document.getElementById("toggleMarker").classList.remove("active")
-        }
+        showSUEPanel();
 
     }
 
-    if (!panel.classList.contains("hidden")) {
-        panel.classList.add("hidden");
+    // if (!panel.classList.contains("hidden")) {
+    //     panel.classList.add("hidden");
 
-        toggle.classList.remove("active");
+    //     toggle.classList.remove("active");
 
-    } else {
-        panel.classList.remove("hidden");
+    // } else {
+    //     panel.classList.remove("hidden");
 
-        toggle.classList.add("active");
-    }
+    //     toggle.classList.add("active");
+    // }
 }
 
 function sortByTime() {

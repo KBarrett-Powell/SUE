@@ -18,7 +18,7 @@ async function processComplexEvent(complex) {
         y += coordstr[0];
         x += coordstr[1];
 
-        let obj = {datetime: data.properties.datetime, name: data.properties.eventName, description: data.properties.eventType + " - " + data.properties.description, coordinates: "[" + coordstr[0] + ", " + coordstr[1] + "]"};
+        let obj = {datetime: data.properties.datetime, name: data.properties.eventName, description: data.properties.eventType + " - " + data.properties.description, coordinates: "[" + coordstr[0] + ", " + coordstr[1] + "]", priority: data.properties.priority};
 
         eventCoordinates.push(coordstr);
         eventDetails.push(obj);

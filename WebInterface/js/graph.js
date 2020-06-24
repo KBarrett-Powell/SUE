@@ -230,3 +230,185 @@ function createChart(chartData, isCarousel) {
     if (isCarousel === true) { window.caroGraph = new Chart(ctx, config); }
     else { window.lineGraph = new Chart(ctx, config); }
 }
+
+function buildStaticCharts() {
+
+    const pctx = document.getElementById('priorityChart').getContext('2d');
+    const tctx = document.getElementById('timeChart').getContext('2d');
+
+    let priorityChart = new Chart(pctx, {
+        type: 'bar',
+        data: {
+            labels: ["4", "3", "2", "1"],
+            datasets: [{
+                label: 'Events by Priority',
+                data: [1, 2, 1, 1],
+                backgroundColor: [
+                    'rgba(0, 106, 255, 0.2)',
+                    'rgba(255, 255, 0, 0.2)',
+                    'rgba(255, 80, 0, 0.2)',
+                    'rgba(255, 0, 0, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(0, 106, 255, 1)',
+                    'rgba(255, 255, 0, 1)',
+                    'rgba(255, 80, 0, 1)',
+                    'rgba(255, 0, 0, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            title: {
+                display: true,
+                fontSize: 18,
+                fontFamily: "Georgia, serif",
+                fontStyle: 'normal',
+                text: 'Events Sorted By Priority'
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+					// scaleLabel: {
+					// 	display: true,
+					//     labelString: 'Priority'
+					// }
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        stepSize: 1
+                    }
+                }]
+            }
+        }
+    });
+
+    let timeChart = new Chart(tctx, {
+        type: 'line',
+		data: {
+            labels: [moment('2020-03-04T16:10:20Z').format('HH:mm:ss'), moment('2020-03-04T16:10:30Z').format('HH:mm:ss'), moment('2020-03-04T16:10:40Z').format('HH:mm:ss'), moment('2020-03-04T16:10:50Z').format('HH:mm:ss'), moment('2020-03-04T16:11:00Z').format('HH:mm:ss')],
+			datasets: [{
+				label: '# Of Events',
+				backgroundColor: 'rgba(255, 0, 0, 0.2)',
+				borderColor: 'rgba(255, 0, 0, 0.2)',
+				data: [{
+                    x: moment('2020-03-04T16:10:20Z').format('HH:mm:ss'),
+                    y: 1
+                },{
+                    x: moment('2020-03-04T16:10:25Z').format('HH:mm:ss'),
+                    y: 1
+                },{
+                    x: moment('2020-03-04T16:10:30Z').format('HH:mm:ss'),
+                    y: 0
+                },{
+                    x: moment('2020-03-04T16:10:35Z').format('HH:mm:ss'),
+                    y: 1
+                },{
+                    x: moment('2020-03-04T16:10:40Z').format('HH:mm:ss'),
+                    y: 0
+                },{
+                    x: moment('2020-03-04T16:10:45Z').format('HH:mm:ss'),
+                    y: 0
+                },{
+                    x: moment('2020-03-04T16:10:50Z').format('HH:mm:ss'),
+                    y: 1
+                },{
+                    x: moment('2020-03-04T16:10:55Z').format('HH:mm:ss'),
+                    y: 0
+                },{
+                    x: moment('2020-03-04T16:11:00Z').format('HH:mm:ss'),
+                    y: 1
+                }],
+				fill: false
+			}, {
+				label: '# Of Events Total',
+				backgroundColor: 'rgba(0, 106, 255, 0.2)',
+				borderColor: 'rgba(0, 106, 255, 0.2)',
+				data: [{
+                    x: moment('2020-03-04T16:10:20Z').format('HH:mm:ss'),
+                    y: 1
+                },{
+                    x: moment('2020-03-04T16:10:25Z').format('HH:mm:ss'),
+                    y: 2
+                },{
+                    x: moment('2020-03-04T16:10:30Z').format('HH:mm:ss'),
+                    y: 2
+                },{
+                    x: moment('2020-03-04T16:10:35Z').format('HH:mm:ss'),
+                    y: 3
+                },{
+                    x: moment('2020-03-04T16:10:40Z').format('HH:mm:ss'),
+                    y: 3
+                },{
+                    x: moment('2020-03-04T16:10:45Z').format('HH:mm:ss'),
+                    y: 3
+                },{
+                    x: moment('2020-03-04T16:10:50Z').format('HH:mm:ss'),
+                    y: 4
+                },{
+                    x: moment('2020-03-04T16:10:55Z').format('HH:mm:ss'),
+                    y: 4
+                },{
+                    x: moment('2020-03-04T16:11:00Z').format('HH:mm:ss'),
+                    y: 5
+                }],
+                fill: false
+			}]
+		},
+		options: {
+            responsive: true,
+			tooltips: {
+				mode: 'index',
+				intersect: false,
+			},
+			hover: {
+				mode: 'nearest',
+				intersect: true
+            },
+            title: {
+                display: true,
+                fontSize: 18,
+                fontFamily: "Georgia, serif",
+                fontStyle: 'normal',
+                text: 'Timeline of Events'
+            },
+            elements: {
+                line: {
+                    tension: 0.2
+                }
+            },
+			scales: {
+				xAxes: [{
+                    display: true,
+                    type: 'time',
+                    time: {
+                        unit: 'second',
+                        unitStepSize: 10,
+                        parser:'HH:mm:ss',
+                        displayFormats: {
+                            second: 'HH:mm:ss'
+                        }
+                    },
+                    distribution: 'linear',
+					scaleLabel: {
+						display: true,
+					    labelString: 'Time'
+                    }
+				}],
+				yAxes: [{
+					// display: true,
+					// scaleLabel: {
+					// 	display: true,
+					// 	labelString: '# of Events'
+                    // },
+                    beginAtZero: true,
+                    stepSize: 1
+				}]
+            }
+        }
+    });	
+}

@@ -1,3 +1,6 @@
+const videoLink = "http://localhost:8000/video/";
+const audioLink = "http://localhost:8000/audio/";
+
 const details = document.getElementById("detailspanel");
 const mainBar = document.getElementById("side-main");
 
@@ -29,10 +32,7 @@ const audioDesc = document.getElementById("audioDesc");
 const audioSource = document.getElementById("audioSource");
 const audioPlayer = document.getElementById("audioPlayer");
 
-const videoLink = "http://localhost:8000/video/";
-const audioLink = "http://localhost:8000/audio/";
-
-function toggleDetailsFromMap(e){
+async function toggleDetailsFromMap(e){
 
     let info = JSON.parse(this.options.properties);
     let mapMarker = e.target;
@@ -45,15 +45,15 @@ function toggleDetailsFromMap(e){
     // console.log("refresh marker");
     // mapMarker.setIcon(toggleMarkerIcon(mapMarker));
 
-    if (mapMarker.isPopupOpen() === true) {
-        toggleDetails(info, e.latlng.toString().slice(7, -1));
-        showListPanel();
-        window.prvClickedMarker = null;
+    if (mapMarker.isPopupOpen() == false) {
+        showDetailsPanel();
+        await toggleDetails(info, e.latlng.toString().slice(7, -1));
+        window.prvClickedMarker = mapMarker;
 
     } else {
-        showDetailsPanel();
-        toggleDetails(info, e.latlng.toString().slice(7, -1));
-        window.prvClickedMarker = mapMarker;
+        await toggleDetails(info, e.latlng.toString().slice(7, -1));
+        showSUEPanel();
+        window.prvClickedMarker = null;
     }
 }
 
@@ -88,9 +88,32 @@ function toggleMarkerIcon(marker) {
     }
 }
 
-function showListPanel() {
-    const panel = document.getElementById("listpanel");
-    const toggle = document.getElementById("toggleList");
+function showSUEPanel() {
+    const panel = document.getElementById("searchpanel");
+    const toggle = document.getElementById("toggleSearch");
+
+    if (panel.classList.contains("hidden")) {
+        if ( !document.getElementById("detailspanel").classList.contains("hidden") ) {
+            document.getElementById("detailspanel").classList.add("hidden")
+        }
+        if ( !document.getElementById("analysispanel").classList.contains("hidden") ) {
+            document.getElementById("analysispanel").classList.add("hidden")
+        }
+        if ( document.getElementById("toggleMarker").classList.contains("active") ) {
+            document.getElementById("toggleMarker").classList.remove("active")
+        }
+        if ( document.getElementById("toggleAnalysis").classList.contains("active") ) {
+            document.getElementById("toggleAnalysis").classList.remove("active")
+        }
+
+        panel.classList.remove("hidden");
+        toggle.classList.add("active");
+    }
+}
+
+function showAnalysisPanel() {
+    const panel = document.getElementById("analysispanel");
+    const toggle = document.getElementById("toggleAnalysis");
 
     if (panel.classList.contains("hidden")) {
         if ( !document.getElementById("detailspanel").classList.contains("hidden") ) {
@@ -116,14 +139,14 @@ function showDetailsPanel() {
     const toggle = document.getElementById("toggleMarker");
 
     if (panel.classList.contains("hidden")) {
-        if ( !document.getElementById("listpanel").classList.contains("hidden") ) {
-            document.getElementById("listpanel").classList.add("hidden")
+        if ( !document.getElementById("analysispanel").classList.contains("hidden") ) {
+            document.getElementById("analysispanel").classList.add("hidden")
         }
         if ( !document.getElementById("searchpanel").classList.contains("hidden") ) {
             document.getElementById("searchpanel").classList.add("hidden")
         }
-        if ( document.getElementById("toggleList").classList.contains("active") ) {
-            document.getElementById("toggleList").classList.remove("active")
+        if ( document.getElementById("toggleAnalysis").classList.contains("active") ) {
+            document.getElementById("toggleAnalysis").classList.remove("active")
         }
         if ( document.getElementById("toggleSearch").classList.contains("active") ) {
             document.getElementById("toggleSearch").classList.remove("active")
@@ -305,6 +328,7 @@ function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, salienc
 
             let div0 = document.createElement("div");
             div0.classList.add("tcontainer");
+            div0.classList.add((timelineInfo[item].priority == 4) ? "blue" : ((timelineInfo[item].priority == 3) ? "yellow" : ((timelineInfo[item].priority == 2) ? "orange" : "red")));
             div0.classList.add((i%2 == 0) ? "left" : "right");
 
             let div1 = document.createElement("div");

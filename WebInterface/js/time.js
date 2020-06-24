@@ -34,7 +34,7 @@ function activeTime() {
                     addMarker(sensor, microphoneIcon);
                 }
 
-                addListItem(sensor, "Sensor", sensor.properties.sensorType);
+                //addListItem(sensor, "Sensor", sensor.properties.sensorType);
             }
         } 
     });
@@ -62,7 +62,7 @@ function activeTime() {
                     } else {
                         addMarker(event, null);
             
-                        addListItem(event, "Event", event.properties.eventType);
+                        //addListItem(event, "Event", event.properties.eventType);
                     }
                 } 
             }
@@ -70,9 +70,6 @@ function activeTime() {
 
         if (window.datetime <= window.cendtime) {
             getComplexEvents(function (data) {
-
-                console.log(JSON.stringify(data));
-                console.log(JSON.stringify(window.complexlst));
 
                 if ( !compareList(data, window.complexlst) ) {
 
@@ -94,7 +91,7 @@ function activeTime() {
 
                             processComplexEvent(complex);
 
-                            addListItem(complex, "Complex", null);
+                            //addListItem(complex, "Complex", null);
                         }
                     } 
                 }
@@ -125,7 +122,7 @@ function skipTime() {
                 addMarker(sensor, microphoneIcon);
             }
 
-            addListItem(sensor, "Sensor", sensor.properties.sensorType);
+            //addListItem(sensor, "Sensor", sensor.properties.sensorType);
         } 
     });
 
@@ -138,7 +135,7 @@ function skipTime() {
         
             addMarker(event, null);
         
-            addListItem(event, "Event", event.properties.eventType);
+            //addListItem(event, "Event", event.properties.eventType);
         } 
     });
 
@@ -153,25 +150,27 @@ function skipTime() {
 
             processComplexEvent(complex);
 
-            addListItem(complex, "Complex", null);
+            //addListItem(complex, "Complex", null);
         } 
     });
 
-    window.sensorCamera.addTo(window.leafletmap);
-    window.sensorMicrophone.addTo(window.leafletmap);
-    window.sensorHuman.addTo(window.leafletmap);
+    buildStaticCharts();
+
+    window.personEventRange.addTo(window.leafletmap);
+    window.vehicleEventRange.addTo(window.leafletmap);
+    window.plannedEventRange.addTo(window.leafletmap);
 
     window.sensorCameraRange.addTo(window.leafletmap);
     window.sensorMicrophoneRange.addTo(window.leafletmap);
     window.sensorHumanRange.addTo(window.leafletmap);
 
+    window.sensorCamera.addTo(window.leafletmap);
+    window.sensorMicrophone.addTo(window.leafletmap);
+    window.sensorHuman.addTo(window.leafletmap);
+
     window.eventPerson.addTo(window.leafletmap);
     window.eventVehicle.addTo(window.leafletmap);
     window.eventPlanned.addTo(window.leafletmap);
-
-    window.personEventRange.addTo(window.leafletmap);
-    window.vehicleEventRange.addTo(window.leafletmap);
-    window.plannedEventRange.addTo(window.leafletmap);
 
     window.complexEvent.addTo(window.leafletmap);
 }

@@ -274,7 +274,7 @@ button.list-group-item {
     font-size: 15px;
 }
 
-div.hidden div.maplist {
+div.hidden div.mapanalysis {
     display: none;
 }
 /* ******* END List Overlay ******* */
@@ -354,6 +354,10 @@ div.overlay-page.hidden {
     border-radius: 1px;
     height: 80vh;
     overflow: hidden;
+}
+
+.sidebar-main.mapanalysis {
+    overflow: scroll;
 }
 
 .sidebar-header {
@@ -561,6 +565,22 @@ audio#audioPlayer {
     top: 16px;
     border-radius: 50%;
     z-index: 3;
+}
+
+.tcontainer.blue::after {
+    border: 4px solid #6aa5f7;
+}
+
+.tcontainer.yellow::after {
+    border: 4px solid #fdfd5f;
+}
+
+.tcontainer.orange::after {
+    border: 4px solid #ff8737;
+}
+
+.tcontainer.red::after {
+    border: 4px solid #f91c1c;
 }
   
 .timeline .left {

@@ -18,6 +18,7 @@
 
         <script type='text/javascript' src="/node_modules/jquery/dist/jquery.min.js"></script>
         <script type='text/javascript' src="/node_modules/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
+        <script type="text/javascript" src="/node_modules/moment/min/moment.min.js"></script>
         <script type='text/javascript' src="/node_modules/chart.js/dist/Chart.min.js"></script>
         <script type="text/javascript" src="/node_modules/leaflet/dist/leaflet.js"></script>
 
@@ -43,11 +44,11 @@
                     <div class="nav-buttons">
                         <div class="overlay-page-toggle" id="togglePages">
                             <div class="toggle-btn">
-                                <button class="btn btn-block btn-list page-btn active" id="toggleList" onclick="togglePage(this)">
-                                    <h4>List</h4>
-                                </button>
-                                <button class="btn btn-block btn-list page-btn" id="toggleSearch" onclick="togglePage(this)">
+                                <button class="btn btn-block btn-list page-btn active" id="toggleSearch" onclick="togglePage(this)">
                                     <h4>SUE</h4>
+                                </button>
+                                <button class="btn btn-block btn-list page-btn" id="toggleAnalysis" onclick="togglePage(this)">
+                                    <h4>Analysis</h4>
                                 </button>
                                 <button class="btn btn-block btn-list page-btn" id="toggleMarker" onclick="togglePage(this)">
                                     <h4>Marker</h4>
@@ -57,182 +58,27 @@
                     </div>
 
                     <div class="information">
-                        <div class="overlay-page" id="listpanel">
-
-                            <div class="sidebar-header">
-                                <span><h3>Map Markers</h3></span>
-                            </div>
-        
-                            <div class="sidebar-main maplist">
-                                <div id="fdiv" class="row smllist">
-        
-                                    <div id="sortTimeDiv" class="sortButton">
-                                        <button class="btn btn-block btn-sort selected" id="sortTime" onclick="sortByTime()">
-                                            Time
-                                            <i id="timeArrow" class="fa fa-long-arrow-down float-right"></i>
-                                        </button>
-                                    </div>
-        
-                                    <div class="sortButton" style="display: none;">
-                                        <button class="btn btn-block btn-sort" id="sortPriority" onclick="sortByPriority()">
-                                            Priority
-                                            <i id="priorityArrow" class="fa fa-long-arrow-down float-right"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-                                <div id="sdiv" class="smllist">
-        
-                                    <button data-toggle="collapse" data-target="#sensorlist" class="btn btn-block btn-list">
-                                        Sensors
-                                        <span id="slst-badge" class="badge badge-primary badge-pill float-right">0</span>
-                                    </button>
-        
-                                    <div id="sensorlist" class="collapse list-group">
-        
-                                        <div class="list-group-item sml-btn">
-        
-                                            <button data-toggle="collapse" data-target="#sensoralist" class="btn btn-block btn-list">
-                                                All
-                                                <span id="salst-badge" class="badge badge-primary badge-pill float-right">0</span>
-                                            </button>
-        
-                                        </div>
-        
-                                        <div id="sensoralist" class="collapse list-group listitems">
-                                        </div>
-        
-                                        <div class="list-group-item sml-btn">
-        
-                                            <button data-toggle="collapse" data-target="#sensorclist" class="btn btn-block btn-list">
-                                                Camera
-                                                <span id="sclst-badge" class="badge badge-primary badge-pill float-right">0</span>
-                                            </button>
-        
-                                        </div>
-        
-                                        <div id="sensorclist" class="collapse list-group listitems">
-                                        </div>
-
-                                        <div class="list-group-item sml-btn">
-        
-                                            <button data-toggle="collapse" data-target="#sensorclist" class="btn btn-block btn-list">
-                                                Microphone
-                                                <span id="smlst-badge" class="badge badge-primary badge-pill float-right">0</span>
-                                            </button>
-        
-                                        </div>
-        
-                                        <div id="sensormlist" class="collapse list-group listitems">
-                                        </div>
-        
-                                        <div class="list-group-item sml-btn">
-        
-                                            <button data-toggle="collapse" data-target="#sensorplist" class="btn btn-block btn-list">
-                                                Human
-                                                <span id="splst-badge" class="badge badge-primary badge-pill float-right">0</span>
-                                            </button>
-        
-                                        </div>
-        
-                                        <div id="sensorplist" class="collapse list-group listitems">
-                                        </div>
-        
-                                    </div>
-                                </div>
-                    
-                                <div id="ediv" class="smllist">
-        
-                                    <button data-toggle="collapse" data-target="#eventlist" class="btn btn-block btn-list">
-                                        Events
-                                        <span id="elst-badge" class="badge badge-primary badge-pill float-right">0</span>
-                                    </button>
-        
-                                    <div id="eventlist" class="collapse list-group">
-        
-                                        <div class="list-group-item sml-btn">
-        
-                                            <button data-toggle="collapse" data-target="#eventalist" class="btn btn-block btn-list">
-                                                All
-                                                <span id="ealst-badge" class="badge badge-primary badge-pill float-right">0</span>
-                                            </button>
-        
-                                        </div>
-        
-                                        <div id="eventalist" class="collapse list-group listitems">
-                                        </div>
-        
-                                        <div class="list-group-item sml-btn">
-        
-                                            <button data-toggle="collapse" data-target="#eventplist" class="btn btn-block btn-list">
-                                                Person
-                                                <span id="eplst-badge" class="badge badge-primary badge-pill float-right">0</span>
-                                            </button>
-        
-                                        </div>
-        
-                                        <div id="eventplist" class="collapse list-group listitems">
-                                        </div>
-        
-                                        <div class="list-group-item sml-btn">
-        
-                                            <button data-toggle="collapse" data-target="#eventvlist" class="btn btn-block btn-list">
-                                                Vehicle
-                                                <span id="evlst-badge" class="badge badge-primary badge-pill float-right">0</span>
-                                            </button>
-        
-                                        </div>
-        
-                                        <div id="eventvlist" class="collapse list-group listitems">
-                                        </div>
-        
-                                        <div class="list-group-item sml-btn">
-        
-                                            <button data-toggle="collapse" data-target="#eventllist" class="btn btn-block btn-list">
-                                                Planned
-                                                <span id="ellst-badge" class="badge badge-primary badge-pill float-right">0</span>
-                                            </button>            
-                                        
-                                        </div>
-        
-                                        <div id="eventllist" class="collapse list-group listitems">
-                                        </div>
-        
-                                    </div>
-                                </div>
-        
-                                <div id="cdiv" class="smllist">
-        
-                                    <button data-toggle="collapse" data-target="#complexlist" class="btn btn-block btn-list">
-                                        Complex Events
-                                        <span id="clst-badge" class="badge badge-primary badge-pill float-right">0</span>
-                                    </button>
-        
-                                    <div id="complexlist" class="collapse list-group">
-        
-                                        <div class="list-group-item sml-btn">
-        
-                                            <button data-toggle="collapse" data-target="#complexalist" class="btn btn-block btn-list">
-                                                All
-                                                <span id="calst-badge" class="badge badge-primary badge-pill float-right">0</span>
-                                            </button>
-        
-                                        </div>
-        
-                                        <div id="complexalist" class="collapse list-group listitems">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-        
-                        <div class="overlay-page hidden" id="searchpanel" >
+                        
+                        <div class="overlay-page" id="searchpanel" >
                             <div class="sidebar-header">
                                 <span><h3>Chat With SUE</h3></span>
                             </div>
         
                             <div class="sidebar-main">
                                 <div class="chat-container cnlChat"></div>
+                            </div>
+                        </div>
+
+                        <div class="overlay-page hidden" id="analysispanel">
+
+                            <div class="sidebar-header">
+                                <span><h3>Data Analysis</h3></span>
+                            </div>
+        
+                            <div class="sidebar-main mapanalysis">
+                                <canvas id="priorityChart"></canvas>
+
+                                <canvas id="timeChart"></canvas>
                             </div>
                         </div>
 
@@ -335,6 +181,7 @@
         <script src="/node_modules/leaflet-semicircle/Semicircle.js"></script>
 
         <script src='js/map-connect.js'></script>
+        <script src='js/ws-connect.js'></script>
         <script src='js/getmarkers.js'></script>
         <script src='js/details.js'></script>
         <script src='js/layers.js'></script>
