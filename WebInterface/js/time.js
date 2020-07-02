@@ -156,9 +156,10 @@ function skipTime() {
 
     buildStaticCharts();
 
-    window.personEventRange.addTo(window.leafletmap);
-    window.vehicleEventRange.addTo(window.leafletmap);
-    window.plannedEventRange.addTo(window.leafletmap);
+    window.critPriorityEventRange.addTo(window.leafletmap);
+    window.highPriorityEventRange.addTo(window.leafletmap);
+    window.medPriorityEventRange.addTo(window.leafletmap);
+    window.lowPriorityEventRange.addTo(window.leafletmap);
 
     window.sensorCameraRange.addTo(window.leafletmap);
     window.sensorMicrophoneRange.addTo(window.leafletmap);
@@ -168,9 +169,10 @@ function skipTime() {
     window.sensorMicrophone.addTo(window.leafletmap);
     window.sensorHuman.addTo(window.leafletmap);
 
-    window.eventPerson.addTo(window.leafletmap);
-    window.eventVehicle.addTo(window.leafletmap);
-    window.eventPlanned.addTo(window.leafletmap);
+    window.critPriorityEvent.addTo(window.leafletmap);
+    window.highPriorityEvent.addTo(window.leafletmap);
+    window.medPriorityEvent.addTo(window.leafletmap);
+    window.lowPriorityEvent.addTo(window.leafletmap);
 
     window.complexEvent.addTo(window.leafletmap);
 }

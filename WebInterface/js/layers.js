@@ -11,11 +11,10 @@ function updateLayers() {
 }
 
 function alterLayers(dict) {
-    let layerdict = JSON.parse(dict);
     removeAllLayers();
 
-    for (let i in layerdict) {
-        if (layerdict[i] === true) {
+    for (let i in dict) {
+        if (dict[i] === true) {
             window[i].addTo(window.leafletmap);
         }
     } 
@@ -25,19 +24,44 @@ function removeAllLayers() {
     window.leafletmap.removeLayer(window.sensorCamera);
     window.leafletmap.removeLayer(window.sensorMicrophone);
     window.leafletmap.removeLayer(window.sensorHuman);
+
     window.leafletmap.removeLayer(window.sensorCameraRange);
     window.leafletmap.removeLayer(window.sensorMicrophoneRange);
     window.leafletmap.removeLayer(window.sensorHumanRange);
 
-    window.leafletmap.removeLayer(window.eventPerson);
-    window.leafletmap.removeLayer(window.eventVehicle);
-    window.leafletmap.removeLayer(window.eventPlanned);
+    window.leafletmap.removeLayer(window.sensorUK);
+    window.leafletmap.removeLayer(window.sensorUS);
 
-    window.leafletmap.removeLayer(window.personEventRange);
-    window.leafletmap.removeLayer(window.vehicleEventRange);
-    window.leafletmap.removeLayer(window.plannedEventRange);
+    window.leafletmap.removeLayer(window.sensorUKRange);
+    window.leafletmap.removeLayer(window.sensorUSRange);
+
+    window.leafletmap.removeLayer(window.critPriorityEvent);
+    window.leafletmap.removeLayer(window.highPriorityEvent);
+    window.leafletmap.removeLayer(window.medPriorityEvent);
+    window.leafletmap.removeLayer(window.lowPriorityEvent);
+
+    window.leafletmap.removeLayer(window.critPriorityEventRange);
+    window.leafletmap.removeLayer(window.highPriorityEventRange);
+    window.leafletmap.removeLayer(window.medPriorityEventRange);
+    window.leafletmap.removeLayer(window.lowPriorityEventRange);
 
     window.leafletmap.removeLayer(window.complexEvent);
+}
+
+function removeSensorLayers() {
+    window.leafletmap.removeLayer(window.sensorCamera);
+    window.leafletmap.removeLayer(window.sensorMicrophone);
+    window.leafletmap.removeLayer(window.sensorHuman);
+
+    window.leafletmap.removeLayer(window.sensorCameraRange);
+    window.leafletmap.removeLayer(window.sensorMicrophoneRange);
+    window.leafletmap.removeLayer(window.sensorHumanRange);
+
+    window.leafletmap.removeLayer(window.sensorUK);
+    window.leafletmap.removeLayer(window.sensorUS);
+
+    window.leafletmap.removeLayer(window.sensorUKRange);
+    window.leafletmap.removeLayer(window.sensorUSRange);
 }
 
 function clearMap() {
@@ -59,48 +83,25 @@ function clearMap() {
     window.sensorMicrophoneRange.clearLayers();
     window.sensorHumanRange.clearLayers();
 
-    window.eventPerson.clearLayers();
-    window.eventVehicle.clearLayers();
-    window.eventPlanned.clearLayers();
+    window.sensorUK.clearLayers();
+    window.sensorUS.clearLayers();
 
-    window.personEventRange.clearLayers();
-    window.vehicleEventRange.clearLayers();
-    window.plannedEventRange.clearLayers();
+    window.sensorUKRange.clearLayers();
+    window.sensorUSRange.clearLayers();
+
+    window.critPriorityEvent.clearLayers();
+    window.highPriorityEvent.clearLayers();
+    window.medPriorityEvent.clearLayers();
+    window.lowPriorityEvent.clearLayers();
+
+    window.critPriorityEventRange.clearLayers();
+    window.highPriorityEventRange.clearLayers();
+    window.medPriorityEventRange.clearLayers();
+    window.lowPriorityEventRange.clearLayers();
 
     window.complexEvent.clearLayers();
-
-    // slstbadge.innerHTML = "0";
-    // salstbadge.innerHTML = "0";
-    // smlstbadge.innerHTML = "0";
-    // sclstbadge.innerHTML = "0";
-    // splstbadge.innerHTML = "0";
-
-    // elstbadge.innerHTML = "0";
-    // ealstbadge.innerHTML = "0";
-    // eplstbadge.innerHTML = "0";
-    // evlstbadge.innerHTML = "0";
-    // ellstbadge.innerHTML = "0";
-
-    // clstbadge.innerHTML = "0";
-    // calstbadge.innerHTML = "0";
-
-    // sensoralist.innerHTML = "";
-    // sensorclist.innerHTML = "";
-    // sensorplist.innerHTML = "";
-
-    // eventalist.innerHTML = "";
-    // eventplist.innerHTML = "";
-    // eventvlist.innerHTML = "";
-    // eventllist.innerHTML = "";
-
-    // complexalist.innerHTML = "";
 }
 
 function refreshComplex() {
     window.complexEvent.clearLayers();
-
-    // clstbadge.innerHTML = "0";
-    // calstbadge.innerHTML = "0";
-
-    //complexalist.innerHTML = "";
 }
