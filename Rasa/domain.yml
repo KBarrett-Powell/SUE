@@ -24,18 +24,22 @@ intents:
   - remove_human_sensors
   - add_sensors
   - remove_sensors
-  - add_person_events
-  - remove_person_events
-  - add_planned_events
-  - remove_planned_events
-  - add_vehicle_events
-  - remove_vehicle_events
+  - add_critical_events
+  - remove_critical_events
+  - add_high_p_events
+  - remove_high_p_events
+  - add_med_p_events
+  - remove_med_p_events
+  - add_low_p_events
+  - remove_low_p_events
   - add_complex_event_ranges
   - remove_complex_event_ranges
   - add_complex_events
   - remove_complex_events
   - add_events
   - remove_events
+  - enter_accessibility_mode
+  - leave_accessibility_mode
   - vague_change
   - out_of_scope
 
@@ -57,6 +61,7 @@ responses:
       \ -help >>> Displays information about SUE along with a list of accepted commands\n\
       \ -add {Object Type} >>> Allows user to add an object type to the current map view\n\
       \ -remove {Object Type} >>> Allows user to remove an object type from the current map view\n\
+      \ -enter/ leave accessibility mode >>> Changes map colour scheme to a colour blind accessible one\n\
       \ -Object Type >>> Objects shown on the map, like sensors and events\n\
       \ List of objects:\n\
       \ - Sensors\n\
@@ -68,9 +73,10 @@ responses:
       \ ---- Human Sensor Ranges\n\
       \ -- Sensor Ranges\n\
       \ - Events\n\
-      \ -- Planned Events\n\
-      \ -- Person Events\n\
-      \ -- Vehicle Events\n\
+      \ -- Critical Events\n\
+      \ -- High Priority Events\n\
+      \ -- Medium Priority Events\n\
+      \ -- Low Priority Events\n\
       \ -- Event Ranges\n\
       \ - Complex Events"
 
@@ -108,21 +114,25 @@ actions:
   - action_remove_sensor_ranges
   - action_add_events
   - action_remove_events
-  - action_add_person_events
-  - action_remove_person_events
-  - action_add_vehicle_events
-  - action_remove_vehicle_events
-  - action_add_planned_events
-  - action_remove_planned_events
+  - action_add_critical_events
+  - action_remove_critical_events
+  - action_add_high_p_events
+  - action_remove_high_p_events
+  - action_add_med_p_events
+  - action_remove_med_p_events
+  - action_add_low_p_events
+  - action_remove_low_p_events
   - action_add_event_ranges
   - action_remove_event_ranges
   - action_add_complex_events
   - action_remove_complex_events
+  - action_enter_accessibility_mode
+  - action_leave_accessibility_mode
 
 slots:
   layers:
     type: list
-    initial_value: [True, True, True, True, True, True, True, True, True, True, True, True, True]
+    initial_value: [True, True, True, True, True, True, True, True, True, True, True, True, True, True, True]
 
 session_config:
   session_expiration_time: 60

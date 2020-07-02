@@ -340,101 +340,245 @@
 - cut events
 - cut events layer
 
-## intent:add_person_events
-- add person events
-- add person events layer
-- plus person events
-- plus person events layer
-- show person events
-- show person events layer
-- show me person events
-- show me person events layer
-- let me see person events
-- let me see person events layer
-- display person events
-- display person events layer
-- bring back person events
-- bring back person events layer
+## intent:add_critical_events
+- add critical events
+- add critical events layer
+- plus critical events
+- plus critical events layer
+- show critical events
+- show critical events layer
+- show me critical events
+- show me critical events layer
+- let me see critical events
+- let me see critical events layer
+- display critical events
+- display critical events layer
+- bring back critical events
+- bring back critical events layer
+- add priority one events
+- add priority one events layer
+- plus priority one events
+- plus priority one events layer
+- show priority one events
+- show priority one events layer
+- show me priority one events
+- show me priority one events layer
+- let me see priority one events
+- let me see priority one events layer
+- display priority one events
+- display priority one events layer
+- bring back priority one events
+- bring back priority one events layer
 
-## intent:remove_person_events
-- remove person events
-- remove person events layer
-- leave person events
-- leave person events layer
-- hide person events
-- hide person events layer
-- take away person events
-- take away person events layer
-- get rid of person events
-- get rid of person events layer
-- conceal person events
-- conceal person events layer
-- cut person events
-- cut person events layer
+## intent:remove_critical_events
+- remove critical events
+- remove critical events layer
+- leave critical events
+- leave critical events layer
+- hide critical events
+- hide critical events layer
+- take away critical events
+- take away critical events layer
+- get rid of critical events
+- get rid of critical events layer
+- conceal critical events
+- conceal critical events layer
+- cut critical events
+- cut critical events layer
+- remove priority one events
+- remove priority one events layer
+- leave priority one events
+- leave priority one events layer
+- hide priority one events
+- hide priority one events layer
+- take away priority one events
+- take away priority one events layer
+- get rid of priority one events
+- get rid of priority one events layer
+- conceal priority one events
+- conceal priority one events layer
+- cut priority one events
+- cut priority one events layer
 
-## intent:add_planned_events
-- add planned events
-- add planned events layer
-- plus planned events
-- plus planned events layer
-- show planned events
-- show planned events layer
-- show me planned events
-- show me planned events layer
-- let me see planned events
-- let me see planned events layer
-- display planned events
-- display planned events layer
-- bring back planned events
-- bring back planned events layer
+## intent:add_high_p_events
+- add high prioirty events
+- add high prioirty events layer
+- plus high prioirty events
+- plus high prioirty events layer
+- show high prioirty events
+- show high prioirty events layer
+- show me high prioirty events
+- show me high prioirty events layer
+- let me see high prioirty events
+- let me see high prioirty events layer
+- display high prioirty events
+- display high prioirty events layer
+- bring back high prioirty events
+- bring back high prioirty events layer
+- add prioirty two events
+- add prioirty two events layer
+- plus prioirty two events
+- plus prioirty two events layer
+- show prioirty two events
+- show prioirty two events layer
+- show me prioirty two events
+- show me prioirty two events layer
+- let me see prioirty two events
+- let me see prioirty two events layer
+- display prioirty two events
+- display prioirty two events layer
+- bring back prioirty two events
+- bring back prioirty two events layer
 
-## intent:remove_planned_events
-- remove planned events
-- remove planned events layer
-- leave planned events 
-- leave planned events layer
-- hide planned events 
-- hide planned events layer
-- take away planned events
-- take away planned events layer
-- get rid of planned events
-- get rid of planned events layer
-- conceal planned events
-- conceal planned events layer
-- cut planned events
-- cut planned events layer
+## intent:remove_high_p_events
+- remove high prioirty events
+- remove high prioirty events layer
+- leave high prioirty events 
+- leave high prioirty events layer
+- hide high prioirty events 
+- hide high prioirty events layer
+- take away high prioirty events
+- take away high prioirty events layer
+- get rid of high prioirty events
+- get rid of high prioirty events layer
+- conceal high prioirty events
+- conceal high prioirty events layer
+- cut high prioirty events
+- cut high prioirty events layer
+- remove prioirty two events
+- remove prioirty two events layer
+- leave prioirty two events 
+- leave prioirty two events layer
+- hide prioirty two events 
+- hide prioirty two events layer
+- take away prioirty two events
+- take away prioirty two events layer
+- get rid of prioirty two events
+- get rid of prioirty two events layer
+- conceal prioirty two events
+- conceal prioirty two events layer
+- cut prioirty two events
+- cut prioirty two events layer
 
-## intent:add_vehicle_events
-- add vehicle events
-- add vehicle events layer
-- plus vehicle events 
-- plus vehicle events layer
-- show vehicle events
-- show vehicle events layer
-- show me vehicle events
-- show me vehicle events layer
-- let me see vehicle events
-- let me see vehicle events layer
-- display vehicle events
-- display vehicle events layer
-- bring back vehicle events
-- bring back vehicle events layer
+## intent:add_med_p_events
+- add medium priority events
+- add medium priority events layer
+- plus medium priority events 
+- plus medium priority events layer
+- show medium priority events
+- show medium priority events layer
+- show me medium priority events
+- show me medium priority events layer
+- let me see medium priority events
+- let me see medium priority events layer
+- display medium priority events
+- display medium priority events layer
+- bring back medium priority events
+- bring back medium priority events layer
+- add priority three events
+- add priority three events layer
+- plus priority three events 
+- plus priority three events layer
+- show priority three events
+- show priority three events layer
+- show me priority three events
+- show me priority three events layer
+- let me see priority three events
+- let me see priority three events layer
+- display priority three events
+- display priority three events layer
+- bring back priority three events
+- bring back priority three events layer
 
-## intent:remove_vehicle_events
-- remove vehicle events
-- remove vehicle events layer
-- leave vehicle events
-- leave vehicle events layer
-- hide vehicle events
-- hide vehicle events layer
-- take away vehicle events
-- take away vehicle events layer
-- get rid of vehicle events
-- get rid of vehicle events layer
-- conceal vehicle events
-- conceal vehicle events layer
-- cut vehicle events
-- cut vehicle events layer
+## intent:remove_med_p_events
+- remove medium priority events
+- remove medium priority events layer
+- leave medium priority events
+- leave medium priority events layer
+- hide medium priority events
+- hide medium priority events layer
+- take away medium priority events
+- take away medium priority events layer
+- get rid of medium priority events
+- get rid of medium priority events layer
+- conceal medium priority events
+- conceal medium priority events layer
+- cut medium priority events
+- cut medium priority events layer
+- remove priority three events
+- remove priority three events layer
+- leave priority three events
+- leave priority three events layer
+- hide priority three events
+- hide priority three events layer
+- take away priority three events
+- take away priority three events layer
+- get rid of priority three events
+- get rid of priority three events layer
+- conceal priority three events
+- conceal priority three events layer
+- cut priority three events
+- cut priority three events layer
+
+## intent:add_low_p_events
+- add low priority events
+- add low priority events layer
+- plus low priority events 
+- plus low priority events layer
+- show low priority events
+- show low priority events layer
+- show me low priority events
+- show me low priority events layer
+- let me see low priority events
+- let me see low priority events layer
+- display low priority events
+- display low priority events layer
+- bring back low priority events
+- bring back low priority events layer
+- add priority four events
+- add priority four events layer
+- plus priority four events 
+- plus priority four events layer
+- show priority four events
+- show priority four events layer
+- show me priority four events
+- show me priority four events layer
+- let me see priority four events
+- let me see priority four events layer
+- display priority four events
+- display priority four events layer
+- bring back priority four events
+- bring back priority four events layer
+
+## intent:remove_low_p_events
+- remove low priority events
+- remove low priority events layer
+- leave low priority events
+- leave low priority events layer
+- hide low priority events
+- hide low priority events layer
+- take away low priority events
+- take away low priority events layer
+- get rid of low priority events
+- get rid of low priority events layer
+- conceal low priority events
+- conceal low priority events layer
+- cut low priority events
+- cut low priority events layer
+- remove priority four events
+- remove priority four events layer
+- leave priority four events
+- leave priority four events layer
+- hide priority four events
+- hide priority four events layer
+- take away priority four events
+- take away priority four events layer
+- get rid of priority four events
+- get rid of priority four events layer
+- conceal priority four events
+- conceal priority four events layer
+- cut priority four events
+- cut priority four events layer
 
 ## intent:add_complex_events
 - add complex events
@@ -510,8 +654,28 @@
 - remove
 - leave
 
+## intent:enter_accessibility_mode
+- open accessibility mode
+- enter accessibility mode
+- begin accessibility mode
+- start accessibility mode
+- commence accessibility mode
+- go to accessibility mode
+- display accessibility mode
+- access accessibility mode
+
+## intent:leave_accessibility_mode
+- close accessibility mode
+- leave accessibility mode
+- exit accessibility mode
+- end accessibility mode
+- escape accessibility mode
+- quit accessibility mode
+- hide accessibility mode
+- stop accessibility mode
+
 ## intent:out_of_scope
 - I want to order food
-- What is 2 + 2?
+- What is two + two?
 - Who’s the US President?
 - I need a job

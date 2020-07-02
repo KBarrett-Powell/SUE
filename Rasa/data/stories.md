@@ -113,36 +113,47 @@
   - utter_changed
 
 
-## add person events
-* add_person_events
-  - action_add_person_events
+## add critical events
+* add_critical_events
+  - action_add_critical_events
   - utter_changed
 
-## remove person events
-* remove_person_events
-  - action_remove_person_events
-  - utter_changed
-
-
-## add planned events
-* add_planned_events
-  - action_add_planned_events
-  - utter_changed
-
-## remove planned events
-* remove_planned_events
-  - action_remove_planned_events
+## remove critical events
+* remove_critical_events
+  - action_remove_critical_events
   - utter_changed
 
 
-## add vehicle events
-* add_vehicle_events
-  - action_add_vehicle_events
+## add high priority events
+* add_high_p_events
+  - action_add_high_p_events
   - utter_changed
 
-## remove vehicle events
-* remove_vehicle_events
-  - action_remove_vehicle_events
+## remove high priority events
+* remove_high_p_events
+  - action_remove_high_p_events
+  - utter_changed
+
+
+## add medium priority events
+* add_med_p_events
+  - action_add_med_p_events
+  - utter_changed
+
+## remove medium priority events
+* remove_med_p_events
+  - action_remove_med_p_events
+  - utter_changed
+
+
+## add low priority events
+* add_low_p_events
+  - action_add_low_p_events
+  - utter_changed
+
+## remove low priority events
+* remove_low_p_events
+  - action_remove_low_p_events
   - utter_changed
 
 
@@ -167,6 +178,13 @@
   - action_remove_event_ranges
   - utter_changed
 
+## enter accessibility mode
+* enter_accessibility_mode
+  - action_enter_accessibility_mode
+
+## leave accessibility mode
+* leave_accessibility_mode
+  - action_leave_accessibility_mode
 
 ## respond vague
 * vague_change

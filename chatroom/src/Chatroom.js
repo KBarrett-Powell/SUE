@@ -158,8 +158,26 @@ export default class Chatroom extends Component<ChatroomProps, ChatroomState> {
 
     for (const message of messages.slice(1)) {
 
-      if (message.message.type === "text" && message.message.text.substring(0, 5) === "JSON;") {
-        alterLayers(message.message.text.substring(5));
+      let messageJSON = true;
+      let parsedMessage = null; 
+
+      if (message.message.type === "text") {
+        try {
+          parsedMessage = JSON.parse(message.message.text);
+        } catch {
+          messageJSON = false;
+        }
+      }
+
+      if (messageJSON && parsedMessage != null && parsedMessage.type != null) {
+        if (parsedMessage.type == "alter-layers") {
+          alterLayers(parsedMessage.layers);
+
+        } else if (parsedMessage.type == "accessibility") {
+          toggleAccessibility(parsedMessage.access);
+        
+        }
+
       } else if (
         // Buttons always have their own group
         lastType === "button" ||
