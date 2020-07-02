@@ -271,11 +271,7 @@ function buildStaticCharts() {
             },
             scales: {
                 xAxes: [{
-                    display: true,
-					// scaleLabel: {
-					// 	display: true,
-					//     labelString: 'Priority'
-					// }
+                    display: true
                 }],
                 yAxes: [{
                     ticks: {
@@ -299,68 +295,26 @@ function buildStaticCharts() {
                     x: moment('2020-03-04T16:10:20Z').format('HH:mm:ss'),
                     y: 1
                 },{
-                    x: moment('2020-03-04T16:10:25Z').format('HH:mm:ss'),
-                    y: 1
-                },{
                     x: moment('2020-03-04T16:10:30Z').format('HH:mm:ss'),
-                    y: 0
-                },{
-                    x: moment('2020-03-04T16:10:35Z').format('HH:mm:ss'),
-                    y: 1
+                    y: 2
                 },{
                     x: moment('2020-03-04T16:10:40Z').format('HH:mm:ss'),
                     y: 0
                 },{
-                    x: moment('2020-03-04T16:10:45Z').format('HH:mm:ss'),
-                    y: 0
-                },{
                     x: moment('2020-03-04T16:10:50Z').format('HH:mm:ss'),
                     y: 1
-                },{
-                    x: moment('2020-03-04T16:10:55Z').format('HH:mm:ss'),
-                    y: 0
                 },{
                     x: moment('2020-03-04T16:11:00Z').format('HH:mm:ss'),
                     y: 1
                 }],
 				fill: false
-			}, {
-				label: '# Of Events Total',
-				backgroundColor: 'rgba(0, 106, 255, 0.2)',
-				borderColor: 'rgba(0, 106, 255, 0.2)',
-				data: [{
-                    x: moment('2020-03-04T16:10:20Z').format('HH:mm:ss'),
-                    y: 1
-                },{
-                    x: moment('2020-03-04T16:10:25Z').format('HH:mm:ss'),
-                    y: 2
-                },{
-                    x: moment('2020-03-04T16:10:30Z').format('HH:mm:ss'),
-                    y: 2
-                },{
-                    x: moment('2020-03-04T16:10:35Z').format('HH:mm:ss'),
-                    y: 3
-                },{
-                    x: moment('2020-03-04T16:10:40Z').format('HH:mm:ss'),
-                    y: 3
-                },{
-                    x: moment('2020-03-04T16:10:45Z').format('HH:mm:ss'),
-                    y: 3
-                },{
-                    x: moment('2020-03-04T16:10:50Z').format('HH:mm:ss'),
-                    y: 4
-                },{
-                    x: moment('2020-03-04T16:10:55Z').format('HH:mm:ss'),
-                    y: 4
-                },{
-                    x: moment('2020-03-04T16:11:00Z').format('HH:mm:ss'),
-                    y: 5
-                }],
-                fill: false
 			}]
 		},
 		options: {
             responsive: true,
+            legend: {
+                display: false
+            },
 			tooltips: {
 				mode: 'index',
 				intersect: false,
@@ -400,14 +354,11 @@ function buildStaticCharts() {
                     }
 				}],
 				yAxes: [{
-					// display: true,
-					// scaleLabel: {
-					// 	display: true,
-					// 	labelString: '# of Events'
-                    // },
-                    beginAtZero: true,
-                    stepSize: 1
-				}]
+                    ticks: {
+                        beginAtZero: true,
+                        stepSize: 1
+                    }
+                }]
             }
         }
     });	
