@@ -50,11 +50,20 @@ let SUEClients = [];
 
 const wsServer = new SocketServer({ server });
 
+wsServer.getUniqueID = function () {
+  function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+  }
+  return s4() + s4() + '-' + s4();
+};
+
 wsServer.on('connection', function (wsClient) {
   console.log('connected');
-  console.log('SUE clients: ', SUEClients.length);
 
-  wsClient.on('message', function (message) {
+  wsClient.id = wsServer.getUniqueID();
+  wsClient.sue = false;
+
+  wsClient.on('message', async function (message) {
     console.log('received: %s', message);
 
     let parsedMessage
@@ -69,77 +78,78 @@ wsServer.on('connection', function (wsClient) {
 
     if (!error) {
       if (parsedMessage.type.toLowerCase() == "add-sue-client") {
+        wsClient.sue = true;
         SUEClients.push(wsClient);
                 
       } else if (parsedMessage.type.toLowerCase() == "post") {
           
         if (parsedMessage.events != null) {
-          events.postEvent(parsedMessage.events);
-          wsClient.send("POST command successfully implemented");
-          
+          let update = await events.postEvent(parsedMessage.events);
+          sendAll(SUEClients, update);
+        
         } else if (parsedMessage.sensors != null) {
-          sensors.postSensor(parsedMessage.sensors);
-          wsClient.send("POST command successfully implemented");
+          let update = await sensors.postSensor(parsedMessage.sensors);
+          sendAll(SUEClients, update);
 
         } else {
-          complex.postComplex(parsedMessage.complex);
-          wsClient.send("POST command successfully implemented");
+          let update = await complex.postComplex(parsedMessage.complex);
+          sendAll(SUEClients, update);
 
         }
 
-        // for(let client of wsServer.clients) {
-        //   client.send(parsedMessage);
-        // }
-        
       } else if (parsedMessage.type.toLowerCase() == "get") {
+
         if (parsedMessage.events != null) {
-          let response = events.getEvent(parsedMessage.events);
+          let response = await events.getEvent(parsedMessage.events);
           wsClient.send(response);
           
         } else if (parsedMessage.sensors != null) {
-          let response = sensors.getSensor(parsedMessage.sensors);
+          let response = await sensors.getSensor(parsedMessage.sensors);
           wsClient.send(response);
 
         } else if (parsedMessage.complex != null) {
-          let response = complex.getComplex(parsedMessage.complex);
+          let response = await complex.getComplex(parsedMessage.complex);
           wsClient.send(response);
 
         } else {
-          let sensors = sensors.getSensor(null);
-          let events = events.getEvent(null);
-          let complex = complex.getComplex(null);
+          let sensorlst = await sensors.getSensor(null);
+          let eventlst = await events.getEvent(null);
+          let complexlst = await complex.getComplex(null);
           wsClient.send("GET command successfully implemented");
         }
         
       } else if (parsedMessage.type.toLowerCase() == "delete") {
+
         if (parsedMessage.events != null) {
-          events.deleteEvent(parsedMessage.events);
-          wsClient.send("DELETE command successfully implemented");
+          let response = await events.deleteEvent(parsedMessage.events);
+          sendAll(SUEClients, response);
           
         } else if (parsedMessage.sensors != null) {
-          sensors.deleteSensor(parsedMessage.sensors);
-          wsClient.send("DELETE command successfully implemented");
+          let response = await sensors.deleteSensor(parsedMessage.sensors);
+          sendAll(SUEClients, response);
 
         } else {
-          complex.deleteComplex(parsedMessage.complex);
-          wsClient.send("DELETE command successfully implemented");
+          let response = await complex.deleteComplex(parsedMessage.complex);
+          sendAll(SUEClients, response);
 
         }
-
-        // for(let client of wsServer.clients) {
-        //   client.send(parsedMessage);
-        // }
       }
     }
   });
 
   wsClient.on('close', function () {
-    if ( SUEClients.includes(wsClient) ) {
-      console.log("removing SUE client");
-      SUEClients.filter(client => client !== wsClient);
-
+    if ( wsClient.sue ) {
+      var removeIndex = SUEClients.map(function(item) { return item.id; }).indexOf(wsClient.id);
+      SUEClients.splice(removeIndex, 1);
     }
     console.log('closed');
-    console.log('SUE clients: ', SUEClients.length);
   });
 });
+
+function sendAll( SUEClients, update ) {
+  if (update != null) {
+    for (var i = 0; i < SUEClients.length; i ++) {
+        SUEClients[i].send(JSON.stringify(update));
+    }
+  }
+}

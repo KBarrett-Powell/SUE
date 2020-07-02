@@ -60,29 +60,27 @@ function listContains(prevlist, curlist) {
 
 function refineList(list) {
     let refinedList = [];
-    let eventsDict = {};
+    let complexList = [];
 
     for ( let i in list ) {
         let complex = list[i];
 
-        for ( let d in eventsDict ) {
-            let val = eventsDict[d];
+        for ( let d in complexList ) {
+            let val = complexList[d];
 
-            if ( listContains(val, complex.properties.events) ) {
-
-                delete eventsDict[d];
-                for ( let j in refinedList ) {
-                    if ( refinedList[j].properties.complexID == d ) {
-                        delete refinedList[j];
-                        break;
-                    }
-                }
-                break;
+            if ( listContains(val.properties.events, complex.properties.events) ) {
+                delete complexList[d];
             }
         }
+        complexList.push(complex);
+    }
 
-        eventsDict[complex.properties.complexID] = complex.properties.events;
-        refinedList.push(complex);
+    for ( let c in complexList ) {
+        let complex = complexList[c];
+
+        if (complex != null) {
+            refinedList.push(complex);
+        }
     }
     return refinedList;
 }

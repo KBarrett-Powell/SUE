@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const fs = require('fs');
+const fsp = require('fs').promises;
 const url = require('url');
 const path = require('path');
 
@@ -176,10 +177,10 @@ router.delete('/:id', function (req, res) {
 module.exports = {
     router,
     getSensors: async function getSensors(request) {
-        let data = await fs.readFile( sensorsJsonFile, {encoding: 'utf8'});
+        let data = await fsp.readFile( sensorsJsonFile, {encoding: 'utf8'});
         data = JSON.parse( data );
     
-        if (request.size() < data.sensors.size()) {
+        if (request != null && request.size() < data.sensors.size()) {
             
             for ( let i in request ) {
                 let found = false;
@@ -207,7 +208,7 @@ module.exports = {
     }, 
     postSensor: async function postSensor(request) {
 
-        let data = await fs.readFile( sensorsJsonFile, {encoding: 'utf8'});
+        let data = await fsp.readFile( sensorsJsonFile, {encoding: 'utf8'});
         data = JSON.parse( data );
 
         for (let req in request) {
@@ -286,7 +287,7 @@ module.exports = {
         });
     },
     deleteSensor: async function deleteSensor(request) {
-        let data = await fs.readFile( sensorsJsonFile, {encoding: 'utf8'});
+        let data = await fsp.readFile( sensorsJsonFile, {encoding: 'utf8'});
         data = JSON.parse( data );
         
         for (let i in request) {

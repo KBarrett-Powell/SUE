@@ -1,9 +1,24 @@
 const ws = new WebSocket('ws://localhost:8000');
 
 ws.onopen = function() { 
-    ws.send('{ \'type\': \'add-sue-client\' }');
+    var obj = new Object();
+    obj.type = "add-sue-client";
+    ws.send(JSON.stringify(obj));
 };
 
 ws.onmessage = function(e) {
-    console.log("Received: '" + e.data + "'");
+    let error = false;
+
+    try {
+      parsedMessage = JSON.parse(e.data);
+    } catch {
+      console.log("Received: '" + e.data + "'");
+      error = true;
+    }
+
+    if (!error) {
+        if (parsedMessage.type != null && parsedMessage.type == "update") { 
+            updateMapMarkers(parsedMessage);
+        }
+    }
 };

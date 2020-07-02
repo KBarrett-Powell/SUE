@@ -2,47 +2,53 @@ const express = require('express');
 const router = express.Router();
 
 const fs = require('fs');
+const fsp = require('fs').promises;
 const url = require('url');
 const path = require('path');
 
 const complexJsonFile = path.join(__dirname, "../json/complex.json");
 
 // GET all
-router.get('/', async function (req, res) {
+router.get('/', function (req, res) {
     var urlparams = url.parse(req.url, true);
     var date = new Date(urlparams.query.iso);
 
-    let data = await fs.readFile( complexJsonFile, 'utf8', function(err, data){ 
-        return data; 
-    }); 
-    data = JSON.parse( data );
-
     if (date != null && urlparams.query.iso != null) {
-        var enddata = "{\"connections\": [";
+        fs.readFile( complexJsonFile, 'utf8', function (err, data) {
 
-        for (d in data.connections) {
-            let complex = data.connections[d];
-            let complexdate = new Date(complex.properties.datetime);
+            var parseddata = JSON.parse(data);
+            var enddata = "{\"connections\": [";
+
+            for (d in parseddata.connections) {
+                let complex = parseddata.connections[d];
+                let complexdate = new Date(complex.properties.datetime);
                 
-            if ( complexdate <= date ) {
-                enddata += JSON.stringify(complex) + ", ";
+                if ( complexdate <= date ) {
+                    enddata += JSON.stringify(complex) + ", ";
+                }
             }
-        }
 
-        let endofstr = enddata.substring(enddata.length - 2, enddata.length);
+            let endofstr = enddata.substring(enddata.length - 2, enddata.length);
 
-        if (endofstr == ", ") {
-            enddata = enddata.slice(0, -2);
-        }
+            if (endofstr == ", ") {
+                enddata = enddata.slice(0, -2);
+            }
             
-        enddata += "]}";
+            enddata += "]}";
 
-        data = JSON.parse(enddata);
+            data = JSON.parse(enddata);
 
+            res.status(200).json(data);
+            res.end( data );
+        });
+    } else {
+        fs.readFile( complexJsonFile, 'utf8', function (err, data) {
+            data = JSON.parse( data );
+            
+            res.status(200).json(data);
+            res.end( data );
+        });
     }
-
-    res.status(200).json(data);
-    res.end( data );
 })
 
 // GET by id
@@ -159,10 +165,10 @@ router.delete('/:id', function (req, res) {
 module.exports = {
     router,
     getComplex: async function getComplex(request) {
-        let data = await fs.readFile( complexJsonFile, {encoding: 'utf8'});
+        let data = await fsp.readFile( complexJsonFile, {encoding: 'utf8'});
         data = JSON.parse( data );
     
-        if (request.size() < data.connections.size()) {
+        if (request != null && request.size() < data.connections.size()) {
             
             for ( let i in request ) {
                 let found = false;
@@ -190,7 +196,7 @@ module.exports = {
     }, 
     postComplex: async function postComplex(request) {
 
-        let data = await fs.readFile( complexJsonFile, {encoding: 'utf8'});
+        let data = await fsp.readFile( complexJsonFile, {encoding: 'utf8'} );
         data = JSON.parse( data );
 
         for (let req in request) {
@@ -251,7 +257,7 @@ module.exports = {
         });
     },
     deleteComplex: async function deleteComplex(request) {
-        let data = await fs.readFile( complexJsonFile, {encoding: 'utf8'});
+        let data = await fsp.readFile( complexJsonFile, {encoding: 'utf8'});
         data = JSON.parse( data );
         
         for (let i in request) {

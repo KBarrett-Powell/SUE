@@ -1,5 +1,5 @@
 {
-    "sensors" : [
+    "sensors": [
         {
             "type": "Feature",
             "properties": {
@@ -10,10 +10,12 @@
             },
             "geometry": {
                 "type": "Point",
-                "coordinates": [58.1483891, 7.9921463]
+                "coordinates": [
+                    58.1483891,
+                    7.9921463
+                ]
             }
         },
-
         {
             "type": "Feature",
             "properties": {
@@ -25,10 +27,12 @@
             },
             "geometry": {
                 "type": "Point",
-                "coordinates": [58.1462350, 7.9948500]
+                "coordinates": [
+                    58.146235,
+                    7.99485
+                ]
             }
         },
-
         {
             "type": "Feature",
             "properties": {
@@ -40,10 +44,12 @@
             },
             "geometry": {
                 "type": "Point",
-                "coordinates": [58.1473814, 7.9950737]
+                "coordinates": [
+                    58.1473814,
+                    7.9950737
+                ]
             }
         },
-
         {
             "type": "Feature",
             "properties": {
@@ -55,10 +61,12 @@
             },
             "geometry": {
                 "type": "Point",
-                "coordinates": [58.1484550, 7.99798]
+                "coordinates": [
+                    58.148455,
+                    7.99798
+                ]
             }
         },
-
         {
             "type": "Feature",
             "properties": {
@@ -66,14 +74,17 @@
                 "sensorName": "CCTV On Vestre Strandgate",
                 "sensorType": "Camera",
                 "video": "MilitaryParade.mp4",
-                "rangeDirection": 220
+                "rangeDirection": 220,
+                "owner": "UK"
             },
             "geometry": {
                 "type": "Point",
-                "coordinates": [58.1461430, 7.9888040]
+                "coordinates": [
+                    58.146143,
+                    7.988804
+                ]
             }
         },
-
         {
             "type": "Feature",
             "properties": {
@@ -85,11 +96,12 @@
             },
             "geometry": {
                 "type": "Point",
-                "coordinates": [58.1483010, 7.9892622]
+                "coordinates": [
+                    58.148301,
+                    7.9892622
+                ]
             }
         },
-
-
         {
             "type": "Feature",
             "properties": {
@@ -101,10 +113,12 @@
             },
             "geometry": {
                 "type": "Point",
-                "coordinates": [58.1469808, 7.9879347]
+                "coordinates": [
+                    58.1469808,
+                    7.9879347
+                ]
             }
         },
-
         {
             "type": "Feature",
             "properties": {
@@ -116,10 +130,12 @@
             },
             "geometry": {
                 "type": "Point",
-                "coordinates": [58.1483275, 7.9944433]
+                "coordinates": [
+                    58.1483275,
+                    7.9944433
+                ]
             }
         },
-
         {
             "type": "Feature",
             "properties": {
@@ -131,7 +147,10 @@
             },
             "geometry": {
                 "type": "Point",
-                "coordinates": [58.1459030, 7.9892440]
+                "coordinates": [
+                    58.145903,
+                    7.989244
+                ]
             }
         }
     ]

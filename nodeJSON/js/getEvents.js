@@ -1,53 +1,53 @@
 const express = require('express');
 const router = express.Router();
 
-const fs = require('fs').promises;
+const fs = require('fs');
+const fsp = require('fs').promises;
 const url = require('url');
 const path = require('path');
 
 const eventsJsonFile = path.join(__dirname, "../json/events.json");
 
 // GET all
-router.get('/', async function (req, res) {
+router.get('/', function (req, res) {
     var urlparams = url.parse(req.url, true);
     var date = new Date(urlparams.query.iso);
 
-    let data = await fs.readFile( eventsJsonFile, 'utf8', function(err, data){ 
-        return data; 
-    }); 
-    data = JSON.parse( data );
-
     if (date != null && urlparams.query.iso != null) {
+        fs.readFile( eventsJsonFile, 'utf8', function (err, data) {
         
-        var enddata = "{\"events\": [";
+            var data = JSON.parse(data);
+            var enddata = "{\"events\": [";
 
-        for (d in data.events) {
-            let event = data.events[d];
-            let eventdate = new Date(event.properties.datetime);
+            for (d in data.events) {
+                let event = data.events[d];
+                let eventdate = new Date(event.properties.datetime);
 
-            if ( eventdate <= date && Math.abs(date.getTime() - eventdate.getTime()) < 5000) {
-               enddata += JSON.stringify(event) + ", ";
+                if ( eventdate <= date && Math.abs(date.getTime() - eventdate.getTime()) < 5000) {
+                    enddata += JSON.stringify(event) + ", ";
+                }
             }
-         }
 
-         let endofstr = enddata.substring(enddata.length - 2, enddata.length);
+            let endofstr = enddata.substring(enddata.length - 2, enddata.length);
 
-         if (endofstr == ", ") {
-             enddata = enddata.slice(0, -2);
-         }
-         enddata += "]}";
+            if (endofstr == ", ") {
+                enddata = enddata.slice(0, -2);
+            }
+            enddata += "]}";
 
-         data = JSON.parse(enddata);
+            data = JSON.parse(enddata);
 
-         res.status(200).json(data);
-         res.end( data );
-
+            res.status(200).json(data);
+            res.end( data );
+        });
     } else {
-         res.status(200).json(data);
-         res.end( data );
+        fs.readFile( eventsJsonFile, 'utf8', function (err, data) {
+            data = JSON.parse( data );
+            
+            res.status(200).json(data);
+            res.end( data );
+        });
     }
-    // res.status(200).json(data);
-    // res.end( data );
 })
 
 // GET by id
@@ -64,10 +64,10 @@ router.get('/:id', function (req, res) {
             if ( item.properties.eventID == req.params.id) {
                 found = true;
     
-                let event = item;
+                let events = item;
     
-                res.status(200).json(event);
-                res.end( event );
+                res.status(200).json(events);
+                res.end( events );
 
                 break;
             }
@@ -147,10 +147,14 @@ router.delete('/:id', function (req, res) {
 module.exports = {
     router,
     getEvents: async function getEvents(request) {
-        let data = await fs.readFile( eventsJsonFile, {encoding: 'utf8'});
+        let data = await fsp.readFile( eventsJsonFile, {encoding: 'utf8'});
         data = JSON.parse( data );
+
+        console.log("getevents: " + JSON.stringify(data));
     
-        if (request.size() < data.events.size()) {
+        if (request != null && request.size() < data.events.size()) {
+
+            console.log("searching for id");
             
             for ( let i in request ) {
                 let found = false;
@@ -173,13 +177,19 @@ module.exports = {
             }
 
         } else {
+            console.log("sending all");
             return data;
         }
     }, 
     postEvent: async function postEvent(request) {
 
-        let data = await fs.readFile( eventsJsonFile, {encoding: 'utf8'});
+        let data = await fsp.readFile( eventsJsonFile, {encoding: 'utf8'});
         data = JSON.parse( data );
+
+        let critPriorityEvent = [];
+        let highPriorityEvent = [];
+        let medPriorityEvent = [];
+        let lowPriorityEvent = [];
 
         for (let req in request) {
 
@@ -232,6 +242,8 @@ module.exports = {
                             data.events[i].properties.datetime = event.datetime;
                         }
 
+                        newEvent = data.events[i];
+
                         break;
                     }
                 }
@@ -262,14 +274,35 @@ module.exports = {
 
                 data.events.push(newEvent);
             }
+
+            if (newEvent.properties.priority == 1) {
+                critPriorityEvent.push(newEvent);
+            } else if (newEvent.properties.priority == 2) {
+                highPriorityEvent.push(newEvent);
+            } else if (newEvent.properties.priority == 3) {
+                medPriorityEvent.push(newEvent);
+            } else {
+                lowPriorityEvent.push(newEvent);
+            }
+
         }
 
         fs.writeFile( eventsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
             if (err) throw err;
         });
+
+        let jsonResp = {
+            "type":"update",
+            "critPriortiyEvent": critPriorityEvent,
+            "highPriorityEvent": highPriorityEvent,
+            "medPriorirtyEvent": medPriorityEvent,
+            "lowPriorityEvent": lowPriorityEvent
+        }
+
+        return jsonResp
     },
     deleteEvent: async function deleteEvent(request) {
-        let data = await fs.readFile( eventsJsonFile, {encoding: 'utf8'});
+        let data = await fsp.readFile( eventsJsonFile, {encoding: 'utf8'});
         data = JSON.parse( data );
         
         for (let i in request) {
