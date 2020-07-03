@@ -332,143 +332,173 @@ function addMarker(json, iconimg) {
 function updateMapMarkers(request) {
 
     for (let i in request.sensorCamera) {
-        updateByLayer(request.sensorCamera[i], "sensorCamera", "Sensor");
+        updateByLayer(request.sensorCamera[i], "sensorCamera", false);
     }
 
     for (let i in request.sensorMicrophone) {
-        updateByLayer(request.sensorMicrophone[i], "sensorMicrophone", "Sensor");
+        updateByLayer(request.sensorMicrophone[i], "sensorMicrophone", false);
     }
 
     for (let i in request.sensorHuman) {
-        updateByLayer(request.sensorHuman[i], "sensorHuman", "Sensor");
+        updateByLayer(request.sensorHuman[i], "sensorHuman", false);
     }
 
     for (let i in request.sensorUK) {
-        updateByLayer(request.sensorUK[i], "sensorUK", "Sensor");
+        updateByLayer(request.sensorUK[i], "sensorUK", true);
     }
 
     for (let i in request.sensorUS) {
-        updateByLayer(request.sensorUS[i], "sensorUS", "Sensor");
+        updateByLayer(request.sensorUS[i], "sensorUS", true);
     }
     
     for (let i in request.critPriorityEvent) {
-        updateByLayer(request.critPriorityEvent[i], "critPriorityEvent", "Event");
+        updateByLayer(request.critPriorityEvent[i], "critPriorityEvent", null);
     }
 
     for (let i in request.highPriorityEvent) {
-        updateByLayer(request.highPriorityEvent[i], "highPriorityEvent", "Event");
+        updateByLayer(request.highPriorityEvent[i], "highPriorityEvent", null);
     }
 
     for (let i in request.medPriorityEvent) {
-        updateByLayer(request.medPriorityEvent[i], "medPriorityEvent", "Event");
+        updateByLayer(request.medPriorityEvent[i], "medPriorityEvent", null);
     }
 
     for (let i in request.lowPriorityEvent) {
-        updateByLayer(request.lowPriorityEvent[i], "lowPriorityEvent", "Event");
+        updateByLayer(request.lowPriorityEvent[i], "lowPriorityEvent", null);
     }
 
     for (let i in request.complexEvent) {
-        updateByLayer(request.complexEvent[i], "complexEvent", "Complex");
+        updateByLayer(request.complexEvent[i], "complexEvent", null);
     }
 }
 
-async function updateByLayer(req, win, type) {
-    let updated = false;
+async function updateByLayer(req, win, sensorType) {
+    
+    let updated = await window[win].eachLayer( async function (layer) {
 
-    await window[win].eachLayer( async function (layer) {
+        let found = false;
         let properties = JSON.parse(layer.options.properties);
-
-        if (properties != null && properties.eventID != null && properties.eventID == req.properties.eventID) {
-            layer.setPopupContent(req.properties.eventName);
-            layer.options.properties, newIcon = JSON.stringify(await updateProperties(properties, req.properties, type));
-            if (newIcon == null) { layer.setIcon(newIcon); }
-            updated = true;
+        
+        let type = null;
+        if (properties.eventID != null && properties.eventID == req.properties.eventID) {
+            type = "Event";
+        } else if (properties.sensorID != null && properties.sensorID == req.properties.sensorID) {
+            type = "Sensor";
+        } else if (properties.complexID != null && properties.complexID == req.properties.complexID) {
+            type = "Complex";
         }
+
+        if (properties != null && type != null) { 
+
+            // updating properties
+            layer.setPopupContent((type == "Event" ? req.properties.eventName : type == "Sensor" ? req.properties.sensorName : req.properties.complexName));
+            let output = await updateProperties(properties, req.properties, type, sensorType);
+            layer.options.properties = JSON.stringify(output.marker);
+
+            // updating map marker information
+            if (output.newIcon != null) { layer.setIcon(output.newIcon); }
+            //console.log("layer coord: " + layer.getLatLng() + " - new coord: " + req.geometry.coordinates);
+            //if (layer.getLatLng() != req.geometry.coordinates) { layer.setLatLng(req.geometry.coordinates); }
+            //layer.setLatLng(newMarker.getLatLng());
+
+            found = true;
+        }
+
+        return Promise.resolve(found);
     });
 
     if (!updated) {
-        console.log("adding new marker");
         addMarker(req, null);
     }
 }
 
-function updateProperties(marker, update, type) {
-    newIcon = null;
+async function updateProperties(marker, update, type, ownerSensor) {
+    let newIcon = null;
+    let jsonObj = {};
 
     if (type == "Event") {
-        if (update.geometry.coordinates != null) {
-            marker.geometry.coordinates = update.geometry.coordinates;
+        // if (marker.timeline == null || update.geometry.coordinates != marker.timeline[Object.keys(marker.timeline).length - 1]) {
+        //     marker.timeline[currentTime] = update.geometry.coordinates;
+        // }
+        if (update.eventName != null) {
+            marker.eventName = update.eventName;
         }
-        if (update.properties.eventName != null) {
-            marker.properties.eventName = update.properties.eventName;
+        if (update.eventType != null) {
+            marker.eventType = update.eventType;
         }
-        if (update.properties.eventType != null) {
-            marker.properties.eventType = update.properties.eventType;
+        if (update.description != null) {
+            marker.description = update.description;
         }
-        if (update.properties.description != null) {
-            marker.properties.description = update.properties.description;
+        if (update.sensorID != null) {
+            marker.sensorID = update.sensorID;
         }
-        if (update.properties.sensorID != null) {
-            marker.properties.sensorID = update.properties.sensorID;
+        if (update.chartPoints != null) {
+            marker.chartPoints = update.chartPoints;
         }
-        if (update.properties.chartPoints != null) {
-            marker.properties.chartPoints = update.properties.chartPoints;
+        if (update.objDetVideo != null) {
+            marker.objDetVideo = update.objDetVideo;
         }
-        if (update.properties.objDetVideo != null) {
-            marker.properties.objDetVideo = update.properties.objDetVideo;
+        if (update.saliencyVideo != null) {
+            marker.saliencyVideo = update.saliencyVideo;
         }
-        if (update.properties.saliencyVideo != null) {
-            marker.properties.saliencyVideo = update.properties.saliencyVideo;
-        }
-        if (update.properties.priority != null) {
-            marker.properties.priority = update.properties.priority;
+        if (update.priority != null) {
+            marker.priority = update.priority;
             // add support for this
         }
-        if (update.properties.datetime != null) {
-            marker.properties.datetime = update.properties.datetime;
+        if (update.datetime != null) {
+            marker.datetime = update.datetime;
         }
 
-        return marker, newIcon;
+        jsonObj.marker = marker;
+        jsonObj.newIcon = newIcon;
+
+        return Promise.resolve(jsonObj);
 
     } else if (type == "Sensor") {
-        if (update.geometry.coordinates != null) {
-            marker.geometry.coordinates = update.geometry.coordinates;
+        // if (update.geometry.coordinates != null) {
+        //     marker.geometry.coordinates = update.geometry.coordinates;
+        // }
+        if (update.sensorName != null) {
+            marker.sensorName = update.sensorName;
         }
-        if (update.properties.sensorName != null) {
-            marker.properties.sensorName = update.properties.sensorName;
+        if (update.sensorType != null) {
+            marker.sensorType = update.sensorType;
+            if (!ownerSensor) { newIcon = (marker.sensorType == "Camera" ? cameraIcon : marker.sensorType == "Microphone" ? microphoneIcon : humanIcon); }
         }
-        if (update.properties.sensorType != null) {
-            marker.properties.sensorType = update.properties.sensorType;
-            newIcon = (marker.properties.sensorType == "Camera" ? cameraIcon : marker.properties.sensorType == "Microphone" ? microphoneIcon : humanIcon);
+        if (update.video != null) {
+            marker.video = update.video;
         }
-        if (update.properties.video != null) {
-            marker.properties.video = update.properties.video;
+        if (update.audio != null) {
+            marker.audio = update.audio;
         }
-        if (update.properties.audio != null) {
-            marker.properties.audio = update.properties.audio;
+        if (update.rangeDirection != null) {
+            marker.rangeDirection = update.rangeDirection;
         }
-        if (update.properties.rangeDirection != null) {
-            marker.properties.rangeDirection = update.properties.rangeDirection;
-        }
-        if (update.properties.owner != null) {
-            marker.properties.owner = update.properties.owner;
-            newIcon = (marker.properties.owner == "UK" ? ukMarker : usMarker);
+        if (update.owner != null) {
+            marker.owner = update.owner;
+            if (ownerSensor) { newIcon = (marker.owner == "UK" ? ukMarker : usMarker); }
         }
 
-        return marker, newIcon;
+        jsonObj.marker = marker;
+        jsonObj.newIcon = newIcon;
+
+        return Promise.resolve(jsonObj);
     
     } else {
-        if (update.properties.complexName != null) {
-            marker.properties.complexName = update.properties.complexName;
+        if (update.complexName != null) {
+            marker.complexName = update.complexName;
         }
-        if (update.properties.events != null) {
-            marker.properties.events = update.properties.events;
+        if (update.events != null) {
+            marker.events = update.events;
         }
-        if (update.properties.datetime != null) {
-            marker.properties.datetime = update.properties.datetime;
+        if (update.datetime != null) {
+            marker.datetime = update.datetime;
         }
 
-        return marker, newIcon;
+        jsonObj.marker = marker;
+        jsonObj.newIcon = newIcon;
+
+        return Promise.resolve(jsonObj);
     }
 }
 
