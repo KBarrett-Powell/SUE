@@ -10,10 +10,26 @@ The interface features a chatbot through which users can customise the map, remo
 
 ![](examples/Chatbot-example.gif)
 
-### Real-Time Mode
-The interface also has a feature to allow for a real-time demonstrations, with events appearing on the map as they are 'detected'. This feature assists in demonstrating how data would appear in a live version.
+### WebSocket
+The gif below shows the submission of a JSON object to the WebSocket (found at ws://localhost:8000) using Smart WebSocket Client for Google Chrome.  
+{  
+  "type": "post",  
+  "events": [
+  {
+	    "eventID": 5,
+	    "eventName": "March on Vestre Strandgate"
+	  }
+  ]  
+}  
 
-![](examples/Realtime-example.gif)
+![](examples/websocket-update.gif)  
+
+*To be implemented in coming week: support for event priority updates, location updates*
+
+### Colour-Blindness Support
+Using a command to enter accessibility mode in the Chatbot, the colour scheme used for events on the map changes to a colour blind friendly scheme.  
+
+![](examples/accessibility-mode.gif)
 
 ## Recommendations
 It is recommended to run this interface on a:  
