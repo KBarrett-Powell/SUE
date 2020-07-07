@@ -308,6 +308,134 @@
 - cut human sensor ranges
 - cut human sensor ranges layer
 
+## intent:add_uk_sensors
+- add uk sensors
+- add uk sensors layer
+- plus uk sensors
+- plus uk sensors layer
+- show uk sensors
+- show uk sensors layer
+- show me uk sensors
+- show me uk sensors layer
+- let me see uk sensors
+- let me see uk sensors layer
+- display uk sensors
+- display uk sensors layer
+- bring back uk sensors
+- bring back uk sensors layer
+
+## intent:remove_uk_sensors
+- remove uk sensors
+- remove uk sensors layer
+- leave uk sensors
+- leave uk sensors layer
+- hide uk sensors
+- hide uk sensors layer
+- take away uk sensors
+- take away uk sensors layer
+- get rid of uk sensors
+- get rid of uk sensors layer
+- conceal uk sensors
+- conceal uk sensors layer
+- cut uk sensors
+- cut uk sensors layer
+
+## intent:add_uk_sensor_ranges
+- add uk sensor ranges
+- add uk sensor ranges layer
+- plus uk sensor ranges
+- plus uk sensor ranges layer
+- show uk sensor ranges
+- show uk sensor ranges layer
+- show me uk sensor ranges
+- show me uk sensor ranges layer
+- let me see uk sensor ranges
+- let me see uk sensor ranges layer
+- display uk sensor ranges
+- display uk sensor ranges layer
+- bring back uk sensor ranges
+- bring back uk sensor ranges layer
+
+## intent:remove_uk_sensor_ranges
+- remove uk sensor ranges
+- remove uk sensor ranges layer
+- leave uk sensor ranges
+- leave uk sensor ranges layer
+- hide uk sensor ranges
+- hide uk sensor ranges layer
+- take away uk sensor ranges
+- take away uk sensor ranges layer
+- get rid of uk sensor ranges
+- get rid of uk sensor ranges layer
+- conceal uk sensor ranges
+- conceal uk sensor ranges layer
+- cut uk sensor ranges
+- cut uk sensor ranges layer
+
+## intent:add_us_sensors
+- add us sensors
+- add us sensors layer
+- plus us sensors
+- plus us sensors layer
+- show us sensors
+- show us sensors layer
+- show me us sensors
+- show me us sensors layer
+- let me see us sensors
+- let me see us sensors layer
+- display us sensors
+- display us sensors layer
+- bring back us sensors
+- bring back us sensors layer
+
+## intent:remove_us_sensors
+- remove us sensors
+- remove us sensors layer
+- leave us sensors
+- leave us sensors layer
+- hide us sensors
+- hide us sensors layer
+- take away us sensors
+- take away us sensors layer
+- get rid of us sensors
+- get rid of us sensors layer
+- conceal us sensors
+- conceal us sensors layer
+- cut us sensors
+- cut us sensors layer
+
+## intent:add_us_sensor_ranges
+- add us sensor ranges
+- add us sensor ranges layer
+- plus us sensor ranges
+- plus us sensor ranges layer
+- show us sensor ranges
+- show us sensor ranges layer
+- show me us sensor ranges
+- show me us sensor ranges layer
+- let me see us sensor ranges
+- let me see us sensor ranges layer
+- display us sensor ranges
+- display us sensor ranges layer
+- bring back us sensor ranges
+- bring back us sensor ranges layer
+
+## intent:remove_us_sensor_ranges
+- remove us sensor ranges
+- remove us sensor ranges layer
+- leave us sensor ranges
+- leave us sensor ranges layer
+- hide us sensor ranges
+- hide us sensor ranges layer
+- take away us sensor ranges
+- take away us sensor ranges layer
+- get rid of us sensor ranges
+- get rid of us sensor ranges layer
+- conceal us sensor ranges
+- conceal us sensor ranges layer
+- cut us sensor ranges
+- cut us sensor ranges layer
+
 ## intent:add_events
 - add events
 - add events layer
@@ -673,6 +801,34 @@
 - quit accessibility mode
 - hide accessibility mode
 - stop accessibility mode
+
+## intent:enter_ownership_view
+- view sensor owners
+- view sensor owners layer
+- show sensor owners
+- show sensor owners layer
+- show me sensor owners
+- show me sensor owners layer
+- let me see sensor owners
+- let me see sensor owners layer
+- display sensor owners
+- display sensor owners layer
+- bring back sensor owners
+- bring back sensor owners layer
+
+## intent:leave_ownership_view
+- view sensor types
+- view sensor types layer
+- show sensor types
+- show sensor types layer
+- show me sensor types
+- show me sensor types layer
+- let me see sensor types
+- let me see sensor types layer
+- display sensor types
+- display sensor types layer
+- bring back sensor types
+- bring back sensor types layer
 
 ## intent:out_of_scope
 - I want to order food

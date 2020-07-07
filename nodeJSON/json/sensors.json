@@ -6,7 +6,8 @@
                 "sensorID": "1",
                 "sensorName": "Microphone On Kristian IVs Gate",
                 "sensorType": "Microphone",
-                "audio": "Shooting.wav"
+                "audio": "Shooting.wav",
+                "owner": "US"
             },
             "geometry": {
                 "type": "Point",
@@ -23,7 +24,8 @@
                 "sensorName": "CCTV In Kristiansand Cathedral",
                 "sensorType": "Camera",
                 "video": "Abuse.mp4",
-                "rangeDirection": 225
+                "rangeDirection": 225,
+                "owner": "UK"
             },
             "geometry": {
                 "type": "Point",
@@ -40,7 +42,8 @@
                 "sensorName": "CCTV In NAV Kristiansand",
                 "sensorType": "Camera",
                 "video": "Fighting.mp4",
-                "rangeDirection": 40
+                "rangeDirection": 40,
+                "owner": "UK"
             },
             "geometry": {
                 "type": "Point",
@@ -57,7 +60,8 @@
                 "sensorName": "CCTV On Holbergs Gate",
                 "sensorType": "Camera",
                 "video": "RoadAccidents.mp4",
-                "rangeDirection": 270
+                "rangeDirection": 270,
+                "owner": "US"
             },
             "geometry": {
                 "type": "Point",
@@ -75,7 +79,7 @@
                 "sensorType": "Camera",
                 "video": "MilitaryParade.mp4",
                 "rangeDirection": 220,
-                "owner": "UK"
+                "owner": "US"
             },
             "geometry": {
                 "type": "Point",
@@ -92,7 +96,8 @@
                 "sensorName": "CCTV On Fjellgata",
                 "sensorType": "Camera",
                 "video": "MilitaryParade.mp4",
-                "rangeDirection": 180
+                "rangeDirection": 180,
+                "owner": "US"
             },
             "geometry": {
                 "type": "Point",
@@ -109,7 +114,8 @@
                 "sensorName": "CCTV On Tordenskjolds Gate",
                 "sensorType": "Camera",
                 "video": "MilitaryParade.mp4",
-                "rangeDirection": 20
+                "rangeDirection": 20,
+                "owner": "US"
             },
             "geometry": {
                 "type": "Point",
@@ -126,7 +132,8 @@
                 "sensorName": "CCTV On Festningsgata",
                 "sensorType": "Camera",
                 "video": "MilitaryParade.mp4",
-                "rangeDirection": 90
+                "rangeDirection": 90,
+                "owner": "UK"
             },
             "geometry": {
                 "type": "Point",
@@ -143,7 +150,8 @@
                 "sensorName": "CCTV On Vestre Strandgate",
                 "sensorType": "Camera",
                 "video": "MilitaryParade.mp4",
-                "rangeDirection": 220
+                "rangeDirection": 220,
+                "owner": "UK"
             },
             "geometry": {
                 "type": "Point",

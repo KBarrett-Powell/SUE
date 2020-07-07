@@ -14,6 +14,10 @@ intents:
   - remove_microphone_sensor_ranges
   - add_human_sensor_ranges
   - remove_human_sensor_ranges
+  - add_uk_sensor_ranges
+  - remove_uk_sensor_ranges
+  - add_us_sensor_ranges
+  - remove_us_sensor_ranges
   - add_sensor_ranges
   - remove_sensor_ranges
   - add_camera_sensors
@@ -22,6 +26,10 @@ intents:
   - remove_microphone_sensors
   - add_human_sensors
   - remove_human_sensors
+  - add_uk_sensors
+  - remove_uk_sensors
+  - add_us_sensors
+  - remove_us_sensors
   - add_sensors
   - remove_sensors
   - add_critical_events
@@ -40,6 +48,8 @@ intents:
   - remove_events
   - enter_accessibility_mode
   - leave_accessibility_mode
+  - enter_ownership_view
+  - leave_ownership_view
   - vague_change
   - out_of_scope
 
@@ -71,6 +81,10 @@ responses:
       \ ---- Microphone Sensor Ranges\n\
       \ -- Human Sensors\n\
       \ ---- Human Sensor Ranges\n\
+      \ -- UK Sensors\n\
+      \ ---- UK Sensor Ranges\n\
+      \ -- US Sensors\n\
+      \ ---- US Sensor Ranges\n\
       \ -- Sensor Ranges\n\
       \ - Events\n\
       \ -- Critical Events\n\
@@ -110,6 +124,14 @@ actions:
   - action_remove_human_sensors
   - action_add_human_sensor_ranges
   - action_remove_human_sensor_ranges
+  - action_add_uk_sensors
+  - action_remove_uk_sensors
+  - action_add_uk_sensor_ranges
+  - action_remove_uk_sensor_ranges
+  - action_add_us_sensors
+  - action_remove_us_sensors
+  - action_add_us_sensor_ranges
+  - action_remove_us_sensor_ranges
   - action_add_sensor_ranges
   - action_remove_sensor_ranges
   - action_add_events
@@ -128,11 +150,13 @@ actions:
   - action_remove_complex_events
   - action_enter_accessibility_mode
   - action_leave_accessibility_mode
+  - action_enter_ownership_view
+  - action_leave_ownership_view
 
 slots:
   layers:
     type: list
-    initial_value: [True, True, True, True, True, True, True, True, True, True, True, True, True, True, True]
+    initial_value: [False, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True]
 
 session_config:
   session_expiration_time: 60

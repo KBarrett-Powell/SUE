@@ -12,9 +12,9 @@ function updateLayers() {
 
 function alterLayers(dict) {
     removeAllLayers();
-
+    
     for (let i in dict) {
-        if (dict[i] === true) {
+        if (i != "ownerSensors" && dict[i] === true) {
             window[i].addTo(window.leafletmap);
         }
     } 
@@ -104,4 +104,11 @@ function clearMap() {
 
 function refreshComplex() {
     window.complexEvent.clearLayers();
+}
+
+function toggleLayer(layer) {
+    if (window.leafletmap.hasLayer(layer)) {
+        layer.removeFrom(window.leafletmap);
+        layer.addTo(window.leafletmap);
+    }
 }

@@ -60,27 +60,6 @@ function toggleAccessibility(on) {
     }
 };
 
-function toggleOwnerView(on) {
-    removeSensorLayers();
-    
-    if (on) {
-        window.sensorUK.addTo(window.leafletmap);
-        window.sensorUS.addTo(window.leafletmap);
-
-        window.sensorUKRange.addTo(window.leafletmap);
-        window.sensorUSRange.addTo(window.leafletmap);
-
-    } else {
-        window.sensorCamera.addTo(window.leafletmap);
-        window.sensorMicrophone.addTo(window.leafletmap);
-        window.sensorHuman.addTo(window.leafletmap);
-
-        window.sensorCameraRange.addTo(window.leafletmap);
-        window.sensorMicrophoneRange.addTo(window.leafletmap);
-        window.sensorHumanRange.addTo(window.leafletmap);
-    }
-}
-
 function simpleStringify (object){
     var simpleObject = {};
     for (var prop in object ){

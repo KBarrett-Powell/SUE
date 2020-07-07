@@ -102,6 +102,50 @@
   - utter_changed
 
 
+## add uk sensors
+* add_uk_sensors
+  - action_add_uk_sensors
+  - utter_changed
+
+## remove uk sensors
+* remove_uk_sensors
+  - action_remove_uk_sensors
+  - utter_changed
+
+
+## add uk sensor ranges
+* add_uk_sensor_ranges
+  - action_add_uk_sensor_ranges
+  - utter_changed
+
+## remove uk sensor ranges
+* remove_uk_sensor_ranges
+  - action_remove_uk_sensor_ranges
+  - utter_changed
+
+
+## add us sensors
+* add_us_sensors
+  - action_add_us_sensors
+  - utter_changed
+
+## remove us sensors
+* remove_us_sensors
+  - action_remove_us_sensors
+  - utter_changed
+
+
+## add us sensor ranges
+* add_us_sensor_ranges
+  - action_add_us_sensor_ranges
+  - utter_changed
+
+## remove us sensor ranges
+* remove_us_sensor_ranges
+  - action_remove_us_sensor_ranges
+  - utter_changed
+
+
 ## add events
 * add_events
   - action_add_events
@@ -178,6 +222,7 @@
   - action_remove_event_ranges
   - utter_changed
 
+
 ## enter accessibility mode
 * enter_accessibility_mode
   - action_enter_accessibility_mode
@@ -185,6 +230,16 @@
 ## leave accessibility mode
 * leave_accessibility_mode
   - action_leave_accessibility_mode
+
+
+## enter ownership view
+* enter_ownership_view
+  - action_enter_ownership_view
+
+## leave ownership view
+* leave_ownership_view
+  - action_leave_ownership_view
+
 
 ## respond vague
 * vague_change
