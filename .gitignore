@@ -1,3 +1,4 @@
 node_modules
 chatroom/node_modules
 Rasa/venv
+Rasa/models/*.tar.gz
