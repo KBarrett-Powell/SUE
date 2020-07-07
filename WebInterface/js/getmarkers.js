@@ -293,7 +293,6 @@ function addMarker(json, iconimg) {
         }
 
         let eventmarker = L.marker(coordinates, {icon: iconChoice, properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap);
-        //let range1 = L.circle(coordinates, {radius: mainradius, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.3, weight: 0.3, gradient: true});
         // let range1 = L.circle(coordinates, {radius: mainradius/3, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.3, weight: 0.2, gradient: true});
         // let range2 = L.circle(coordinates, {radius: mainradius*2/3, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.2, weight: 0.4, gradient: true});
         // let range3 = L.circle(coordinates, {radius: mainradius, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.2, weight: 0.6, gradient: true});
@@ -308,11 +307,17 @@ function addMarker(json, iconimg) {
             range2.addTo(window.lowPriorityEventRange);
             //range3.addTo(window.lowPriorityEventRange);
 
+            toggleLayer(window.lowPriorityEvent);
+            toggleLayer(window.lowPriorityEventRange);
+
         } else if (json.properties.priority == 3) {
             eventmarker.addTo(window.medPriorityEvent);
             range1.addTo(window.medPriorityEventRange);
             range2.addTo(window.medPriorityEventRange);
             //range3.addTo(window.medPriorityEventRange);
+
+            toggleLayer(window.medPriorityEvent);
+            toggleLayer(window.medPriorityEventRange);
 
         } else if (json.properties.priority == 2) {
             eventmarker.addTo(window.highPriorityEvent);
@@ -320,13 +325,21 @@ function addMarker(json, iconimg) {
             range2.addTo(window.highPriorityEventRange);
             //range3.addTo(window.highPriorityEventRange);
 
+            toggleLayer(window.highPriorityEvent);
+            toggleLayer(window.highPriorityEventRange);
+
         } else {
             eventmarker.addTo(window.critPriorityEvent);
             range1.addTo(window.critPriorityEventRange);
             range2.addTo(window.critPriorityEventRange);
             //range3.addTo(window.critPriorityEventRange);
+
+            toggleLayer(window.critPriorityEvent);
+            toggleLayer(window.critPriorityEventRange);
         }
     }
+
+    buildAnalysisCharts();
 }
 
 function updateMapMarkers(request) {
@@ -373,22 +386,27 @@ function updateMapMarkers(request) {
 }
 
 async function updateByLayer(req, win, sensorType) {
-    
-    let updated = await window[win].eachLayer( async function (layer) {
+    let updated = false;
+    let count = 0;
+    let size = window[win].getLayers().length;
 
-        let found = false;
+    await window[win].eachLayer( async function (layer) {
+        count ++;
+
         let properties = JSON.parse(layer.options.properties);
-        
+            
         let type = null;
         if (properties.eventID != null && properties.eventID == req.properties.eventID) {
             type = "Event";
-        } else if (properties.sensorID != null && properties.sensorID == req.properties.sensorID) {
+        } else if (req.properties.eventID == null && properties.sensorID != null && properties.sensorID == req.properties.sensorID) {
             type = "Sensor";
         } else if (properties.complexID != null && properties.complexID == req.properties.complexID) {
             type = "Complex";
         }
 
         if (properties != null && type != null) { 
+
+            updated = true;
 
             // updating properties
             layer.setPopupContent((type == "Event" ? req.properties.eventName : type == "Sensor" ? req.properties.sensorName : req.properties.complexName));
@@ -400,16 +418,14 @@ async function updateByLayer(req, win, sensorType) {
             //console.log("layer coord: " + layer.getLatLng() + " - new coord: " + req.geometry.coordinates);
             //if (layer.getLatLng() != req.geometry.coordinates) { layer.setLatLng(req.geometry.coordinates); }
             //layer.setLatLng(newMarker.getLatLng());
-
-            found = true;
+            
         }
 
-        return Promise.resolve(found);
-    });
+        if (updated == false && count == size) {
+            addMarker(req, null);
+        }
 
-    if (!updated) {
-        addMarker(req, null);
-    }
+    });
 }
 
 async function updateProperties(marker, update, type, ownerSensor) {
