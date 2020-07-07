@@ -3,7 +3,7 @@
         {
             "type": "Feature",
             "properties": {
-                "sensorID": "1",
+                "sensorID": 1,
                 "sensorName": "Microphone On Kristian IVs Gate",
                 "sensorType": "Microphone",
                 "audio": "Shooting.wav",
@@ -20,7 +20,7 @@
         {
             "type": "Feature",
             "properties": {
-                "sensorID": "2",
+                "sensorID": 2,
                 "sensorName": "CCTV In Kristiansand Cathedral",
                 "sensorType": "Camera",
                 "video": "Abuse.mp4",
@@ -38,7 +38,7 @@
         {
             "type": "Feature",
             "properties": {
-                "sensorID": "3",
+                "sensorID": 3,
                 "sensorName": "CCTV In NAV Kristiansand",
                 "sensorType": "Camera",
                 "video": "Fighting.mp4",
@@ -56,7 +56,7 @@
         {
             "type": "Feature",
             "properties": {
-                "sensorID": "4",
+                "sensorID": 4,
                 "sensorName": "CCTV On Holbergs Gate",
                 "sensorType": "Camera",
                 "video": "RoadAccidents.mp4",
@@ -74,7 +74,7 @@
         {
             "type": "Feature",
             "properties": {
-                "sensorID": "5",
+                "sensorID": 5,
                 "sensorName": "CCTV On Vestre Strandgate",
                 "sensorType": "Camera",
                 "video": "MilitaryParade.mp4",
@@ -92,7 +92,7 @@
         {
             "type": "Feature",
             "properties": {
-                "sensorID": "6",
+                "sensorID": 6,
                 "sensorName": "CCTV On Fjellgata",
                 "sensorType": "Camera",
                 "video": "MilitaryParade.mp4",
@@ -110,7 +110,7 @@
         {
             "type": "Feature",
             "properties": {
-                "sensorID": "7",
+                "sensorID": 7,
                 "sensorName": "CCTV On Tordenskjolds Gate",
                 "sensorType": "Camera",
                 "video": "MilitaryParade.mp4",
@@ -128,7 +128,7 @@
         {
             "type": "Feature",
             "properties": {
-                "sensorID": "8",
+                "sensorID": 8,
                 "sensorName": "CCTV On Festningsgata",
                 "sensorType": "Camera",
                 "video": "MilitaryParade.mp4",
@@ -146,7 +146,7 @@
         {
             "type": "Feature",
             "properties": {
-                "sensorID": "9",
+                "sensorID": 9,
                 "sensorName": "CCTV On Vestre Strandgate",
                 "sensorType": "Camera",
                 "video": "MilitaryParade.mp4",

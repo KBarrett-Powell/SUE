@@ -164,7 +164,7 @@ async function toggleDetails(json, coordinates){
 
     let chartdata = json.chartPoints;
     let objdetfile = ((json.objDetVideo != null) ? videoLink + json.objDetVideo : null);
-    let saliencyfile = ((json.saliencyVideo != null) ? videoLink + json.saliencyVideo : null);
+    let slctRevVideo = ((json.slctRevVideo != null) ? videoLink + json.slctRevVideo : null);
 
     let videofile = null;
     let audiofile = null; 
@@ -190,7 +190,7 @@ async function toggleDetails(json, coordinates){
        
         clearDetailsMedia()
 
-        AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, saliencyfile, videofile, audiofile, timelineInfo)
+        AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, slctRevVideo, videofile, audiofile, timelineInfo)
 
     } else if (details.classList.contains('hidden') === false) {
 
@@ -204,7 +204,7 @@ async function toggleDetails(json, coordinates){
 
         clearDetailsMedia()
 
-        AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, saliencyfile, videofile, audiofile, timelineInfo)
+        AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, slctRevVideo, videofile, audiofile, timelineInfo)
     }
 }
 
@@ -247,7 +247,7 @@ function clearDetailsMedia() {
     }
 }
 
-function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, saliencyfile, videofile, audiofile, timelineInfo) {
+function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, slctRevVideo, videofile, audiofile, timelineInfo) {
 
     if (type === "Sensor" || type === "Event") {
         if (type === "Sensor") {
@@ -296,9 +296,9 @@ function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, salienc
                 analysisSource.setAttribute('src', objdetfile);
                 analysisPlayer.load();
 
-            } else if (saliencyfile != null) {
+            } else if (slctRevVideo != null) {
                 analysisVideo.style.display = "block";
-                analysisSource.setAttribute('src', saliencyfile);
+                analysisSource.setAttribute('src', slctRevVideo);
                 analysisPlayer.load();
             }
         }

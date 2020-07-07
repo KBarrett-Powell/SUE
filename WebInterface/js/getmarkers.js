@@ -296,8 +296,11 @@ function addMarker(json, iconimg) {
         // let range1 = L.circle(coordinates, {radius: mainradius/3, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.3, weight: 0.2, gradient: true});
         // let range2 = L.circle(coordinates, {radius: mainradius*2/3, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.2, weight: 0.4, gradient: true});
         // let range3 = L.circle(coordinates, {radius: mainradius, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.2, weight: 0.6, gradient: true});
-        let range1 = L.circle(coordinates, {radius: mainradius*2/5, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.6, weight: 3, gradient: true});
-        let range2 = L.circle(coordinates, {radius: mainradius, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.4, weight: 3, gradient: true});
+        let range1 = L.circle(coordinates, {radius: mainradius*1/4, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.6, weight: 3, gradient: true});
+        
+        let rangeRadius = [90, 80, 70, 60, 50, 40, 30];
+        let rad = rangeRadius[Math.floor(Math.random() * rangeRadius.length)];
+        let range2 = L.circle(coordinates, {radius: rad, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.4, weight: 3, gradient: true});
 
         eventmarker.bindPopup(json.properties.eventName)
         
@@ -454,8 +457,8 @@ async function updateProperties(marker, update, type, ownerSensor) {
         if (update.objDetVideo != null) {
             marker.objDetVideo = update.objDetVideo;
         }
-        if (update.saliencyVideo != null) {
-            marker.saliencyVideo = update.saliencyVideo;
+        if (update.slctRevVideo != null) {
+            marker.slctRevVideo = update.slctRevVideo;
         }
         if (update.priority != null) {
             marker.priority = update.priority;

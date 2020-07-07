@@ -88,9 +88,7 @@ router.post('/', function (req, res) {
         let sensorIds = data.map(item => item.id);
         let newId = 0;
         if (sensorIds.length > 0) {
-            newId = "sensor" + toString(sensorIds.length + 1); 
-        } else {
-            newId = "sensor";
+            newId = (sensorIds.length + 1); 
         };
 
         let newSensor = {
@@ -224,7 +222,7 @@ module.exports = {
             for ( i in data.sensors ) {
                 let item  = data.sensors[i];
 
-                maxId = parseInt(item.properties.sensorID, 10);
+                maxId = item.properties.sensorID;
 
                 if (sensor.sensorID != null) {
                     
@@ -259,7 +257,7 @@ module.exports = {
             }
         
             if (found == false) {
-                Id = "" + (maxId + 1); 
+                Id = maxId + 1; 
 
                 newSensor = {
                     "type": "Feature",

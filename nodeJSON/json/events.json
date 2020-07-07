@@ -3,11 +3,11 @@
         {
             "type": "Feature",
             "properties": {
-                "eventID": "1",
+                "eventID": 1,
                 "eventName": "Shooting on Kristian IVs Gate",
                 "eventType": "Person",
                 "description": "Shooting",
-                "sensorID": "1",
+                "sensorID": 1,
                 "chartPoints": [
                     {
                         "audioOnly": [
@@ -89,11 +89,11 @@
         {
             "type": "Feature",
             "properties": {
-                "eventID": "2",
+                "eventID": 2,
                 "eventName": "Abuse In Kristiansand Cathedral",
                 "eventType": "Person",
                 "description": "Abuse",
-                "sensorID": "2",
+                "sensorID": 2,
                 "chartPoints": [
                     {
                         "videoAndObjDet": [
@@ -856,11 +856,11 @@
         {
             "type": "Feature",
             "properties": {
-                "eventID": "3",
+                "eventID": 3,
                 "eventName": "Fighting In NAV Kristiansand",
                 "eventType": "Person",
                 "description": "Fighting",
-                "sensorID": "3",
+                "sensorID": 3,
                 "chartPoints": [
                     {
                         "videoOnly": [
@@ -1350,11 +1350,11 @@
         {
             "type": "Feature",
             "properties": {
-                "eventID": "4",
+                "eventID": 4,
                 "eventName": "Road Accident On Holbergs Gate",
                 "eventType": "Vehicle",
                 "description": "Road Accident",
-                "sensorID": "4",
+                "sensorID": 4,
                 "chartPoints": [
                     {
                         "videoOnly": [
@@ -2024,12 +2024,12 @@
         {
             "type": "Feature",
             "properties": {
-                "eventID": "5",
+                "eventID": 5,
                 "eventName": "Military Parade on Vestre Strandgate",
                 "eventType": "Planned",
                 "description": "Military Parade",
-                "sensorID": "5",
-                "saliencyVideo": "MilitaryParade_desc.mp4",
+                "sensorID": 5,
+                "slctRevVideo": "MilitaryParade_desc.mp4",
                 "priority": 4,
                 "datetime": "2020-03-04T16:11:00Z",
                 "skip": 6

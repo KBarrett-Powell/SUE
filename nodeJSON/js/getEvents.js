@@ -204,7 +204,7 @@ module.exports = {
             for ( i in data.events ) {
                 let item  = data.events[i];
 
-                maxId = parseInt(item.properties.eventID, 10);
+                maxId = item.properties.eventID;
 
                 if (event.eventID != null) {
                     
@@ -232,8 +232,8 @@ module.exports = {
                         if (event.objDetVideo != null) {
                             data.events[i].properties.objDetVideo = event.objDetVideo;
                         }
-                        if (event.saliencyVideo != null) {
-                            data.events[i].properties.saliencyVideo = event.saliencyVideo;
+                        if (event.slctRevVideo != null) {
+                            data.events[i].properties.slctRevVideo = event.slctRevVideo;
                         }
                         if (event.priority != null) {
                             data.events[i].properties.priority = event.priority;
@@ -250,7 +250,7 @@ module.exports = {
             }
         
             if (found == false) {
-                Id = "" + (maxId + 1); 
+                Id = (maxId + 1); 
 
                 newEvent = {
                     "type": "Feature",
@@ -262,7 +262,7 @@ module.exports = {
                         "sensorID": event.sensorID,
                         "chartPoints": event.chartPoints,
                         "objDetVideo": event.objDetVideo,
-                        "saliencyVideo": event.saliencyVideo,
+                        "slctRevVideo": event.slctRevVideo,
                         "priority": event.priority,
                         "datetime": event.datetime
                     },

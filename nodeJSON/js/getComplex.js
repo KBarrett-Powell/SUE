@@ -212,7 +212,7 @@ module.exports = {
             for ( i in data.connections ) {
                 let item  = data.connections[i];
 
-                maxId = parseInt(item.properties.complexID, 10);
+                maxId = item.properties.complexID;
 
                 if (complex.complexID != null) {
                     
@@ -237,7 +237,7 @@ module.exports = {
             }
         
             if (found == false) {
-                Id = "" + (maxId + 1); 
+                Id = (maxId + 1); 
 
                 newComplex = {
                     "properties": {
