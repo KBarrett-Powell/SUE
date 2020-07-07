@@ -231,18 +231,24 @@ function createChart(chartData, isCarousel) {
     else { window.lineGraph = new Chart(ctx, config); }
 }
 
-function buildStaticCharts() {
+function buildAnalysisCharts() {
 
     const pctx = document.getElementById('priorityChart').getContext('2d');
     const tctx = document.getElementById('timeChart').getContext('2d');
 
-    let priorityChart = new Chart(pctx, {
+    let priorityData = [0, 0, 0, 0];
+    priorityData[0] = window.lowPriorityEvent.getLayers().length;
+    priorityData[1] = window.medPriorityEvent.getLayers().length;
+    priorityData[2] = window.highPriorityEvent.getLayers().length;
+    priorityData[3] = window.critPriorityEvent.getLayers().length;
+
+    new Chart(pctx, {
         type: 'bar',
         data: {
             labels: ["4", "3", "2", "1"],
             datasets: [{
                 label: 'Events by Priority',
-                data: [1, 2, 1, 1],
+                data: priorityData,
                 backgroundColor: [
                     'rgba(0, 106, 255, 0.2)',
                     'rgba(255, 255, 0, 0.2)',
@@ -279,11 +285,13 @@ function buildStaticCharts() {
                         stepSize: 1
                     }
                 }]
-            }
+            },
+            responsive: true,
+            maintainAspectRatio: false
         }
     });
 
-    let timeChart = new Chart(tctx, {
+    new Chart(tctx, {
         type: 'line',
 		data: {
             labels: [moment('2020-03-04T16:10:20Z').format('HH:mm:ss'), moment('2020-03-04T16:10:30Z').format('HH:mm:ss'), moment('2020-03-04T16:10:40Z').format('HH:mm:ss'), moment('2020-03-04T16:10:50Z').format('HH:mm:ss'), moment('2020-03-04T16:11:00Z').format('HH:mm:ss')],
@@ -359,7 +367,9 @@ function buildStaticCharts() {
                         stepSize: 1
                     }
                 }]
-            }
+            },
+            responsive: true,
+            maintainAspectRatio: false
         }
     });	
 }

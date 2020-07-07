@@ -656,6 +656,9 @@ audio#audioPlayer {
 }
 /* ******* END Timeline ******** */
 
+.priorityChart, .timeChart {
+    height: 310px;
+}
 /* ******* Different media size texts ******** */
 @media screen and (min-width: 1000px) {
     .toggle-btn h4 {
