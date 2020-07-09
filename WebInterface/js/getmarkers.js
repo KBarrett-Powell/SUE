@@ -28,249 +28,251 @@ window.lowPriorityEventRange = L.layerGroup();
 
 window.complexEvent = L.layerGroup();
 
-window.id = "";
+const eventRadius = 90;
 
+const shadowUrl = "images/marker-shadow.png";
+const iconSize = [35, 54];
+const shadowSize = [54, 54];
+const iconAnchor = [17, 53];
+const popupAnchor = [0, -48];
+
+// to remove
+window.id = "";
 window.prvClickedMarker = null;
 
 // Define camera icon
 const cameraIcon = L.icon({
     iconUrl: 'images/camera-marker.png',
-    shadowUrl: "images/marker-shadow.png",
-
-    iconSize:     [35, 54],
-    shadowSize:   [54, 54],
-    iconAnchor:   [17, 53],
-    popupAnchor:  [0, -48] 
+    shadowUrl: shadowUrl,
+    iconSize:     iconSize,
+    shadowSize:   shadowSize,
+    iconAnchor:   iconAnchor,
+    popupAnchor:  popupAnchor 
 });
 
 // Define microphone icon
 const microphoneIcon = L.icon({
     iconUrl: 'images/microphone-marker.png',
-    shadowUrl: "images/marker-shadow.png",
-
-    iconSize:     [35, 54],
-    shadowSize:   [54, 54],
-    iconAnchor:   [17, 53],
-    popupAnchor:  [0, -48] 
+    shadowUrl: shadowUrl,
+    iconSize:     iconSize,
+    shadowSize:   shadowSize,
+    iconAnchor:   iconAnchor,
+    popupAnchor:  popupAnchor  
 });
 
 // Define human icon
 const humanIcon = L.icon({
     iconUrl: 'images/human-marker.png',
-    shadowUrl: "images/marker-shadow.png",
-
-    iconSize:     [35, 54],
-    shadowSize:   [54, 54],
-    iconAnchor:   [17, 53],
-    popupAnchor:  [0, -48] 
+    shadowUrl: shadowUrl,
+    iconSize:     iconSize,
+    shadowSize:   shadowSize,
+    iconAnchor:   iconAnchor,
+    popupAnchor:  popupAnchor  
 });
 
 // Define UK icon
 const ukMarker = L.icon({
     iconUrl: 'images/uk-marker.png',
-    shadowUrl: "images/marker-shadow.png",
-
-    iconSize:     [35, 54],
-    shadowSize:   [54, 54],
-    iconAnchor:   [17, 53],
-    popupAnchor:  [0, -48] 
+    shadowUrl: shadowUrl,
+    iconSize:     iconSize,
+    shadowSize:   shadowSize,
+    iconAnchor:   iconAnchor,
+    popupAnchor:  popupAnchor 
 });
 
 // Define US icon
 const usMarker = L.icon({
     iconUrl: 'images/us-marker.png',
-    shadowUrl: "images/marker-shadow.png",
-
-    iconSize:     [35, 54],
-    shadowSize:   [54, 54],
-    iconAnchor:   [17, 53],
-    popupAnchor:  [0, -48] 
+    shadowUrl: shadowUrl,
+    iconSize:     iconSize,
+    shadowSize:   shadowSize,
+    iconAnchor:   iconAnchor,
+    popupAnchor:  popupAnchor 
 });
 
 // Define blue marker
 const blueIcon = L.icon({
     iconUrl: 'images/blue-marker.png',
-    shadowUrl: "images/marker-shadow.png",
-
-    iconSize:     [35, 54],
-    shadowSize:   [54, 54],
-    iconAnchor:   [17, 53],
-    popupAnchor:  [0, -48] 
+    shadowUrl: shadowUrl,
+    iconSize:     iconSize,
+    shadowSize:   shadowSize,
+    iconAnchor:   iconAnchor,
+    popupAnchor:  popupAnchor 
 });
 
 // Define yellow marker
 const yellowIcon = L.icon({
     iconUrl: 'images/yellow-marker.png',
-    shadowUrl: "images/marker-shadow.png",
-
-    iconSize:     [35, 54],
-    shadowSize:   [54, 54],
-    iconAnchor:   [17, 53],
-    popupAnchor:  [0, -48]  
+    shadowUrl: shadowUrl,
+    iconSize:     iconSize,
+    shadowSize:   shadowSize,
+    iconAnchor:   iconAnchor,
+    popupAnchor:  popupAnchor 
 });
 
 // Define orange marker
 const orangeIcon = L.icon({
     iconUrl: 'images/orange-marker.png',
-    shadowUrl: "images/marker-shadow.png",
-
-    iconSize:     [35, 54],
-    shadowSize:   [54, 54],
-    iconAnchor:   [17, 53],
-    popupAnchor:  [0, -48]  
+    shadowUrl: shadowUrl,
+    iconSize:     iconSize,
+    shadowSize:   shadowSize,
+    iconAnchor:   iconAnchor,
+    popupAnchor:  popupAnchor 
 });
 
 // Define red marker
 const redIcon = L.icon({
     iconUrl: 'images/red-marker.png',
-    shadowUrl: "images/marker-shadow.png",
-
-    iconSize:     [35, 54],
-    shadowSize:   [54, 54],
-    iconAnchor:   [17, 53],
-    popupAnchor:  [0, -48] 
+    shadowUrl: shadowUrl,
+    iconSize:     iconSize,
+    shadowSize:   shadowSize,
+    iconAnchor:   iconAnchor,
+    popupAnchor:  popupAnchor 
 });
 
 // Define cb blue marker
 const cbBlueIcon = L.icon({
     iconUrl: 'images/cb-drkblue-marker.png',
-    shadowUrl: "images/marker-shadow.png",
-
-    iconSize:     [35, 54],
-    shadowSize:   [54, 54],
-    iconAnchor:   [17, 53],
-    popupAnchor:  [0, -48] 
+    shadowUrl: shadowUrl,
+    iconSize:     iconSize,
+    shadowSize:   shadowSize,
+    iconAnchor:   iconAnchor,
+    popupAnchor:  popupAnchor 
 });
 
 // Define cb yellow marker
 const cbYellowIcon = L.icon({
     iconUrl: 'images/cb-lghtblue-marker.png',
-    shadowUrl: "images/marker-shadow.png",
-
-    iconSize:     [35, 54],
-    shadowSize:   [54, 54],
-    iconAnchor:   [17, 53],
-    popupAnchor:  [0, -48]  
+    shadowUrl: shadowUrl,
+    iconSize:     iconSize,
+    shadowSize:   shadowSize,
+    iconAnchor:   iconAnchor,
+    popupAnchor:  popupAnchor 
 });
 
 // Define cb orange marker
 const cbOrangeIcon = L.icon({
     iconUrl: 'images/cb-orange-marker.png',
-    shadowUrl: "images/marker-shadow.png",
-
-    iconSize:     [35, 54],
-    shadowSize:   [54, 54],
-    iconAnchor:   [17, 53],
-    popupAnchor:  [0, -48]  
+    shadowUrl: shadowUrl,
+    iconSize:     iconSize,
+    shadowSize:   shadowSize,
+    iconAnchor:   iconAnchor,
+    popupAnchor:  popupAnchor  
 });
 
 // Define cb red marker
 const cbRedIcon = L.icon({
     iconUrl: 'images/cb-red-marker.png',
-    shadowUrl: "images/marker-shadow.png",
-
-    iconSize:     [35, 54],
-    shadowSize:   [54, 54],
-    iconAnchor:   [17, 53],
-    popupAnchor:  [0, -48] 
+    shadowUrl: shadowUrl,
+    iconSize:     iconSize,
+    shadowSize:   shadowSize,
+    iconAnchor:   iconAnchor,
+    popupAnchor:  popupAnchor 
 });
 
 // Define complex marker
 const complexIcon = L.icon({
     iconUrl: 'images/complex-marker.png',
-    shadowUrl: "images/marker-shadow.png",
-
-    iconSize:     [35, 54],
-    shadowSize:   [54, 54],
-    iconAnchor:   [17, 53],
-    popupAnchor:  [0, -48]  
-});
-
-// Define selected camera icon
-const cameraSelectIcon = L.icon({
-    iconUrl: 'images/camera select pin.svg',
-    shadowUrl: "images/marker-shadow.png",
-
-    iconSize:     [31, 52],
-    shadowSize:   [52, 52],
-    iconAnchor:   [15, 50],
-    popupAnchor:  [0, -45] 
+    shadowUrl: shadowUrl,
+    iconSize:     iconSize,
+    shadowSize:   shadowSize,
+    iconAnchor:   iconAnchor,
+    popupAnchor:  popupAnchor  
 });
 
 // Add marker function
-function addMarker(json, iconimg) {
+function addMarker(json, sensor) {
     let type = json.geometry.type;
     let coordinates = json.geometry.coordinates;
 
-    if (type === "Point" && iconimg != null) {
-        let sensormarker = L.marker(coordinates, {icon: iconimg, properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap);
+    if (type === "Point" && sensor) {
+        let sensorMarker = null;
         let range1 = null;
         let range2 = null;
         let range3 = null;
         let range4 = null;
         let range5 = null;
 
-        sensormarker.bindPopup(json.properties.sensorName);
-
         if (json.properties.sensorType === "Camera") {
-            range1 = L.semiCircle(coordinates, {radius: 10, fillColor: '#999', fillOpacity: 0.6, weight: 0, gradient: true}).setDirection(json.properties.rangeDirection, 90);
-            range2 = L.semiCircle(coordinates, {radius: 15, fillColor: '#999', fillOpacity: 0.5, weight: 0, gradient: true}).setDirection(json.properties.rangeDirection, 90);
-            range3 = L.semiCircle(coordinates, {radius: 20, fillColor: '#999', fillOpacity: 0.4, weight: 0, gradient: true}).setDirection(json.properties.rangeDirection, 90);
-            range4 = L.semiCircle(coordinates, {radius: 25, fillColor: '#999', fillOpacity: 0.3, weight: 0, gradient: true}).setDirection(json.properties.rangeDirection, 90);
+            range1 = L.semiCircle(coordinates, {radius: 10, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true}).setDirection(json.properties.rangeDirection, 90);
+            range2 = L.semiCircle(coordinates, {radius: 15, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true}).setDirection(json.properties.rangeDirection, 90);
+            range3 = L.semiCircle(coordinates, {radius: 20, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true}).setDirection(json.properties.rangeDirection, 90);
+            range4 = L.semiCircle(coordinates, {radius: 25, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true}).setDirection(json.properties.rangeDirection, 90);
             range5 = L.semiCircle(coordinates, {radius: 30, fillColor: '#999', weight: 0, gradient: true}).setDirection(json.properties.rangeDirection, 90);
         
-            sensormarker.addTo(window.sensorCamera);
+            sensorMarker = L.marker(coordinates, {icon: cameraIcon, properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap).addTo(window.sensorCamera);
             range1.addTo(window.sensorCameraRange);
             range2.addTo(window.sensorCameraRange);
             range3.addTo(window.sensorCameraRange);
             range4.addTo(window.sensorCameraRange);
             range5.addTo(window.sensorCameraRange);
 
+            toggleLayer(window.sensorCamera);
+            toggleLayer(window.sensorCameraRange)
+
         } else {
-            range1 = L.circle(coordinates, {radius: 10, fillColor: '#999', fillOpacity: 0.6, weight: 0, gradient: true});
-            range2 = L.circle(coordinates, {radius: 15, fillColor: '#999', fillOpacity: 0.5, weight: 0, gradient: true});
-            range3 = L.circle(coordinates, {radius: 20, fillColor: '#999', fillOpacity: 0.4, weight: 0, gradient: true});
-            range4 = L.circle(coordinates, {radius: 25, fillColor: '#999', fillOpacity: 0.3, weight: 0, gradient: true});
+            range1 = L.circle(coordinates, {radius: 10, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true});
+            range2 = L.circle(coordinates, {radius: 15, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true});
+            range3 = L.circle(coordinates, {radius: 20, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true});
+            range4 = L.circle(coordinates, {radius: 25, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true});
             range5 = L.circle(coordinates, {radius: 30, fillColor: '#999', weight: 0, gradient: true});
 
             if (json.properties.sensorType === "Microphone") {
-                sensormarker.addTo(window.sensorMicrophone);
+
+                sensorMarker = L.marker(coordinates, {icon: microphoneIcon, properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap).addTo(window.sensorMicrophone);
                 range1.addTo(window.sensorMicrophoneRange);
                 range2.addTo(window.sensorMicrophoneRange);
                 range3.addTo(window.sensorMicrophoneRange);
                 range4.addTo(window.sensorMicrophoneRange);
                 range5.addTo(window.sensorMicrophoneRange);
+
+                toggleLayer(window.sensorMicrophone);
+                toggleLayer(window.sensorMicrophoneRange)
         
             } else {
-                sensormarker.addTo(window.sensorHuman);
+
+                sensorMarker = L.marker(coordinates, {icon: humanIcon, properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap).addTo(window.sensorHuman);
                 range1.addTo(window.sensorHumanRange);
                 range2.addTo(window.sensorHumanRange);
                 range3.addTo(window.sensorHumanRange);
                 range4.addTo(window.sensorHumanRange);
                 range5.addTo(window.sensorHumanRange);
+
+                toggleLayer(window.sensorHuman);
+                toggleLayer(window.sensorHumanRange)
             }
         }
 
+        sensorMarker.bindPopup(json.properties.sensorName);
+
         if (json.properties.owner == "UK") {
-            L.marker(coordinates, {icon: ukMarker, properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap).addTo(window.sensorUK);
+            sensorMarker = L.marker(coordinates, {icon: ukMarker, properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap).addTo(window.sensorUK);
             range1.addTo(window.sensorUKRange);
             range2.addTo(window.sensorUKRange);
             range3.addTo(window.sensorUKRange);
             range4.addTo(window.sensorUKRange);
             range5.addTo(window.sensorUKRange);
 
+            toggleLayer(window.sensorUK);
+            toggleLayer(window.sensorUKRange);
+
         } else {
-            L.marker(coordinates, {icon: usMarker, properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap).addTo(window.sensorUS);
+            sensorMarker = L.marker(coordinates, {icon: usMarker, properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap).addTo(window.sensorUS);
             range1.addTo(window.sensorUSRange);
             range2.addTo(window.sensorUSRange);
             range3.addTo(window.sensorUSRange);
             range4.addTo(window.sensorUSRange);
             range5.addTo(window.sensorUSRange);
+        
+            toggleLayer(window.sensorUS);
+            toggleLayer(window.sensorUSRange);
         }
+
+        sensorMarker.bindPopup(json.properties.sensorName);
     
     } else {
-        let mainradius = window.complexDist;
-        //let radius = json.properties.uncertainty;
+        let rangeRadius = [90, 80, 70, 60, 50, 40, 30];
+        let rad = rangeRadius[Math.floor(Math.random() * rangeRadius.length)];
 
         let iconChoice = null;
         let colourChoice = "";
@@ -293,22 +295,15 @@ function addMarker(json, iconimg) {
         }
 
         let eventmarker = L.marker(coordinates, {icon: iconChoice, properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap);
-        // let range1 = L.circle(coordinates, {radius: mainradius/3, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.3, weight: 0.2, gradient: true});
-        // let range2 = L.circle(coordinates, {radius: mainradius*2/3, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.2, weight: 0.4, gradient: true});
-        // let range3 = L.circle(coordinates, {radius: mainradius, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.2, weight: 0.6, gradient: true});
-        let range1 = L.circle(coordinates, {radius: mainradius*1/4, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.6, weight: 3, gradient: true});
-        
-        let rangeRadius = [90, 80, 70, 60, 50, 40, 30];
-        let rad = rangeRadius[Math.floor(Math.random() * rangeRadius.length)];
+        let range1 = L.circle(coordinates, {radius: eventRadius*1/4, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.6, weight: 3, gradient: true});
         let range2 = L.circle(coordinates, {radius: rad, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.4, weight: 3, gradient: true});
 
-        eventmarker.bindPopup(json.properties.eventName)
+        eventmarker.bindPopup(json.properties.eventName);
         
         if (json.properties.priority == 4) {
             eventmarker.addTo(window.lowPriorityEvent);
             range1.addTo(window.lowPriorityEventRange);
             range2.addTo(window.lowPriorityEventRange);
-            //range3.addTo(window.lowPriorityEventRange);
 
             toggleLayer(window.lowPriorityEvent);
             toggleLayer(window.lowPriorityEventRange);
@@ -317,7 +312,6 @@ function addMarker(json, iconimg) {
             eventmarker.addTo(window.medPriorityEvent);
             range1.addTo(window.medPriorityEventRange);
             range2.addTo(window.medPriorityEventRange);
-            //range3.addTo(window.medPriorityEventRange);
 
             toggleLayer(window.medPriorityEvent);
             toggleLayer(window.medPriorityEventRange);
@@ -326,7 +320,6 @@ function addMarker(json, iconimg) {
             eventmarker.addTo(window.highPriorityEvent);
             range1.addTo(window.highPriorityEventRange);
             range2.addTo(window.highPriorityEventRange);
-            //range3.addTo(window.highPriorityEventRange);
 
             toggleLayer(window.highPriorityEvent);
             toggleLayer(window.highPriorityEventRange);
@@ -335,7 +328,6 @@ function addMarker(json, iconimg) {
             eventmarker.addTo(window.critPriorityEvent);
             range1.addTo(window.critPriorityEventRange);
             range2.addTo(window.critPriorityEventRange);
-            //range3.addTo(window.critPriorityEventRange);
 
             toggleLayer(window.critPriorityEvent);
             toggleLayer(window.critPriorityEventRange);
@@ -345,7 +337,7 @@ function addMarker(json, iconimg) {
     buildAnalysisCharts();
 }
 
-function updateMapMarkers(request) {
+async function updateMapMarkers(request) {
 
     for (let i in request.sensorCamera) {
         updateByLayer(request.sensorCamera[i], "sensorCamera", false);
@@ -384,56 +376,76 @@ function updateMapMarkers(request) {
     }
 
     for (let i in request.complexEvent) {
-        updateByLayer(request.complexEvent[i], "complexEvent", null);
+        await updateByLayer(request.complexEvent[i], "complexEvent", null);
     }
 }
 
-async function updateByLayer(req, win, sensorType) {
+async function updateByLayer(req, win, ownerSensor) {
     let updated = false;
     let count = 0;
     let size = window[win].getLayers().length;
 
-    await window[win].eachLayer( async function (layer) {
-        count ++;
+    let sensor = (req.properties.sensorType != null ? true : false);
 
-        let properties = JSON.parse(layer.options.properties);
+    let icon = getIcon(req.properties, ownerSensor);
+
+    if (window[win].getLayers().length > 0) {
+
+        await window[win].eachLayer( async function (layer) {
+            count ++;
+
+            let properties = null;
+            try {
+                properties = JSON.parse(layer.options.properties);
+            } catch {
+                console.log("no properties found on layer");
+            }
             
-        let type = null;
-        if (properties.eventID != null && properties.eventID == req.properties.eventID) {
-            type = "Event";
-        } else if (req.properties.eventID == null && properties.sensorID != null && properties.sensorID == req.properties.sensorID) {
-            type = "Sensor";
-        } else if (properties.complexID != null && properties.complexID == req.properties.complexID) {
-            type = "Complex";
+            if (properties != null) {
+                let type = null;
+                if (properties.eventID != null && properties.eventID == req.properties.eventID) {
+                    type = "Event";
+                } else if (req.properties.eventID == null && properties.sensorID != null && properties.sensorID == req.properties.sensorID) {
+                    type = "Sensor";
+                } else if (properties.complexID != null && properties.complexID == req.properties.complexID) {
+                    type = "Complex";
+                }
+
+                if (properties != null && type != null) { 
+
+                    updated = true;
+
+                    // updating properties
+                    layer.setPopupContent((type == "Event" ? req.properties.eventName : type == "Sensor" ? req.properties.sensorName : req.properties.complexName));
+                    let output = await updateProperties(properties, req.properties, type, ownerSensor);
+                    layer.options.properties = JSON.stringify(output);
+
+                    // updating map marker information
+                    if (output.newIcon != null) { layer.setIcon(icon); }
+                    //if (layer.getLatLng() != req.geometry.coordinates) { layer.setLatLng(req.geometry.coordinates); }
+                    //layer.setLatLng(newMarker.getLatLng());
+                    
+                }
+
+                if (updated == false && count == size) {
+                    if (req.properties.complexID != null) {
+                        await processComplexEvent(req);
+                    } else {
+                        addMarker(req, sensor);
+                    }
+                }
+            }
+        });
+    } else {
+        if (req.properties.complexID != null) {
+            await processComplexEvent(req);
+        } else {
+            addMarker(req, sensor);
         }
-
-        if (properties != null && type != null) { 
-
-            updated = true;
-
-            // updating properties
-            layer.setPopupContent((type == "Event" ? req.properties.eventName : type == "Sensor" ? req.properties.sensorName : req.properties.complexName));
-            let output = await updateProperties(properties, req.properties, type, sensorType);
-            layer.options.properties = JSON.stringify(output.marker);
-
-            // updating map marker information
-            if (output.newIcon != null) { layer.setIcon(output.newIcon); }
-            //console.log("layer coord: " + layer.getLatLng() + " - new coord: " + req.geometry.coordinates);
-            //if (layer.getLatLng() != req.geometry.coordinates) { layer.setLatLng(req.geometry.coordinates); }
-            //layer.setLatLng(newMarker.getLatLng());
-            
-        }
-
-        if (updated == false && count == size) {
-            addMarker(req, null);
-        }
-
-    });
+    }
 }
 
-async function updateProperties(marker, update, type, ownerSensor) {
-    let newIcon = null;
-    let jsonObj = {};
+async function updateProperties(marker, update, type) {
 
     if (type == "Event") {
         // if (marker.timeline == null || update.geometry.coordinates != marker.timeline[Object.keys(marker.timeline).length - 1]) {
@@ -468,10 +480,7 @@ async function updateProperties(marker, update, type, ownerSensor) {
             marker.datetime = update.datetime;
         }
 
-        jsonObj.marker = marker;
-        jsonObj.newIcon = newIcon;
-
-        return Promise.resolve(jsonObj);
+        return Promise.resolve(marker);
 
     } else if (type == "Sensor") {
         // if (update.geometry.coordinates != null) {
@@ -482,7 +491,6 @@ async function updateProperties(marker, update, type, ownerSensor) {
         }
         if (update.sensorType != null) {
             marker.sensorType = update.sensorType;
-            if (!ownerSensor) { newIcon = (marker.sensorType == "Camera" ? cameraIcon : marker.sensorType == "Microphone" ? microphoneIcon : humanIcon); }
         }
         if (update.video != null) {
             marker.video = update.video;
@@ -495,13 +503,9 @@ async function updateProperties(marker, update, type, ownerSensor) {
         }
         if (update.owner != null) {
             marker.owner = update.owner;
-            if (ownerSensor) { newIcon = (marker.owner == "UK" ? ukMarker : usMarker); }
         }
 
-        jsonObj.marker = marker;
-        jsonObj.newIcon = newIcon;
-
-        return Promise.resolve(jsonObj);
+        return Promise.resolve(marker);
     
     } else {
         if (update.complexName != null) {
@@ -514,70 +518,89 @@ async function updateProperties(marker, update, type, ownerSensor) {
             marker.datetime = update.datetime;
         }
 
-        jsonObj.marker = marker;
-        jsonObj.newIcon = newIcon;
-
-        return Promise.resolve(jsonObj);
+        return Promise.resolve(marker);
     }
 }
 
-// Get sensor markers
-function getSensorMarkers(callback) {
-    const sensorurlwithtime = sensorsurl + "?iso=" + window.datetime.toISOString();
-    $.getJSON(sensorurlwithtime, function(data) {
-        callback(data.sensors);
-    });
-}
+function getIcon(properties, ownerSensor) {
+    if (properties.sensorType != null) {
+        if (ownerSensor) { 
+            return (properties.owner == "UK" ? ukMarker : usMarker); 
+        } else { 
+            return (properties.sensorType == "Camera" ? cameraIcon : properties.sensorType == "Microphone" ? microphoneIcon : humanIcon); 
+        }
+    } else if (properties.priority != null) {
+        if (window.accessibility) {
+            return (properties.priority == 1 ? cbRedIcon : properties.priority == 2 ? cbOrangeIcon : properties.priority == 3 ? cbYellowIcon : cbBlueIcon);
+        } else {
+            return (properties.priority == 1 ? redIcon : properties.priority == 2 ? orangeIcon : properties.priority == 3 ? yellowIcon : blueIcon);
+        }        
+    } else {
+        return complexIcon;
+    }
+};
 
-// Get event markers
-function getEventMarkers(callback) {
-    const eventurlwithtime = eventsurl + "?iso=" + window.datetime.toISOString();
-    $.getJSON(eventurlwithtime, function(data) {
-        callback(data.events);
-    });
-}
+async function findSensor(id) {
+    let found = null;
 
-// Get complex event polygons
-function getComplexEvents(callback) {
-    const complexurlwithtime = complexurl + "?iso=" + window.datetime.toISOString();
-    $.getJSON(complexurlwithtime, function(data) {
-        callback(data.connections);
-    });
-}
+    found = await isInLayer(id, window.sensorUK);
 
-// Get sensor markers
-function getAllSensorMarkers(callback) {
-    $.getJSON(sensorsurl, function(data) {
-        callback(data.sensors);
-    });
-}
+    if (found != null && !isEmpty(found)) { 
+        return found;
 
-// Get event markers
-function getAllEventMarkers(callback) {
-    $.getJSON(eventsurl, function(data) {
-        callback(data.events);
-    });
-}
+    } else {
+        found = await isInLayer(id, window.sensorUS);
 
-// Get complex event polygons
-function getAllComplexEvents(callback) {
-    $.getJSON(complexurl, function(data) {
-        callback(data.connections);
-    });
-}
+        if (found != null && !isEmpty(found)) { 
+            return found
+        }
+    };
+    return null;
+};
 
-// Get sensors by id
-function getSensorMarkersByID(callback) {
-    const sensorsurlwithid = sensorsurl + "/" + window.id;
-    $.getJSON(sensorsurlwithid, function(data) {
-        callback(data);
-    });
-}
+async function findEvents(list) {
+    let discoveredItems = [];
 
-// Get events by id
-function getEventMarkersByID(callback) {
-    const eventsurlwithid = eventsurl + "/" + window.id;
-    $.getJSON(eventsurlwithid, function(data) {
-        callback(data);
-    });
-}
+    for ( let i in list ) {
+        let found = null;
+
+        found = await isInLayer(list[i], window.critPriorityEvent);
+
+        if (found != null && !isEmpty(found)) { 
+            discoveredItems.push(found);
+
+        } else {
+            found = await isInLayer(list[i], window.highPriorityEvent);
+
+            if (found != null && !isEmpty(found)) { 
+                discoveredItems.push(found);
+             
+            } else {
+                found = await isInLayer(list[i], window.medPriorityEvent);
+    
+                if (found != null && !isEmpty(found)) {
+                    discoveredItems.push(found);
+                 
+                } else {
+                    found = await isInLayer(list[i], window.lowPriorityEvent);
+        
+                    if (found != null && !isEmpty(found)) {
+                        discoveredItems.push(found); 
+                     
+                    }
+                }
+            }
+        }
+    }
+
+    return discoveredItems;
+};
+
+function isEmpty(obj) {
+    for ( var key in obj ) {
+        if ( obj.hasOwnProperty(key) ) {
+            return false;
+        }
+    }
+    return true;
+};

@@ -177,6 +177,12 @@ module.exports = {
     getSensors: async function getSensors(request) {
         let data = await fsp.readFile( sensorsJsonFile, {encoding: 'utf8'});
         data = JSON.parse( data );
+
+        let sensorCamera = [];
+        let sensorMicrophone = [];
+        let sensorHuman = [];
+        let sensorUK = [];
+        let sensorUS = [];
     
         if (request != null && request.size() < data.sensors.size()) {
             
@@ -191,23 +197,66 @@ module.exports = {
                     if ( sensor.properties.sensorID == req.sensorID ) {
                         found = true;
             
-                        return sensor;
+                        if (sensor.properties.sensorType == "Camera") {
+                            sensorCamera.push(sensor);
+                        } else if (sensor.properties.sensorType == "Microphone") {
+                            sensorMicrophone.push(sensor);
+                        } else {
+                            sensorHuman.push(sensor);
+                        } 
+                        
+                        if (sensor.properties.owner == "UK") {
+                            sensorUK.push(sensor);
+                        } else {
+                            sensorUS.push(sensor);
+                        }
+
+                        break;
                     }
                 }
             }
 
-            // if ( found == false ) {
-            //     return "404";
-            // }
-
         } else {
-            return data;
+            for ( let i in data.sensors ) {
+                let sensor = data.sensors[i];
+
+                if (sensor.properties.sensorType == "Camera") {
+                    sensorCamera.push(sensor);
+                } else if (sensor.properties.sensorType == "Microphone") {
+                    sensorMicrophone.push(sensor);
+                } else {
+                    sensorHuman.push(sensor);
+                } 
+                
+                if (sensor.properties.owner == "UK") {
+                    sensorUK.push(sensor);
+                } else {
+                    sensorUS.push(sensor);
+                }
+            }
         }
+
+        let jsonResp = {
+            "type":"update",
+            "sensorCamera": sensorCamera,
+            "sensorMicrophone": sensorMicrophone,
+            "sensorHuman": sensorHuman,
+            "sensorUK": sensorUK,
+            "sensorUS": sensorUS
+        }
+
+        return JSON.stringify(jsonResp);
     }, 
     postSensor: async function postSensor(request) {
 
         let data = await fsp.readFile( sensorsJsonFile, {encoding: 'utf8'});
         data = JSON.parse( data );
+
+        let sensorCamera = [];
+        let sensorMicrophone = [];
+        let sensorHuman = [];
+        let sensorUK = [];
+        let sensorUS = [];
 
         for (let req in request) {
 
@@ -251,6 +300,8 @@ module.exports = {
                             data.sensors[i].properties.owner = sensor.owner;
                         }
 
+                        newSensor = data.sensors[i];
+
                         break;
                     }
                 }
@@ -278,11 +329,36 @@ module.exports = {
 
                 data.sensors.push(newSensor);
             }
+
+            if (newSensor.properties.sensorType == "Camera") {
+                sensorCamera.push(newSensor);
+            } else if (newSensor.properties.sensorType == "Microphone") {
+                sensorMicrophone.push(newSensor);
+            } else {
+                sensorHuman.push(newSensor);
+            } 
+            
+            if (newSensor.properties.owner == "UK") {
+                sensorUK.push(newSensor);
+            } else {
+                sensorUS.push(newSensor);
+            }
         }
 
         fs.writeFile( sensorsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
             if (err) throw err;
         });
+
+        let jsonResp = {
+            "type":"update",
+            "sensorCamera": sensorCamera,
+            "sensorMicrophone": sensorMicrophone,
+            "sensorHuman": sensorHuman,
+            "sensorUK": sensorUK,
+            "sensorUS": sensorUS
+        }
+
+        return jsonResp
     },
     deleteSensor: async function deleteSensor(request) {
         let data = await fsp.readFile( sensorsJsonFile, {encoding: 'utf8'});
@@ -306,9 +382,6 @@ module.exports = {
                     }
                 }
             }
-            // if ( found == false ) {
-            //     return "404";
-            // }
         } 
 
         fs.writeFile( sensorsJsonFile, JSON.stringify(data, undefined, 4), function (err) {

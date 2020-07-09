@@ -171,13 +171,12 @@ async function toggleDetails(json, coordinates){
 
     if (type == "Event") {
 
-        window.id = json.sensorID;
-        let sensor = await new Promise((resolve, reject) => {
-            getSensorMarkersByID(resolve);
-        });
+        let sensor = JSON.parse((await findSensor(json.sensorID)).options.properties);
 
-        videofile = ((sensor.properties.video != null) ? videoLink + sensor.properties.video : null);
-        audiofile = ((sensor.properties.audio != null) ? audioLink + sensor.properties.audio : null);
+        if (sensor != null) {
+            videofile = ((sensor.video != null) ? videoLink + sensor.video : null);
+            audiofile = ((sensor.audio != null) ? audioLink + sensor.audio : null);
+        }
 
     } else if (type == "Sensor") {
         videofile = ((json.video != null) ? videoLink + json.video : null);

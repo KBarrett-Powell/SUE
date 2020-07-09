@@ -1,24 +1,39 @@
-async function processComplexEvent(complex) {
+window.currentComplex = [];
+
+async function processComplexEvent(json) {
+    let currentComplexLst = window.currentComplex;
+    currentComplexLst.push(json);
+
+    let refinedList = await refineList(currentComplexLst); 
+    window.currentComplex = refinedList;
+
+    if (refinedList != currentComplexLst) {
+        refreshComplex();
+
+        for ( let i in refinedList ) {
+            let complex = refinedList[i];
+            await addComplexMarker(complex);
+        }
+    }
+};
+
+async function addComplexMarker(complex) {
     let eventCoordinates = [];
     let eventDetails = [];
-    let y = 0;
-    let x = 0;
+    let lat = 0;
+    let long = 0;
 
-    for (let i in complex.properties.events ) {
-        let item = complex.properties.events[i];
+    let events = await findEvents(complex.properties.events);
 
-        window.id = item;
+    for ( let i in events ) {
+        let item = JSON.parse(events[i].options.properties);
 
-        let data = await new Promise((resolve, reject) => {
-            getEventMarkersByID(resolve);
-        });
-
-        let coordstr = data.geometry.coordinates;
+        let coordstr = events[i].getLatLng();
        
-        y += coordstr[0];
-        x += coordstr[1];
+        lat += coordstr.lat;
+        long += coordstr.lng;
 
-        let obj = {datetime: data.properties.datetime, name: data.properties.eventName, description: data.properties.eventType + " - " + data.properties.description, coordinates: "[" + coordstr[0] + ", " + coordstr[1] + "]", priority: data.properties.priority};
+        let obj = {datetime: item.datetime, name: item.eventName, description: item.eventType + " - " + item.description, coordinates: "[" + coordstr.lat + ", " + coordstr.lng + "]", priority: item.priority};
 
         eventCoordinates.push(coordstr);
         eventDetails.push(obj);
@@ -26,10 +41,10 @@ async function processComplexEvent(complex) {
 
     if (complex.properties.events != null && complex.properties.events.length > 0) {
 
-        y = y / eventCoordinates.length;
-        x = x / eventCoordinates.length;
+        lat = lat / eventCoordinates.length;
+        long = long / eventCoordinates.length;
 
-        let markerCoordinates = [y, x];
+        let markerCoordinates = [lat, long];
 
         let coordinates = [];
         for ( let i in eventCoordinates ) {
@@ -39,40 +54,35 @@ async function processComplexEvent(complex) {
         let cmplxproperties = complex.properties;
         cmplxproperties.eventDetails = eventDetails;
 
-        L.polyline(coordinates, {color: "#ee133b"}).addTo(window.complexEvent);
+        L.polyline(coordinates, {color: "#ee133b", properties: JSON.stringify(cmplxproperties)}).addTo(window.complexEvent);
         complexevent = L.marker(markerCoordinates, {icon: complexIcon, properties: JSON.stringify(cmplxproperties)}).on('click', toggleDetailsFromMap).addTo(window.complexEvent);
         complexevent.bindPopup(complex.properties.complexName)
+
+        toggleLayer(window.complexEvent);
     }
-}
-
-function listContains(prevlist, curlist) {
-    let match = true;
-
-    for ( let i in prevlist ) {
-
-        if (!curlist.includes(prevlist[i])) {
-            match = false;
-        }
-    }
-
-    return match;
 }
 
 function refineList(list) {
     let refinedList = [];
     let complexList = [];
-
+      
     for ( let i in list ) {
-        let complex = list[i];
+        let newEvents = list[i].properties.events;
+        let okayToAdd = true;
 
         for ( let d in complexList ) {
-            let val = complexList[d];
+            let prevEvents = complexList[d].properties.events;
 
-            if ( listContains(val.properties.events, complex.properties.events) ) {
+            if (newEvents.every(function(item) {return prevEvents.indexOf(item) >= 0;})) {
+                okayToAdd = false;
+            }
+
+            if (prevEvents.every(function(item) {return newEvents.indexOf(item) >= 0;})) {
                 delete complexList[d];
             }
         }
-        complexList.push(complex);
+
+        if (okayToAdd) { complexList.push(list[i]); }
     }
 
     for ( let c in complexList ) {
@@ -82,30 +92,6 @@ function refineList(list) {
             refinedList.push(complex);
         }
     }
+
     return refinedList;
 }
-
-function compareList(current, previous) { 
-
-    let match = true;
-
-    if (current.length == previous.length) {
-        for (let i in previous) {
-            if ( !current[i].properties.complexID == previous[i].properties.complexID ) {
-                match = false;
-            }
-        }
-    } else {
-        match = false;
-    }
-
-    return match;
-}
-
-// function calculateComplex(events) {
-//     for (i in events) {
-//         if(events[i].datetime - events[i].datetime < window.complexTime && ) {
-
-//         }
-//     }
-// }

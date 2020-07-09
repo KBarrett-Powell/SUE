@@ -110,7 +110,6 @@ router.put('/:id', function (req, res) {
 
             data[req.params.id] = updatedEvent;
 
-            console.log( data );
             res.sendStatus(204);
             res.end( JSON.stringify(data));
 
@@ -150,11 +149,12 @@ module.exports = {
         let data = await fsp.readFile( eventsJsonFile, {encoding: 'utf8'});
         data = JSON.parse( data );
 
-        console.log("getevents: " + JSON.stringify(data));
+        let critPriorityEvent = [];
+        let highPriorityEvent = [];
+        let medPriorityEvent = [];
+        let lowPriorityEvent = [];
     
         if (request != null && request.size() < data.events.size()) {
-
-            console.log("searching for id");
             
             for ( let i in request ) {
                 let found = false;
@@ -167,19 +167,45 @@ module.exports = {
                     if ( event.properties.eventID == req.eventID ) {
                         found = true;
             
-                        return event;
+                        if (event.properties.priority == 1) {
+                            critPriorityEvent.push(event);
+                        } else if (event.properties.priority == 2) {
+                            highPriorityEvent.push(event);
+                        } else if (event.properties.priority == 3) {
+                            medPriorityEvent.push(event);
+                        } else {
+                            lowPriorityEvent.push(event);
+                        }
+
+                        break;
                     }
                 }
-
-                // if ( found == false ) {
-                //     return "404";
-                // }
             }
-
         } else {
-            console.log("sending all");
-            return data;
+            for ( let i in data.events ) {
+                let event = data.events[i];
+
+                if (event.properties.priority == 1) {
+                    critPriorityEvent.push(event);
+                } else if (event.properties.priority == 2) {
+                    highPriorityEvent.push(event);
+                } else if (event.properties.priority == 3) {
+                    medPriorityEvent.push(event);
+                } else {
+                    lowPriorityEvent.push(event);
+                }
+            }
         }
+
+        let jsonResp = {
+            "type":"update",
+            "critPriorityEvent": critPriorityEvent,
+            "highPriorityEvent": highPriorityEvent,
+            "medPriorityEvent": medPriorityEvent,
+            "lowPriorityEvent": lowPriorityEvent
+        }
+
+        return JSON.stringify(jsonResp);
     }, 
     postEvent: async function postEvent(request) {
 
@@ -323,9 +349,6 @@ module.exports = {
                     }
                 }
             }
-            // if ( found == false ) {
-            //     return "404";
-            // }
         } 
 
         fs.writeFile( eventsJsonFile, JSON.stringify(data, undefined, 4), function (err) {

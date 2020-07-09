@@ -1,14 +1,24 @@
-function updateLayers() {
-    removeAllLayers();
+function initializeLayers() {
+    window.critPriorityEventRange.addTo(window.leafletmap);
+    window.highPriorityEventRange.addTo(window.leafletmap);
+    window.medPriorityEventRange.addTo(window.leafletmap);
+    window.lowPriorityEventRange.addTo(window.leafletmap);
 
-    for (let i = 1; i < 10; i++) {
-        let string = "layer" + i;
-        if ( document.getElementById(string).checked === true ) {
-            let vari = document.getElementById(string).value;
-            window[vari].addTo(window.leafletmap);
-        }     
-    }
-}
+    window.sensorCameraRange.addTo(window.leafletmap);
+    window.sensorMicrophoneRange.addTo(window.leafletmap);
+    window.sensorHumanRange.addTo(window.leafletmap);
+
+    window.sensorCamera.addTo(window.leafletmap);
+    window.sensorMicrophone.addTo(window.leafletmap);
+    window.sensorHuman.addTo(window.leafletmap);
+
+    window.critPriorityEvent.addTo(window.leafletmap);
+    window.highPriorityEvent.addTo(window.leafletmap);
+    window.medPriorityEvent.addTo(window.leafletmap);
+    window.lowPriorityEvent.addTo(window.leafletmap);
+
+    window.complexEvent.addTo(window.leafletmap);
+};
 
 function alterLayers(dict) {
     removeAllLayers();
@@ -17,8 +27,24 @@ function alterLayers(dict) {
         if (i != "ownerSensors" && dict[i] === true) {
             window[i].addTo(window.leafletmap);
         }
-    } 
-}
+    }; 
+};
+
+async function isInLayer(id, layer) {
+    let data = await layer.getLayers();
+
+    for ( let i in data ) {
+        let properties = JSON.parse(data[i].options.properties);
+            
+        if (properties.eventID != null && properties.eventID == id) {
+            return data[i];
+        } else if (properties.sensorID != null && properties.sensorType != null && properties.sensorID == id) {
+            return data[i];
+        } else if (properties.complexID != null && properties.complexID == id) {
+            return data[i];
+        }
+    };
+};
 
 function removeAllLayers() {
     window.leafletmap.removeLayer(window.sensorCamera);
@@ -46,7 +72,7 @@ function removeAllLayers() {
     window.leafletmap.removeLayer(window.lowPriorityEventRange);
 
     window.leafletmap.removeLayer(window.complexEvent);
-}
+};
 
 function removeSensorLayers() {
     window.leafletmap.removeLayer(window.sensorCamera);
@@ -62,7 +88,14 @@ function removeSensorLayers() {
 
     window.leafletmap.removeLayer(window.sensorUKRange);
     window.leafletmap.removeLayer(window.sensorUSRange);
-}
+};
+
+function toggleLayer(layer) {
+    if (window.leafletmap.hasLayer(layer)) {
+        layer.removeFrom(window.leafletmap);
+        layer.addTo(window.leafletmap);
+    }
+};
 
 function clearMap() {
 
@@ -72,7 +105,7 @@ function clearMap() {
 
         details.classList.add('hidden');
 
-        clearDetailsMedia()
+        clearDetailsMedia();
     }
 
     window.sensorCamera.clearLayers();
@@ -100,15 +133,8 @@ function clearMap() {
     window.lowPriorityEventRange.clearLayers();
 
     window.complexEvent.clearLayers();
-}
+};
 
 function refreshComplex() {
     window.complexEvent.clearLayers();
-}
-
-function toggleLayer(layer) {
-    if (window.leafletmap.hasLayer(layer)) {
-        layer.removeFrom(window.leafletmap);
-        layer.addTo(window.leafletmap);
-    }
-}
+};

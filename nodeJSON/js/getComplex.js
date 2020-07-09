@@ -168,10 +168,11 @@ module.exports = {
         let data = await fsp.readFile( complexJsonFile, {encoding: 'utf8'});
         data = JSON.parse( data );
     
+        let complexEvent = [];
+
         if (request != null && request.size() < data.connections.size()) {
             
             for ( let i in request ) {
-                let found = false;
                 let req = request[i];
 
                 for ( let j in data.connections ) {
@@ -179,20 +180,28 @@ module.exports = {
                     let complex  = data.connections[j];
             
                     if ( complex.properties.complexID == req.complexID ) {
-                        found = true;
-            
-                        return complex;
+
+                        complexEvent.push(complex);
+
+                        break;
                     }
                 }
-
-                // if ( found == false ) {
-                //     return "404";
-                // }
             }
 
         } else {
-            return data;
+            for ( let i in data.connections ) {
+                let complex = data.connections[i];
+
+                complexEvent.push(complex);
+            }
         }
+
+        let jsonResp = {
+            "type":"update",
+            "complexEvent": complexEvent
+        }
+
+        return JSON.stringify(jsonResp);
     }, 
     postComplex: async function postComplex(request) {
 

@@ -80,58 +80,65 @@ wsServer.on('connection', function (wsClient) {
       if (parsedMessage.type.toLowerCase() == "add-sue-client") {
         wsClient.sue = true;
         SUEClients.push(wsClient);
+
+        let eventlst = await events.getEvents(null);
+        wsClient.send(eventlst);
+
+        let sensorlst = await sensors.getSensors(null);
+        wsClient.send(sensorlst);
+        
+        let complexlst = await complex.getComplex(null);
+        wsClient.send(complexlst);
                 
       } else if (parsedMessage.type.toLowerCase() == "post") {
           
         if (parsedMessage.events != null) {
           let update = await events.postEvent(parsedMessage.events);
           sendAll(SUEClients, update);
-        
-        } else if (parsedMessage.sensors != null) {
+        } 
+
+        if (parsedMessage.sensors != null) {
           let update = await sensors.postSensor(parsedMessage.sensors);
           sendAll(SUEClients, update);
-
-        } else {
+        } 
+        
+        if (parsedMessage.complex != null) {
           let update = await complex.postComplex(parsedMessage.complex);
           sendAll(SUEClients, update);
-
         }
 
       } else if (parsedMessage.type.toLowerCase() == "get") {
 
         if (parsedMessage.events != null) {
-          let response = await events.getEvent(parsedMessage.events);
+          let response = await events.getEvents(parsedMessage.events);
           wsClient.send(response);
-          
-        } else if (parsedMessage.sensors != null) {
-          let response = await sensors.getSensor(parsedMessage.sensors);
-          wsClient.send(response);
+        } 
 
-        } else if (parsedMessage.complex != null) {
+        if (parsedMessage.sensors != null) {
+          let response = await sensors.getSensors(parsedMessage.sensors);
+          wsClient.send(response);
+        } 
+        
+        if (parsedMessage.complex != null) {
           let response = await complex.getComplex(parsedMessage.complex);
           wsClient.send(response);
-
-        } else {
-          let sensorlst = await sensors.getSensor(null);
-          let eventlst = await events.getEvent(null);
-          let complexlst = await complex.getComplex(null);
-          wsClient.send("GET command successfully implemented");
         }
-        
+
       } else if (parsedMessage.type.toLowerCase() == "delete") {
 
         if (parsedMessage.events != null) {
           let response = await events.deleteEvent(parsedMessage.events);
           sendAll(SUEClients, response);
-          
-        } else if (parsedMessage.sensors != null) {
+        } 
+        
+        if (parsedMessage.sensors != null) {
           let response = await sensors.deleteSensor(parsedMessage.sensors);
           sendAll(SUEClients, response);
-
-        } else {
+        } 
+        
+        if (parsedMessage.complex != null) {
           let response = await complex.deleteComplex(parsedMessage.complex);
           sendAll(SUEClients, response);
-
         }
       }
     }
