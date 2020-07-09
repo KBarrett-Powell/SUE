@@ -24,4 +24,4 @@ policies:
     epochs: 100
   - name: MappingPolicy
   - name: TwoStageFallbackPolicy
-    nlu_threshold: 0.8
+    nlu_threshold: 0.9

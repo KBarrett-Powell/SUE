@@ -40,8 +40,8 @@ intents:
   - remove_med_p_events
   - add_low_p_events
   - remove_low_p_events
-  - add_complex_event_ranges
-  - remove_complex_event_ranges
+  - add_event_ranges
+  - remove_event_ranges
   - add_complex_events
   - remove_complex_events
   - add_events
@@ -96,9 +96,6 @@ responses:
 
   utter_goodbye:
   - text: "Bye"
-
-  utter_iamabot:
-  - text: "I am a bot, powered by Rasa."
 
   utter_changed:
   - text: "Successfully changed map view."
@@ -156,7 +153,7 @@ actions:
 slots:
   layers:
     type: list
-    initial_value: [False, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True]
+    initial_value: [False, True, True, True, True, True, True, False, False, False, False, True, True, True, True, True, True, True, True, True]
 
 session_config:
   session_expiration_time: 60

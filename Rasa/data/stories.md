@@ -6,13 +6,10 @@
 * goodbye
   - utter_goodbye
 
-## bot challenge
-* bot_challenge
-  - utter_iamabot
-
 ## help
 * help
   - utter_help
+
 
 ## add sensors
 * add_sensors
@@ -212,13 +209,13 @@
   - utter_changed
 
 
-## add complex event ranges
-* add_complex_event_ranges
+## add event ranges
+* add_event_ranges
   - action_add_event_ranges
   - utter_changed
 
-## remove complex event ranges
-* remove_complex_event_ranges
+## remove event ranges
+* remove_event_ranges
   - action_remove_event_ranges
   - utter_changed
 
@@ -245,9 +242,11 @@
 * vague_change
   - utter_vague_change
 
+
 ## thank
 * thank
   - utter_noworries
+
 
 ## out of scope
 * out_of_scope

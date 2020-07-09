@@ -12,21 +12,6 @@
 - see you around
 - see you later
 
-## intent:affirm
-- yes
-- indeed
-- of course
-- that sounds good
-- correct
-
-## intent:deny
-- no
-- never
-- I don't think so
-- don't like that
-- no way
-- not really
-
 ## intent:thank
 - thanks
 - thank you
@@ -45,12 +30,6 @@
 - h
 - give me information
 - who are you?
-
-## intent:bot_challenge
-- are you a bot?
-- are you a human?
-- am I talking to a bot?
-- am I talking to a human?
 
 ## intent:add_sensors
 - add sensors
@@ -740,7 +719,7 @@
 - cut complex events
 - cut complex events layer
 
-## intent:add_complex_event_ranges
+## intent:add_event_ranges
 - add event ranges
 - add event ranges layer
 - plus event ranges
@@ -756,7 +735,7 @@
 - bring back event ranges
 - bring back event ranges layer
 
-## intent:remove_complex_event_ranges
+## intent:remove_event_ranges
 - remove event ranges
 - remove event ranges layer
 - leave event ranges
