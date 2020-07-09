@@ -155,46 +155,36 @@
                                     <h4 id="audioDesc">Captured Audio:</h4>
                                     <audio id="audioPlayer" controls autoplay loop onplay="plotChartPoints()" >
                                         <source id="audioSource" src="" type="audio/wav">
-                                    </audio>                
+                                        </audio>                
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>         
-
-            <div class="outer-wrap" id="maindiv">
-
+                </div>         
+    
+                <div class="outer-wrap" id="maindiv">
                     <div id="mapdiv">
                         <div id="map"></div>
                     </div>
-
-                    <div class="overlay-skip">
-                        <label class="switch">
-                            <input id="skipSwitch" type="checkbox" onclick="changeTime(this)">
-                            <span class="slider round"></span>
-                        </label>
-                        <label>Real Time</label>
-                    </div>
                 </div>
-            </div>
+            </div>         
         </div>
 
         <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
         <script src="/node_modules/leaflet-semicircle/Semicircle.js"></script>
 
         <script src='js/map-connect.js'></script>
+        <script src='js/layers.js'></script>
         <script src='js/ws-connect.js'></script>
         <script src='js/getmarkers.js'></script>
         <script src='js/settings.js'></script>
         <script src='js/details.js'></script>
-        <script src='js/layers.js'></script>
         <script src='js/graph.js'></script>
         <script src="js/complex.js"></script>
         <script src='js/lists.js'></script>
-        <script src='js/time.js'></script>
 
         <script src="/chatroom/dist/Chatroom.js"></script>
-        <script src="js/main.js"></script>
+        <script src="js/chatbot.js"></script>
     </body>
 </html>
