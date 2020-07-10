@@ -194,11 +194,11 @@ function addMarker(json, sensor) {
         let range5 = null;
 
         if (json.properties.sensorType === "Camera") {
-            range1 = L.semiCircle(coordinates, {radius: 10, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true}).setDirection(json.properties.rangeDirection, 90);
-            range2 = L.semiCircle(coordinates, {radius: 15, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true}).setDirection(json.properties.rangeDirection, 90);
-            range3 = L.semiCircle(coordinates, {radius: 20, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true}).setDirection(json.properties.rangeDirection, 90);
-            range4 = L.semiCircle(coordinates, {radius: 25, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true}).setDirection(json.properties.rangeDirection, 90);
-            range5 = L.semiCircle(coordinates, {radius: 30, fillColor: '#999', weight: 0, gradient: true}).setDirection(json.properties.rangeDirection, 90);
+            range1 = L.semiCircle(coordinates, {radius: 10, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true, properties: JSON.stringify(json.properties)}).setDirection(json.properties.rangeDirection, 90);
+            range2 = L.semiCircle(coordinates, {radius: 15, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true, properties: JSON.stringify(json.properties)}).setDirection(json.properties.rangeDirection, 90);
+            range3 = L.semiCircle(coordinates, {radius: 20, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true, properties: JSON.stringify(json.properties)}).setDirection(json.properties.rangeDirection, 90);
+            range4 = L.semiCircle(coordinates, {radius: 25, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true, properties: JSON.stringify(json.properties)}).setDirection(json.properties.rangeDirection, 90);
+            range5 = L.semiCircle(coordinates, {radius: 30, fillColor: '#999', weight: 0, gradient: true, properties: JSON.stringify(json.properties)}).setDirection(json.properties.rangeDirection, 90);
         
             sensorMarker = L.marker(coordinates, {icon: cameraIcon, properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap).addTo(window.sensorCamera);
             range1.addTo(window.sensorCameraRange);
@@ -211,11 +211,11 @@ function addMarker(json, sensor) {
             toggleLayer(window.sensorCameraRange)
 
         } else {
-            range1 = L.circle(coordinates, {radius: 10, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true});
-            range2 = L.circle(coordinates, {radius: 15, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true});
-            range3 = L.circle(coordinates, {radius: 20, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true});
-            range4 = L.circle(coordinates, {radius: 25, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true});
-            range5 = L.circle(coordinates, {radius: 30, fillColor: '#999', weight: 0, gradient: true});
+            range1 = L.circle(coordinates, {radius: 10, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true, properties: JSON.stringify(json.properties)});
+            range2 = L.circle(coordinates, {radius: 15, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true, properties: JSON.stringify(json.properties)});
+            range3 = L.circle(coordinates, {radius: 20, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true, properties: JSON.stringify(json.properties)});
+            range4 = L.circle(coordinates, {radius: 25, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true, properties: JSON.stringify(json.properties)});
+            range5 = L.circle(coordinates, {radius: 30, fillColor: '#999', weight: 0, gradient: true, properties: JSON.stringify(json.properties)});
 
             if (json.properties.sensorType === "Microphone") {
 
@@ -295,8 +295,8 @@ function addMarker(json, sensor) {
         }
 
         let eventmarker = L.marker(coordinates, {icon: iconChoice, properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap);
-        let range1 = L.circle(coordinates, {radius: eventRadius*1/4, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.6, weight: 3, gradient: true});
-        let range2 = L.circle(coordinates, {radius: rad, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.4, weight: 3, gradient: true});
+        let range1 = L.circle(coordinates, {radius: eventRadius*1/4, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.6, weight: 3, gradient: true, properties: JSON.stringify(json.properties)});
+        let range2 = L.circle(coordinates, {radius: rad, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.4, weight: 3, gradient: true, properties: JSON.stringify(json.properties)});
 
         eventmarker.bindPopup(json.properties.eventName);
         
@@ -403,12 +403,17 @@ async function updateByLayer(req, win, ownerSensor) {
             
             if (properties != null) {
                 let type = null;
+                let objectID = null;
+
                 if (properties.eventID != null && properties.eventID == req.properties.eventID) {
                     type = "Event";
+                    objectID = properties.eventID;
                 } else if (req.properties.eventID == null && properties.sensorID != null && properties.sensorID == req.properties.sensorID) {
                     type = "Sensor";
+                    objectID = properties.sensorID;
                 } else if (properties.complexID != null && properties.complexID == req.properties.complexID) {
                     type = "Complex";
+                    objectID = properties.complexID;
                 }
 
                 if (properties != null && type != null) { 
@@ -422,9 +427,18 @@ async function updateByLayer(req, win, ownerSensor) {
 
                     // updating map marker information
                     if (output.newIcon != null) { layer.setIcon(icon); }
-                    //if (layer.getLatLng() != req.geometry.coordinates) { layer.setLatLng(req.geometry.coordinates); }
-                    //layer.setLatLng(newMarker.getLatLng());
-                    
+
+                    let currentLocation = layer.getLatLng();
+                    let newLocation = req.geometry.coordinates;
+
+                    let direction = null;
+                    if (type == "Sensor" && req.properties.rangeDirection != null) { direction = req.properties.rangeDirection; }
+
+                    if (currentLocation.lat != newLocation[0] || currentLocation.lng != newLocation[1]) { 
+                        layer.setLatLng(newLocation); 
+                    }
+
+                    if (type != "Complex") { updateRange(win, newLocation, objectID, direction); }
                 }
 
                 if (updated == false && count == size) {
@@ -483,9 +497,6 @@ async function updateProperties(marker, update, type) {
         return Promise.resolve(marker);
 
     } else if (type == "Sensor") {
-        // if (update.geometry.coordinates != null) {
-        //     marker.geometry.coordinates = update.geometry.coordinates;
-        // }
         if (update.sensorName != null) {
             marker.sensorName = update.sensorName;
         }
@@ -497,9 +508,6 @@ async function updateProperties(marker, update, type) {
         }
         if (update.audio != null) {
             marker.audio = update.audio;
-        }
-        if (update.rangeDirection != null) {
-            marker.rangeDirection = update.rangeDirection;
         }
         if (update.owner != null) {
             marker.owner = update.owner;
@@ -539,6 +547,43 @@ function getIcon(properties, ownerSensor) {
         return complexIcon;
     }
 };
+
+async function updateRange(layerName, newLocation, objID, direction) {
+    let win = layerName + "Range";
+
+    if (window[win].getLayers().length > 0) {
+
+        await window[win].eachLayer( async function (layer) {
+            let properties = null;
+            try {
+                properties = JSON.parse(layer.options.properties);
+            } catch {
+                console.log("no properties found on layer");
+            }
+
+            if (properties != null) {
+                let type = null;
+
+                if (properties.eventID != null && properties.eventID == objID) {
+                    type = "Event";
+                } else if (properties.eventID == null && properties.sensorID != null && properties.sensorID == objID) {
+                    type = "Sensor";
+                } else if (properties.complexID != null && properties.complexID == objID) {
+                    type = "Complex";
+                }
+
+                if (properties != null && type != null) { 
+                    let prevLocation = layer.getLatLng();
+                    if (newLocation != null && (prevLocation.lat != newLocation[0] || prevLocation.lng != newLocation[1])) { layer.setLatLng(newLocation); }
+                    if (direction != null && properties.rangeDirection != null && properties.rangeDirection != direction) { 
+                        layer.setDirection(direction, 90); 
+                        layer.options.properties.rangeDirection = direction;
+                    }
+                }
+            }
+        })
+    }
+}
 
 async function findSensor(id) {
     let found = null;
