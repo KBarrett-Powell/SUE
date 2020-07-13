@@ -363,26 +363,27 @@ module.exports = {
     deleteSensor: async function deleteSensor(request) {
         let data = await fsp.readFile( sensorsJsonFile, {encoding: 'utf8'});
         data = JSON.parse( data );
-        
+
         for (let i in request) {
 
             let req = request[i];
             let found = false;
-                        
-            if (id != null) {
-            
+
+            if (req.sensorID != null) {
+
                 for ( let j in data.sensors ) {
-            
+
                     let sensor = data.sensors[j];
-                
+
                     if ( sensor.properties.sensorID == req.sensorID) {
                         found = true;
-                
-                        data.sensors.delete(sensor);
+
+                        // removes the sensor at index j
+                        data.sensors.splice(j, 1)
                     }
                 }
             }
-        } 
+        }
 
         fs.writeFile( sensorsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
             if (err) throw err;
