@@ -21,6 +21,8 @@ ws.onmessage = function(e) {
   if (!error) {
     if (parsedMessage.type != null && parsedMessage.type == "update") { 
       updateMapMarkers(parsedMessage);
+    } else if (parsedMessage.type != null && parsedMessage.type == "delete") {
+      deleteMapMarkers(parsedMessage);
     }
   }
 };

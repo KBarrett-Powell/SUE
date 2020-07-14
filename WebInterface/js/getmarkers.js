@@ -380,6 +380,29 @@ async function updateMapMarkers(request) {
     }
 }
 
+async function deleteMapMarkers(request) {
+
+    if (request.sensorCamera != null && request.sensorCamera.length > 0) { deleteByLayer(request.sensorCamera, "sensorCamera"); }
+
+    if (request.sensorMicrophone != null && request.sensorMicrophone.length > 0) { deleteByLayer(request.sensorMicrophone, "sensorMicrophone"); }
+
+    if (request.sensorHuman != null && request.sensorHuman.length > 0) { deleteByLayer(request.sensorHuman, "sensorHuman"); }
+
+    if (request.sensorUK != null && request.sensorUK.length > 0) { deleteByLayer(request.sensorUK, "sensorUK"); }
+
+    if (request.sensorUS != null && request.sensorUS.length > 0) { deleteByLayer(request.sensorUS, "sensorUS"); }
+
+    if (request.critPriorityEvent != null && request.critPriorityEvent.length > 0) { deleteByLayer(request.critPriorityEvent, "critPriorityEvent"); }
+
+    if (request.highPriorityEvent != null && request.highPriorityEvent.length > 0) { deleteByLayer(request.highPriorityEvent, "highPriorityEvent"); }
+
+    if (request.medPriorityEvent != null && request.medPriorityEvent.length > 0) { deleteByLayer(request.medPriorityEvent, "medPriorityEvent"); }
+
+    if (request.lowPriorityEvent != null && request.lowPriorityEvent.length > 0) { deleteByLayer(request.lowPriorityEvent, "lowPriorityEvent"); }
+
+    if (request.complexEvent != null && request.complexEvent.length > 0) { deleteByLayer(request.complexEvent, "complexEvent"); }
+}
+
 async function updateByLayer(req, win, ownerSensor) {
     let updated = false;
     let count = 0;
@@ -402,19 +425,9 @@ async function updateByLayer(req, win, ownerSensor) {
             }
             
             if (properties != null) {
-                let type = null;
-                let objectID = null;
-
-                if (properties.eventID != null && properties.eventID == req.properties.eventID) {
-                    type = "Event";
-                    objectID = properties.eventID;
-                } else if (req.properties.eventID == null && properties.sensorID != null && properties.sensorID == req.properties.sensorID) {
-                    type = "Sensor";
-                    objectID = properties.sensorID;
-                } else if (properties.complexID != null && properties.complexID == req.properties.complexID) {
-                    type = "Complex";
-                    objectID = properties.complexID;
-                }
+                let objID = (req.properties.eventID != null ? req.properties.eventID : (req.properties.sensorID != null ? req.properties.sensorID : req.properties.complexID));
+                let type = isObjectToUpdate(properties, objID);
+                let objectID = (type == null ? null : (type == "Event" ? properties.eventID : (type == "Sensor" ? properties.sensorID : properties.complexID)));
 
                 if (properties != null && type != null) { 
 
@@ -457,6 +470,44 @@ async function updateByLayer(req, win, ownerSensor) {
             addMarker(req, sensor);
         }
     }
+}
+
+async function deleteByLayer(request, win, idsLst) {
+    let layers = window[win].getLayers();
+    
+    let type = (win.includes("sensor") ? "sensor" : (win.includes("complex") ? "complex" : "event"));
+
+    let listOfIDs = [];
+    if (idsLst != null && idsLst.length > 0) {
+        listOfIDs = idsLst
+    } else {
+        for (let i in request) {
+            if (type == "event") { listOfIDs.push(request[i].properties.eventID); } 
+            else if (type == "sensor") { listOfIDs.push(request[i].properties.sensorID); } 
+            else if (type == "complex") { listOfIDs.push(request[i].properties.complexID); } 
+        }
+    }
+
+    await window[win].clearLayers();
+
+    let updatedLayers = layers.filter(function(item) { 
+        let properties = null;
+        try {
+            properties = JSON.parse(item.options.properties);
+        } catch {
+            console.log("No properties found on layer");
+        }
+
+        let id = (type == "event" ? properties.eventID : (type == "sensor" ? properties.sensorID : properties.complexID));
+
+        return ( listOfIDs.indexOf(id) == -1);
+    });
+
+    for (let i in updatedLayers) { 
+        updatedLayers[i].addTo(window[win]);
+    }
+
+    if (type != "complex" && !win.includes("Range")) { deleteByLayer(null, win  + "Range", listOfIDs); }
 }
 
 async function updateProperties(marker, update, type) {
@@ -562,15 +613,7 @@ async function updateRange(layerName, newLocation, objID, direction) {
             }
 
             if (properties != null) {
-                let type = null;
-
-                if (properties.eventID != null && properties.eventID == objID) {
-                    type = "Event";
-                } else if (properties.eventID == null && properties.sensorID != null && properties.sensorID == objID) {
-                    type = "Sensor";
-                } else if (properties.complexID != null && properties.complexID == objID) {
-                    type = "Complex";
-                }
+                let type = isObjectToUpdate(properties, objID);
 
                 if (properties != null && type != null) { 
                     let prevLocation = layer.getLatLng();
@@ -583,6 +626,22 @@ async function updateRange(layerName, newLocation, objID, direction) {
             }
         })
     }
+}
+
+function isObjectToUpdate(properties, objID) {
+    if (properties.eventID != null && properties.eventID == objID) {
+        return "Event";
+    } else if (properties.eventID == null && properties.sensorID != null && properties.sensorID == objID) {
+        return "Sensor";
+    } else if (properties.complexID != null && properties.complexID == objID) {
+        return "Complex";
+    }
+    return null;
+}
+
+async function changeLayer(layer, currentGroup, newGroup) {
+    layer.removeFrom(currentGroup);
+    layer.addTo(newGroup);
 }
 
 async function findSensor(id) {
