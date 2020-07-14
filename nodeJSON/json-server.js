@@ -95,16 +95,19 @@ wsServer.on('connection', function (wsClient) {
         if (parsedMessage.events != null) {
           let update = await events.postEvent(parsedMessage.events);
           sendAll(SUEClients, update);
+          wsClient.send(JSON.stringify(update));
         } 
 
         if (parsedMessage.sensors != null) {
           let update = await sensors.postSensor(parsedMessage.sensors);
           sendAll(SUEClients, update);
+          wsClient.send(JSON.stringify(update));
         } 
         
         if (parsedMessage.complex != null) {
           let update = await complex.postComplex(parsedMessage.complex);
           sendAll(SUEClients, update);
+          wsClient.send(JSON.stringify(update));
         }
 
       } else if (parsedMessage.type.toLowerCase() == "get") {
