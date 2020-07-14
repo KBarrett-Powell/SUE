@@ -24,7 +24,7 @@ The gif below shows the submission of a JSON object to the WebSocket (found at w
 
 ![](examples/websocket-update.gif)  
 
-*To be implemented in coming week: support for event priority updates, location updates*
+*To be implemented in coming week: support for event priority updates*
 
 ### Colour-Blindness Support
 Using a command to enter accessibility mode in the Chatbot, the colour scheme used for events on the map changes to a colour blind friendly scheme.  
