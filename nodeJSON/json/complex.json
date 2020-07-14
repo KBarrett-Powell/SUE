@@ -1,6 +1,6 @@
-{ 
+{
     "connections": [
-        {   
+        {
             "properties": {
                 "complexID": 1,
                 "complexName": "Complex Event 1",
@@ -12,7 +12,6 @@
                 "skip": 5
             }
         },
-
         {
             "properties": {
                 "complexID": 2,

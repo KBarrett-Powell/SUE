@@ -74,7 +74,7 @@
                         ]
                     }
                 ],
-                "priority": "2",
+                "priority": 2,
                 "datetime": "2020-03-04T16:10:20Z",
                 "skip": 2
             },
@@ -841,7 +841,7 @@
                     }
                 ],
                 "objDetVideo": "Abuse_objdet.mp4",
-                "priority": "3",
+                "priority": 3,
                 "datetime": "2020-03-04T16:10:25Z",
                 "skip": 3
             },
@@ -1335,7 +1335,7 @@
                         ]
                     }
                 ],
-                "priority": "3",
+                "priority": 3,
                 "datetime": "2020-03-04T16:10:30Z",
                 "skip": 4
             },
@@ -2009,7 +2009,7 @@
                         ]
                     }
                 ],
-                "priority": "1",
+                "priority": 1,
                 "datetime": "2020-03-04T16:10:50Z",
                 "skip": 5
             },
