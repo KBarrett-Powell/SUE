@@ -25,9 +25,6 @@ app.use(function(req, res, next) {
 router.use('/json', express.static(__dirname + '/json'));
 router.use('/media', express.static(__dirname + '/media'));
 
-router.use('/sensors', sensors.router);
-router.use('/events', events.router);
-router.use('/complex', complex.router);
 router.use('/video', video.router);
 router.use('/audio', audio.router);
 
@@ -47,6 +44,10 @@ const server = app.listen(port, function () {
 });
 
 let SUEClients = [];
+
+events.refreshEvents();
+sensors.refreshSensors();
+complex.refreshComplex();
 
 const wsServer = new SocketServer({ server });
 
@@ -95,16 +96,28 @@ wsServer.on('connection', function (wsClient) {
         if (parsedMessage.events != null) {
           let update = await events.postEvent(parsedMessage.events);
           sendAll(SUEClients, update);
+          let allUpdated = getUpdatedID(update);
+          for ( let i in allUpdated ) {
+            wsClient.send("Successfully updated " + allUpdated[i]);
+          }
         } 
 
         if (parsedMessage.sensors != null) {
           let update = await sensors.postSensor(parsedMessage.sensors);
           sendAll(SUEClients, update);
+          let allUpdated = getUpdatedID(update);
+          for ( let i in allUpdated ) {
+            wsClient.send("Successfully updated " + allUpdated[i]);
+          }
         } 
         
         if (parsedMessage.complex != null) {
           let update = await complex.postComplex(parsedMessage.complex);
           sendAll(SUEClients, update);
+          let allUpdated = getUpdatedID(update);
+          for ( let i in allUpdated ) {
+            wsClient.send("Successfully updated " + allUpdated[i]);
+          }
         }
 
       } else if (parsedMessage.type.toLowerCase() == "get") {
@@ -129,16 +142,28 @@ wsServer.on('connection', function (wsClient) {
         if (parsedMessage.events != null) {
           let response = await events.deleteEvent(parsedMessage.events);
           sendAll(SUEClients, response);
+          let allUpdated = getUpdatedID(response);
+          for ( let i in allUpdated ) {
+            wsClient.send("Successfully deleted " + allUpdated[i]);
+          }
         } 
         
         if (parsedMessage.sensors != null) {
           let response = await sensors.deleteSensor(parsedMessage.sensors);
           sendAll(SUEClients, response);
+          let allUpdated = getUpdatedID(response);
+          for ( let i in allUpdated ) {
+            wsClient.send("Successfully deleted " + allUpdated[i]);
+          }
         } 
         
         if (parsedMessage.complex != null) {
           let response = await complex.deleteComplex(parsedMessage.complex);
           sendAll(SUEClients, response);
+          let allUpdated = getUpdatedID(response);
+          for ( let i in allUpdated ) {
+            wsClient.send("Successfully deleted " + allUpdated[i]);
+          }
         }
       }
     }
@@ -153,10 +178,38 @@ wsServer.on('connection', function (wsClient) {
   });
 });
 
+function getUpdatedID(response) {
+  let ids = [];
+
+  for ( let i in response.sensorUK ) {
+    ids.push("sensor with ID " + response.sensorUK[i].properties.sensorID);
+  }
+  for ( let i in response.sensorUS ) {
+    ids.push("sensor with ID " + response.sensorUS[i].properties.sensorID);
+  }
+  for ( let i in response.critPriorityEvent ) {
+    ids.push("event with ID " + response.critPriorityEvent[i].properties.eventID);
+  }
+  for ( let i in response.highPriorityEvent ) {
+    ids.push("event with ID " + response.highPriorityEvent[i].properties.eventID);
+  }
+  for ( let i in response.medPriorityEvent ) {
+    ids.push("event with ID " + response.medPriorityEvent[i].properties.eventID);
+  }
+  for ( let i in response.lowPriorityEvent ) {
+    ids.push("event with ID " + response.lowPriorityEvent[i].properties.eventID);
+  }
+  for ( let i in response.complexEvent ) {
+    ids.push("complex event with ID " + response.complexEvent[i].properties.complexID);
+  }
+
+  return ids;
+};
+
 function sendAll( SUEClients, update ) {
   if (update != null) {
     for (var i = 0; i < SUEClients.length; i ++) {
         SUEClients[i].send(JSON.stringify(update));
     }
   }
-}
+}; 
