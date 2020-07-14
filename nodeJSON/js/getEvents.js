@@ -1,150 +1,19 @@
-const express = require('express');
-const router = express.Router();
-
 const fs = require('fs');
 const fsp = require('fs').promises;
-const url = require('url');
 const path = require('path');
 
 const eventsJsonFile = path.join(__dirname, "../json/events.json");
-
-// GET all
-router.get('/', function (req, res) {
-    var urlparams = url.parse(req.url, true);
-    var date = new Date(urlparams.query.iso);
-
-    if (date != null && urlparams.query.iso != null) {
-        fs.readFile( eventsJsonFile, 'utf8', function (err, data) {
-        
-            var data = JSON.parse(data);
-            var enddata = "{\"events\": [";
-
-            for (d in data.events) {
-                let event = data.events[d];
-                let eventdate = new Date(event.properties.datetime);
-
-                if ( eventdate <= date && Math.abs(date.getTime() - eventdate.getTime()) < 5000) {
-                    enddata += JSON.stringify(event) + ", ";
-                }
-            }
-
-            let endofstr = enddata.substring(enddata.length - 2, enddata.length);
-
-            if (endofstr == ", ") {
-                enddata = enddata.slice(0, -2);
-            }
-            enddata += "]}";
-
-            data = JSON.parse(enddata);
-
-            res.status(200).json(data);
-            res.end( data );
-        });
-    } else {
-        fs.readFile( eventsJsonFile, 'utf8', function (err, data) {
-            data = JSON.parse( data );
-            
-            res.status(200).json(data);
-            res.end( data );
-        });
-    }
-})
-
-// GET by id
-router.get('/:id', function (req, res) {
-    fs.readFile( eventsJsonFile, 'utf8', function (err, data) {
-        data = JSON.parse( data );
-
-        let found = false;
-
-        for ( i in data.events ) {
-
-            let item  = data.events[i];
-    
-            if ( item.properties.eventID == req.params.id) {
-                found = true;
-    
-                let events = item;
-    
-                res.status(200).json(events);
-                res.end( events );
-
-                break;
-            }
-        }
-        
-        if ( found == false ) {
-            res.sendStatus(404);
-        }
-    });
-})
-
-// POST
-router.post('/', function (req, res) {
-
-    let newEvent, data = postEvent(req.body);
-
-    res.status(201).json(newEvent);
-    res.end( JSON.stringify(data));
-})
-
-// PUT
-router.put('/:id', function (req, res) {
-    fs.readFile( eventsJsonFile, 'utf8', function (err, data) {
-        data = JSON.parse( data );
-
-        if ( req.params.id in data ) {
-
-            let updatedEvent = {
-                "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": req.body.coordinates
-                },
-                "properties": {
-                    "name": req.body.name,
-                    "type" : "Event",
-                    "time": req.body.time
-                }
-            }
-
-            data[req.params.id] = updatedEvent;
-
-            res.sendStatus(204);
-            res.end( JSON.stringify(data));
-
-            fs.writeFile(eventsJsonFile, JSON.stringify(data), function(err) {
-                if(err) throw err;
-            })
-        } else {
-            res.sendStatus(404);
-        }
-    });
-});
-
-// DELETE
-router.delete('/:id', function (req, res) {
-    fs.readFile(eventsJsonFile, 'utf8', function (err, data) {
-        data = JSON.parse( data );
-
-        if ( req.params.id in data ) {
-            delete data[req.params.id];
-
-            console.log( data );
-            res.sendStatus(204);
-            res.end( JSON.stringify(data));
-
-            fs.writeFile(eventsJsonFile, JSON.stringify(data), function(err) {
-                if(err) throw err;
-            })
-        } else {
-            res.sendStatus(404);
-        }
-    });
-})
+const originalEventsJsonFile = path.join(__dirname, "../json/demo/events.json");
 
 module.exports = {
-    router,
+    refreshEvents: async function refreshEvents() {
+        let data = await fsp.readFile( originalEventsJsonFile, {encoding: 'utf8'});
+        data = JSON.parse( data );
+
+        fs.writeFile( eventsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
+            if (err) throw err;
+        });
+    },
     getEvents: async function getEvents(request) {
         let data = await fsp.readFile( eventsJsonFile, {encoding: 'utf8'});
         data = JSON.parse( data );
@@ -330,29 +199,54 @@ module.exports = {
     deleteEvent: async function deleteEvent(request) {
         let data = await fsp.readFile( eventsJsonFile, {encoding: 'utf8'});
         data = JSON.parse( data );
+
+        let listOfIDs = [];
+        let filteredList = [];
+         
+        let critPriorityEvent = [];
+        let highPriorityEvent = [];
+        let medPriorityEvent = [];
+        let lowPriorityEvent = [];
         
         for (let i in request) {
-            
-            let req = request[i];
-            let found = false;
+            if (request[i].eventID != null) { listOfIDs.push(request[i].eventID); }
+        } 
 
-            if (id != null) {
-            
-                for ( let j in data.events ) {
-            
-                    let event = data.events[j];
-                
-                    if ( event.properties.eventID == req.eventID) {
-                        found = true;
-                
-                        data.events.delete(event);
+        if (listOfIDs.length > 0) {
+            for ( let i in data.events ) {
+                let event = data.events[i].properties;
+
+                if ( listOfIDs.indexOf(event.eventID) >= 0 ) {
+                    if (event.priority == 1) {
+                        critPriorityEvent.push(data.events[i]);
+                    } else if (event.priority == 2) {
+                        highPriorityEvent.push(data.events[i]);
+                    } else if (event.priority == 3) {
+                        medPriorityEvent.push(data.events[i]);
+                    } else {
+                        lowPriorityEvent.push(data.events[i]);
                     }
+
+                } else {
+                    filteredList.push(data.events[i]);
                 }
             }
-        } 
+            
+            data.events = filteredList;
+        }
 
         fs.writeFile( eventsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
             if (err) throw err;
         });
+
+        let jsonResp = {
+            "type":"delete",
+            "critPriortiyEvent": critPriorityEvent,
+            "highPriorityEvent": highPriorityEvent,
+            "medPriorirtyEvent": medPriorityEvent,
+            "lowPriorityEvent": lowPriorityEvent
+        }
+
+        return jsonResp
     }
 }

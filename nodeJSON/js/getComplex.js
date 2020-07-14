@@ -1,169 +1,19 @@
-const express = require('express');
-const router = express.Router();
-
 const fs = require('fs');
 const fsp = require('fs').promises;
-const url = require('url');
 const path = require('path');
 
 const complexJsonFile = path.join(__dirname, "../json/complex.json");
-
-// GET all
-router.get('/', function (req, res) {
-    var urlparams = url.parse(req.url, true);
-    var date = new Date(urlparams.query.iso);
-
-    if (date != null && urlparams.query.iso != null) {
-        fs.readFile( complexJsonFile, 'utf8', function (err, data) {
-
-            var parseddata = JSON.parse(data);
-            var enddata = "{\"connections\": [";
-
-            for (d in parseddata.connections) {
-                let complex = parseddata.connections[d];
-                let complexdate = new Date(complex.properties.datetime);
-                
-                if ( complexdate <= date ) {
-                    enddata += JSON.stringify(complex) + ", ";
-                }
-            }
-
-            let endofstr = enddata.substring(enddata.length - 2, enddata.length);
-
-            if (endofstr == ", ") {
-                enddata = enddata.slice(0, -2);
-            }
-            
-            enddata += "]}";
-
-            data = JSON.parse(enddata);
-
-            res.status(200).json(data);
-            res.end( data );
-        });
-    } else {
-        fs.readFile( complexJsonFile, 'utf8', function (err, data) {
-            data = JSON.parse( data );
-            
-            res.status(200).json(data);
-            res.end( data );
-        });
-    }
-})
-
-// GET by id
-router.get('/:id', function (req, res) {
-    fs.readFile( complexJsonFile, 'utf8', function (err, data) {
-        data = JSON.parse( data );
-        
-        if ( req.params.id in data ) {
-
-            complex = data[req.params.id];
-
- 
-            res.status(200).json(complex);
-            res.end( JSON.stringify(complex));
-
-        } else {
-            res.sendStatus(404);
-        }
-    });
-})
-
-// POST
-router.post('/', function (req, res) {
-    fs.readFile( complexJsonFile, 'utf8', function (err, data) {
-        data = JSON.parse( data );
-
-        let complexIds = data.map(item => item.id);
-        let newId = 0;
-
-        if (complexIds.length > 0) {
-            newId = "Complex" + toString(complexIds.length + 1); 
-        } else {
-            newId = "Complex1";
-        };
-
-        let newComplex = {
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": req.body.coordinates
-            },
-            "properties": {
-                "id": newId,
-                "name": req.body.name,
-                "type" : "Complex",
-                "time": req.body.time
-            }
-        }
-
-        data[complexIds.length] = newComplex;
-
-        console.log( data );
-        res.status(201).json(newComplex);
-        res.end( JSON.stringify(data));
-    });
-})
-
-// PUT
-router.put('/:id', function (req, res) {
-    fs.readFile( complexJsonFile, 'utf8', function (err, data) {
-        data = JSON.parse( data );
-
-        if ( req.params.id in data ) {
-
-            let updatedComplex = {
-                "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": req.body.coordinates
-                },
-                "properties": {
-                    "id": req.params.id,
-                    "name": req.body.name,
-                    "type" : "Complex",
-                    "time": req.body.time
-                }
-            }
-
-            data[req.params.id] = updatedComplex;
-
-            console.log( data );
-            res.sendStatus(204);
-            res.end( JSON.stringify(data));
-
-            fs.writeFile(complexJsonFile, JSON.stringify(data), function(err) {
-                if(err) throw err;
-            })
-        } else {
-            res.sendStatus(404);
-        }
-    });
-});
-
-// DELETE
-router.delete('/:id', function (req, res) {
-    fs.readFile(complexJsonFile, 'utf8', function (err, data) {
-        data = JSON.parse( data );
-
-        if ( req.params.id in data ) {
-            delete data[req.params.id];
-
-            res.sendStatus(204);
-            res.end( JSON.stringify(data));
-
-            fs.writeFile(complexJsonFile, JSON.stringify(data), function(err) {
-                if(err) throw err;
-            })
-        } else {
-            res.sendStatus(404);
-        }
-    });
-})
+const originalComplexJsonFile = path.join(__dirname, "../json/demo/complex.json");
 
 module.exports = {
-    router,
+    refreshComplex: async function refreshComplex() {
+        let data = await fsp.readFile( originalComplexJsonFile, {encoding: 'utf8'});
+        data = JSON.parse( data );
+
+        fs.writeFile( complexJsonFile, JSON.stringify(data, undefined, 4), function (err) {
+            if (err) throw err;
+        });
+    },
     getComplex: async function getComplex(request) {
         let data = await fsp.readFile( complexJsonFile, {encoding: 'utf8'});
         data = JSON.parse( data );
@@ -208,6 +58,8 @@ module.exports = {
         let data = await fsp.readFile( complexJsonFile, {encoding: 'utf8'} );
         data = JSON.parse( data );
 
+        let complexEvent = [];
+
         for (let req in request) {
 
             let found = false;
@@ -240,6 +92,8 @@ module.exports = {
                             data.connections[i].properties.datetime = complex.datetime;
                         }
 
+                        newComplex = data.connections[i];
+
                         break;
                     }
                 }
@@ -259,41 +113,58 @@ module.exports = {
 
                 data.connections.push(newComplex);
             }
+
+            complexEvent.push(newComplex);
         }
 
         fs.writeFile( complexsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
             if (err) throw err;
         });
+
+        let jsonResp = {
+            "type":"update",
+            "complexEvent": complexEvent
+        }
+
+        return jsonResp
     },
     deleteComplex: async function deleteComplex(request) {
         let data = await fsp.readFile( complexJsonFile, {encoding: 'utf8'});
         data = JSON.parse( data );
         
+        let listOfIDs = [];
+        let filteredList = [];
+         
+        let complexEvent = [];
+        
         for (let i in request) {
-            
-            let req = request[i];
-            let found = false;
+            if (request[i].complexID != null) { listOfIDs.push(request[i].complexID); }
+        } 
 
-            if (id != null) {
-            
-                for ( let j in data.connections ) {
-            
-                    let complex = data.connections[j];
-                
-                    if ( complex.properties.complexID == req.complexID) {
-                        found = true;
-                
-                        data.connections.delete(complex);
-                    }
+        if (listOfIDs.length > 0) {
+            for ( let i in data.connections ) {
+                let complex = data.connections[i].properties;
+
+                if ( listOfIDs.indexOf(complex.complexID) >= 0 ) {
+                    complexEvent.push(data.connections[i]);
+                    
+                } else {
+                    filteredList.push(data.connections[i]);
                 }
             }
-            // if ( found == false ) {
-            //     return "404";
-            // }
-        } 
+            
+            data.connections = filteredList;
+        }
 
         fs.writeFile( complexsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
             if (err) throw err;
         });
+
+        let jsonResp = {
+            "type":"delete",
+            "complexEvent": complexEvent
+        }
+
+        return jsonResp
     }
 }
