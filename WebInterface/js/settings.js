@@ -59,3 +59,15 @@ function toggleAccessibility(on) {
 
     }
 };
+
+function togglePage(e) {
+    if (e.id === "toggleAnalysis") {
+        showAnalysisPanel();
+
+    } else if (e.id === "toggleMarker") {
+        showDetailsPanel();
+
+    } else {
+        showSUEPanel();
+    }
+};

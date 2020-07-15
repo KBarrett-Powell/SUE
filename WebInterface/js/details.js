@@ -37,14 +37,6 @@ async function toggleDetailsFromMap(e){
     let info = JSON.parse(this.options.properties);
     let mapMarker = e.target;
 
-    // if (window.prvClickedMarker != null && window.prvClickedMarker != mapMarker) {
-    //     console.log("refresh prev marker");
-    //     window.prvClickedMarker.setIcon(toggleMarkerIcon(window.prvClickedMarker));
-    // }
-
-    // console.log("refresh marker");
-    // mapMarker.setIcon(toggleMarkerIcon(mapMarker));
-
     if (mapMarker.isPopupOpen() == false) {
         showDetailsPanel();
         await toggleDetails(info, e.latlng.toString().slice(7, -1));
