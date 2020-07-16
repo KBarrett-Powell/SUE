@@ -12,15 +12,7 @@ The interface features a chatbot through which users can customise the map, remo
 
 ### WebSocket
 The gif below shows the submission of a JSON object to the WebSocket (found at ws://localhost:8000) using Smart WebSocket Client for Google Chrome.  
-{  
-  "type": "post",  
-  "events": [
-  {
-	    "eventID": 5,
-	    "eventName": "March on Vestre Strandgate"
-	  }
-  ]  
-}  
+*More information on how to form and send a WebSOcket request avaliable in WebSocket.md*
 
 ![](examples/websocket-update.gif)  
 
