@@ -232,7 +232,7 @@ function addMarkerToLayer(marker, ranges, layer, rangeLayer) {
 
 // Function to go through each object in the request and attempt to find and update it on the appropriate map layer
 // If not found, a new marker is added to that layer
-function updateMapMarkers(request) {
+async function updateMapMarkers(request) {
 
     for (let i in request.sensorCamera) {
         updateByLayer(request.sensorCamera[i], "sensorCamera", false, false);
@@ -271,7 +271,7 @@ function updateMapMarkers(request) {
     }
 
     for (let i in request.complexEvent) {
-        updateByLayer(request.complexEvent[i], "complexEvent", null, false);
+        await updateByLayer(request.complexEvent[i], "complexEvent", null, false);
     }
 };
 
