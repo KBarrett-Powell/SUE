@@ -15,26 +15,25 @@ from rasa_sdk.executor import CollectingDispatcher
 def defineDict(setOwnerSensors, setCamera, setMicrophone, setHuman, setCameraR, setMicrophoneR, setHumanR, setUK, setUS, setUKR, setUSR, setCritPriority, setHighPriority, setMedPriority, setLowPriority, setCritPriorityR, setHighPriorityR, setMedPriorityR, setLowPriorityR, setComplex):
     jsdict = {
         "ownerSensors": setOwnerSensors,
-        "sensorCamera": setCamera,
-        "sensorMicrophone": setMicrophone,
-        "sensorHuman": setHuman,
-        "sensorCameraRange": setCameraR,
-        "sensorMicrophoneRange": setMicrophoneR,
-        "sensorHumanRange": setHumanR,
-        "sensorUK": setUK,
-        "sensorUS": setUS,
-        "sensorUKRange": setUKR,
-        "sensorUSRange": setUSR,
-        "critPriorityEvent": setCritPriority,
-        "highPriorityEvent": setHighPriority,
-        "medPriorityEvent": setMedPriority,
-        "lowPriorityEvent": setLowPriority,
         "critPriorityEventRange": setCritPriorityR,
         "highPriorityEventRange": setHighPriorityR,
         "medPriorityEventRange": setMedPriorityR,
         "lowPriorityEventRange": setLowPriorityR,
+        "sensorCameraRange": setCameraR,
+        "sensorMicrophoneRange": setMicrophoneR,
+        "sensorHumanRange": setHumanR,
+        "sensorUKRange": setUKR,
+        "sensorUSRange": setUSR,
+        "sensorCamera": setCamera,
+        "sensorMicrophone": setMicrophone,
+        "sensorHuman": setHuman,
+        "sensorUK": setUK,
+        "sensorUS": setUS,
+        "critPriorityEvent": setCritPriority,
+        "highPriorityEvent": setHighPriority,
+        "medPriorityEvent": setMedPriority,
+        "lowPriorityEvent": setLowPriority,
         "complexEvent": setComplex
-
     }
     return jsdict
 

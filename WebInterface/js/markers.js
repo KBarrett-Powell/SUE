@@ -109,63 +109,58 @@ const complexIcon = new mapIcon({
 });
 
 // Add map marker function
-function addMarker(json, sensor) {
+async function addMarker(json, sensor, layer) {
     let coordinates = json.geometry.coordinates;
     let ranges = [];
 
     if (sensor) {
         // Create default sensor marker with camera icon
-        let sensorMarker = L.marker(coordinates, {icon: cameraIcon, properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap);
+        let sensorMarker = L.marker(coordinates, {properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap);
         sensorMarker.bindPopup(json.properties.sensorName);
         let radius = 10;
 
+        let sensorType = json.properties.sensorType;
+
         // Fill in Sensor Type map layers
-        if (json.properties.sensorType === "Camera") {
+        if (sensorType == "Camera"){
             // Create semicircle ranges for camera range, and store in ranges list
             for ( let i = 0; i < 5; i ++ ) {
-                let newRange = L.semiCircle(coordinates, {radius: radius, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true, properties: JSON.stringify(json.properties)});
+                let newRange = L.semiCircle(coordinates, {radius: radius, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true, properties: JSON.stringify(json.properties)}).setDirection(json.properties.rangeDirection, 90);
                 ranges.push(newRange);
                 radius = radius + 5;
             }
-
-            // Update map layer with new marker and ranges
-            addMarkerToLayer(sensorMarker, ranges, window.sensorCamera, window.sensorCameraRange);
-
         } else {
-             // Create circle ranges for microphone and human range, and store in ranges list
+            // Create circle ranges for microphone and human range, and store in ranges list
             for ( let i = 0; i < 5; i ++ ) {
                 let newRange = L.circle(coordinates, {radius: radius, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true, properties: JSON.stringify(json.properties)});
                 ranges.push(newRange);
                 radius = radius + 5;
             }
+        } 
 
-            if (json.properties.sensorType === "Microphone") {
-                // use default sensor marker with microphone icon
-                let microphoneMarker = sensorMarker.setIcon(microphoneIcon);
-                // Update map layer with new marker and ranges
-                addMarkerToLayer(microphoneMarker, ranges, window.sensorMicrophone, window.sensorMicrophoneRange);
-        
-            } else {
-                // use default sensor marker with human icon
-                let humanMarker = sensorMarker.setIcon(humanIcon);
-                // Update map layer with new marker and ranges
-                addMarkerToLayer(humanMarker, ranges, window.sensorHuman, window.sensorHumanRange);
-            }
-        }
-
-        // Fill in Sensor Owner map layers
-        if (json.properties.owner == "UK") {
-            // use default sensor marker with uk flag icon
-            let ukMarker = sensorMarker.setIcon(ukIcon);
+        if (layer == "sensorCamera") {
             // Update map layer with new marker and ranges
-            addMarkerToLayer(ukMarker, ranges, window.sensorUK, window.sensorUKRange);
+            sensorMarker.setIcon(cameraIcon);
+
+        } else if (layer == "sensorMicrophone") {
+            // Use default sensor marker with microphone icon
+            sensorMarker.setIcon(microphoneIcon);
+    
+        } else if (layer == "sensorHuman") {
+            // Use default sensor marker with human icon
+            sensorMarker.setIcon(humanIcon);
+        
+        } else if (layer == "sensorUK") {
+            // Use default sensor marker with uk flag icon
+            sensorMarker.setIcon(ukIcon);
 
         } else {
-            // use default sensor marker with us flag icon
-            let usMarker = sensorMarker.setIcon(usIcon);
-            // Update map layer with new marker and ranges
-            addMarkerToLayer(usMarker, ranges, window.sensorUS, window.sensorUSRange);
+            // Use default sensor marker with us flag icon
+            sensorMarker.setIcon(usIcon);
         }
+
+        // Update map layer with new marker and ranges
+        addMarkerToLayer(sensorMarker, ranges, window[layer], window[layer + "Range"]);
     
     } else {
         let iconChoice = null;
@@ -222,10 +217,12 @@ function addMarker(json, sensor) {
 
 function addMarkerToLayer(marker, ranges, layer, rangeLayer) {
     // Add the marker and its range to the appropriate layers
-    if (marker != null) { marker.addTo(layer); }
+    if (marker != null) {
+        marker.addTo(layer);
+    }
 
     for( let i in ranges ) {
-        ranges[i].addTo(rangeLayer)
+        ranges[i].addTo(rangeLayer);
     }
 
     // Refresh layers on map so updates are displayed in SUE
@@ -327,9 +324,6 @@ async function updateByLayer(req, win, ownerSensor, isRange) {
     let count = 0;
     let size = window[win].getLayers().length;
 
-    // If sensor
-    let sensor = (req.properties.sensorType != null ? true : false);
-
     let icon = getIcon(req.properties, ownerSensor);
 
     if (window[win].getLayers().length > 0) {
@@ -338,7 +332,6 @@ async function updateByLayer(req, win, ownerSensor, isRange) {
             count ++;
 
             let properties = await getProperties(layer);
-            let currentIcon = layer.getIcon();
             
             if (properties != null) {
                 // Get ID and check if layer is the right one to update
@@ -355,7 +348,10 @@ async function updateByLayer(req, win, ownerSensor, isRange) {
 
                     // Updating map marker information
                     // Changing icon for sensor type, owner or event priority change
-                    if (!isRange && currentIcon != icon) { 
+                    let currentIcon = null;
+                    if (!isRange) { currentIcon = layer.getIcon(); }
+
+                    if (!isRange && currentIcon != null && currentIcon != icon) { 
                         console.log("icon needs changing");
                         layer.setIcon(icon); 
                     }
@@ -374,7 +370,7 @@ async function updateByLayer(req, win, ownerSensor, isRange) {
                     }
 
                     // Update range of sensor or event
-                    if (type != "Complex" && !win.includes("Range")) { updateByLayer(req, win + "Range", ownerSensor, true); }
+                    if (type != "Complex" && !isRange) { updateByLayer(req, win + "Range", ownerSensor, true); }
                 }
 
                 // If correct layer not found, add a new marker to the map
@@ -382,7 +378,7 @@ async function updateByLayer(req, win, ownerSensor, isRange) {
                     if (req.properties.complexID != null) {
                         await processComplexEvent(req);
                     } else {
-                        addMarker(req, sensor);
+                        addMarker(req, (req.properties.sensorType != null), win);
                     }
                 }
             }
@@ -392,7 +388,7 @@ async function updateByLayer(req, win, ownerSensor, isRange) {
         if (req.properties.complexID != null) {
             await processComplexEvent(req);
         } else {
-            addMarker(req, sensor);
+            addMarker(req, (req.properties.sensorType != null), win);
         }
     }
 }
@@ -612,7 +608,7 @@ async function findEvents(list) {
 
 // Simple function to determine whether a list of objects is empty or not
 function isEmpty(obj) {
-    for ( var key in obj ) {
+    for ( let key in obj ) {
         if ( obj.hasOwnProperty(key) ) {
             return false;
         }

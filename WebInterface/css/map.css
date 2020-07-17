@@ -656,7 +656,7 @@ audio#audioPlayer {
 }
 /* ******* END Timeline ******** */
 
-.priorityChart, .timeChart {
+#priorityChartContainer, #timeChartContainer {
     height: 310px;
 }
 /* ******* Different media size texts ******** */
