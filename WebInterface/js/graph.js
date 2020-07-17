@@ -231,16 +231,24 @@ function createChart(chartData, isCarousel) {
     else { window.lineGraph = new Chart(ctx, config); }
 }
 
-function buildAnalysisCharts() {
+async function buildAnalysisCharts() {
+
+    await resetCanvas("priorityChart");
+    await resetCanvas("timeChart");
 
     const pctx = document.getElementById('priorityChart').getContext('2d');
     const tctx = document.getElementById('timeChart').getContext('2d');
 
+    let lowPriority = window.lowPriorityEvent.getLayers();
+    let medPriority = window.medPriorityEvent.getLayers();
+    let highPriority = window.highPriorityEvent.getLayers();
+    let critPriority = window.critPriorityEvent.getLayers();
+
     let priorityData = [0, 0, 0, 0];
-    priorityData[0] = window.lowPriorityEvent.getLayers().length;
-    priorityData[1] = window.medPriorityEvent.getLayers().length;
-    priorityData[2] = window.highPriorityEvent.getLayers().length;
-    priorityData[3] = window.critPriorityEvent.getLayers().length;
+    priorityData[0] = lowPriority.length;
+    priorityData[1] = medPriority.length;
+    priorityData[2] = highPriority.length;
+    priorityData[3] = critPriority.length;
 
     new Chart(pctx, {
         type: 'bar',
@@ -291,30 +299,31 @@ function buildAnalysisCharts() {
         }
     });
 
+    let eventTimes = {};
+    eventTimes = addTimeToDict(eventTimes, lowPriority);
+    eventTimes = addTimeToDict(eventTimes, medPriority);
+    eventTimes = addTimeToDict(eventTimes, highPriority);
+    eventTimes = addTimeToDict(eventTimes, critPriority);
+
+    let labels = [];
+    let data = [];
+    for ( let key in eventTimes ) {
+        let simpleTime = moment(key).format('HH:mm:ss');
+        labels.push(simpleTime);
+
+        let dataObj = {x: simpleTime, y: eventTimes[key]};
+        data.push(dataObj);
+    };
+
     new Chart(tctx, {
         type: 'line',
 		data: {
-            labels: [moment('2020-03-04T16:10:20Z').format('HH:mm:ss'), moment('2020-03-04T16:10:30Z').format('HH:mm:ss'), moment('2020-03-04T16:10:40Z').format('HH:mm:ss'), moment('2020-03-04T16:10:50Z').format('HH:mm:ss'), moment('2020-03-04T16:11:00Z').format('HH:mm:ss')],
+            labels: labels,
 			datasets: [{
 				label: '# Of Events',
 				backgroundColor: 'rgba(255, 0, 0, 0.2)',
 				borderColor: 'rgba(255, 0, 0, 0.2)',
-				data: [{
-                    x: moment('2020-03-04T16:10:20Z').format('HH:mm:ss'),
-                    y: 1
-                },{
-                    x: moment('2020-03-04T16:10:30Z').format('HH:mm:ss'),
-                    y: 2
-                },{
-                    x: moment('2020-03-04T16:10:40Z').format('HH:mm:ss'),
-                    y: 0
-                },{
-                    x: moment('2020-03-04T16:10:50Z').format('HH:mm:ss'),
-                    y: 1
-                },{
-                    x: moment('2020-03-04T16:11:00Z').format('HH:mm:ss'),
-                    y: 1
-                }],
+				data: data,
 				fill: false
 			}]
 		},
@@ -372,4 +381,50 @@ function buildAnalysisCharts() {
             maintainAspectRatio: false
         }
     });	
-}
+};
+
+function addTimeToDict(dict, list) {
+    for ( let i in list ) {
+        let event = JSON.parse(list[i].options.properties);
+        let dateTime = new Date(event.datetime);
+
+        if (dateTime.getSeconds() < 20) {
+            dateTime.setSeconds(0);
+        } else if (dateTime.getSeconds() < 40) {
+            dateTime.setSeconds(20);
+        } else {
+            dateTime.setSeconds(40);
+        }
+
+        let timestr = buildISOString(dateTime);
+    
+        if (dict[timestr] != null) { dict[timestr] = dict[timestr] + 1; }
+            else { dict[timestr] = 1; }
+    }
+
+    return dict;
+};
+
+function buildISOString(date) {
+
+    function pad(number) {
+      if (number < 10) {
+        return '0' + number;
+      }
+      return number;
+    }
+
+    return date.getUTCFullYear() + '-' + pad(date.getUTCMonth() + 1) + '-' + pad(date.getUTCDate()) +
+        'T' + pad(date.getUTCHours()) + ':' + pad(date.getUTCMinutes()) + ':' + pad(date.getUTCSeconds()) + 'Z';
+};
+
+function resetCanvas(canvasName){
+    let oldCanvas = document.getElementById( canvasName );
+    oldCanvas.parentNode.removeChild(oldCanvas); 
+
+    let newCanvas = document.createElement('canvas');     
+    newCanvas.setAttribute('id', canvasName); 
+
+    let containerName = canvasName  + "Container";
+    document.getElementById(containerName).appendChild(newCanvas);
+};
