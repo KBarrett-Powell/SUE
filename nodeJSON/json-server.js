@@ -98,7 +98,7 @@ wsServer.on('connection', function (wsClient) {
           sendAll(SUEClients, update);
           let allUpdated = getUpdatedID(update);
           for ( let i in allUpdated ) {
-            wsClient.send("Successfully updated " + allUpdated[i]);
+            wsClient.send(JSON.stringify({"success": {"eventID": allUpdated[i]}}));
           }
         } 
 
@@ -107,7 +107,7 @@ wsServer.on('connection', function (wsClient) {
           sendAll(SUEClients, update);
           let allUpdated = getUpdatedID(update);
           for ( let i in allUpdated ) {
-            wsClient.send("Successfully updated " + allUpdated[i]);
+            wsClient.send(JSON.stringify({"success": {"sensorID": allUpdated[i]}}));
           }
         } 
         
@@ -116,7 +116,7 @@ wsServer.on('connection', function (wsClient) {
           sendAll(SUEClients, update);
           let allUpdated = getUpdatedID(update);
           for ( let i in allUpdated ) {
-            wsClient.send("Successfully updated " + allUpdated[i]);
+            wsClient.send(JSON.stringify({"success": {"complexID": allUpdated[i]}}));
           }
         }
 
@@ -144,7 +144,7 @@ wsServer.on('connection', function (wsClient) {
           sendAll(SUEClients, response);
           let allUpdated = getUpdatedID(response);
           for ( let i in allUpdated ) {
-            wsClient.send("Successfully deleted " + allUpdated[i]);
+            wsClient.send(JSON.stringify({"success": {"eventID": allUpdated[i]}}));
           }
         } 
         
@@ -153,7 +153,7 @@ wsServer.on('connection', function (wsClient) {
           sendAll(SUEClients, response);
           let allUpdated = getUpdatedID(response);
           for ( let i in allUpdated ) {
-            wsClient.send("Successfully deleted " + allUpdated[i]);
+            wsClient.send(JSON.stringify({"success": {"sensorID": allUpdated[i]}}));
           }
         } 
         
@@ -162,7 +162,7 @@ wsServer.on('connection', function (wsClient) {
           sendAll(SUEClients, response);
           let allUpdated = getUpdatedID(response);
           for ( let i in allUpdated ) {
-            wsClient.send("Successfully deleted " + allUpdated[i]);
+            wsClient.send(JSON.stringify({"success": {"complexID": allUpdated[i]}}));
           }
         }
       }
@@ -182,25 +182,25 @@ function getUpdatedID(response) {
   let ids = [];
 
   for ( let i in response.sensorUK ) {
-    ids.push("sensor with ID " + response.sensorUK[i].properties.sensorID);
+    ids.push(response.sensorUK[i].properties.sensorID);
   }
   for ( let i in response.sensorUS ) {
-    ids.push("sensor with ID " + response.sensorUS[i].properties.sensorID);
+    ids.push(response.sensorUS[i].properties.sensorID);
   }
   for ( let i in response.critPriorityEvent ) {
-    ids.push("event with ID " + response.critPriorityEvent[i].properties.eventID);
+    ids.push(response.critPriorityEvent[i].properties.eventID);
   }
   for ( let i in response.highPriorityEvent ) {
-    ids.push("event with ID " + response.highPriorityEvent[i].properties.eventID);
+    ids.push(response.highPriorityEvent[i].properties.eventID);
   }
   for ( let i in response.medPriorityEvent ) {
-    ids.push("event with ID " + response.medPriorityEvent[i].properties.eventID);
+    ids.push(response.medPriorityEvent[i].properties.eventID);
   }
   for ( let i in response.lowPriorityEvent ) {
-    ids.push("event with ID " + response.lowPriorityEvent[i].properties.eventID);
+    ids.push(response.lowPriorityEvent[i].properties.eventID);
   }
   for ( let i in response.complexEvent ) {
-    ids.push("complex event with ID " + response.complexEvent[i].properties.complexID);
+    ids.push(response.complexEvent[i].properties.complexID);
   }
 
   return ids;
