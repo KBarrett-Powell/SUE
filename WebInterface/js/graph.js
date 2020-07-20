@@ -387,25 +387,24 @@ function addTimeToDict(dict, list) {
     for ( let i in list ) {
         let event = JSON.parse(list[i].options.properties);
         let dateTime = new Date(event.datetime);
+        let timestr = "";
 
         if (dateTime.getSeconds() < 20) {
-            dateTime.setSeconds(0);
+            timestr = buildISOString(dateTime, 0);
         } else if (dateTime.getSeconds() < 40) {
-            dateTime.setSeconds(20);
+            timestr = buildISOString(dateTime, 20);
         } else {
-            dateTime.setSeconds(40);
+            timestr = buildISOString(dateTime, 40);
         }
-
-        let timestr = buildISOString(dateTime);
     
         if (dict[timestr] != null) { dict[timestr] = dict[timestr] + 1; }
-            else { dict[timestr] = 1; }
+        else { dict[timestr] = 1; }
     }
 
     return dict;
 };
 
-function buildISOString(date) {
+function buildISOString(date, seconds) {
 
     function pad(number) {
       if (number < 10) {
@@ -415,7 +414,7 @@ function buildISOString(date) {
     }
 
     return date.getUTCFullYear() + '-' + pad(date.getUTCMonth() + 1) + '-' + pad(date.getUTCDate()) +
-        'T' + pad(date.getUTCHours()) + ':' + pad(date.getUTCMinutes()) + ':' + pad(date.getUTCSeconds()) + 'Z';
+        'T' + pad(date.getUTCHours()) + ':' + pad(date.getUTCMinutes()) + ':' + pad(seconds) + 'Z';
 };
 
 function resetCanvas(canvasName){

@@ -2,6 +2,8 @@ const fs = require('fs');
 const fsp = require('fs').promises;
 const path = require('path');
 
+const functions = require('./functions.js');
+
 const eventsJsonFile = path.join(__dirname, "../json/events.json");
 const originalEventsJsonFile = path.join(__dirname, "../json/demo/events.json");
 
@@ -9,6 +11,15 @@ module.exports = {
     refreshEvents: async function refreshEvents() {
         let data = await fsp.readFile( originalEventsJsonFile, {encoding: 'utf8'});
         data = JSON.parse( data );
+
+        const today = new Date();
+
+        for ( let i in data.events ) {
+            let event = data.events[i];
+            let datetime = new Date(event.properties.datetime);
+
+            data.events[i].properties.datetime = (functions.buildISOString(today, datetime));
+        }
 
         fs.writeFile( eventsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
             if (err) throw err;
@@ -89,6 +100,7 @@ module.exports = {
         for (let req in request) {
 
             let found = false;
+            let invalid = false;
             let maxId = 0;
             let Id = 0;
 
@@ -146,28 +158,35 @@ module.exports = {
         
             if (found == false) {
                 Id = (maxId + 1); 
+                if ( event.eventName = null ) { newEvent = buildNewObjectError(newEvent, "Event", "eventName"); invalid = true; }
+                if ( event.eventType = null ) { newEvent = buildNewObjectError(newEvent, "Event", "eventType"); invalid = true; }
+                if ( event.description = null ) { newEvent = buildNewObjectError(newEvent, "Event", "description"); invalid = true; }
+                if ( event.sensorID = null ) { newEvent = buildNewObjectError(newEvent, "Event", "sensorID"); invalid = true; }
+                if ( event.priority = null ) { newEvent = buildNewObjectError(newEvent, "Event", "priority"); invalid = true; }
 
-                newEvent = {
-                    "type": "Feature",
-                    "properties": {
-                        "eventID": Id,
-                        "eventName": event.eventName,
-                        "eventType": event.eventType,
-                        "description": event.description,
-                        "sensorID": event.sensorID,
-                        "chartPoints": event.chartPoints,
-                        "objDetVideo": event.objDetVideo,
-                        "slctRevVideo": event.slctRevVideo,
-                        "priority": event.priority,
-                        "datetime": event.datetime
-                    },
-                    "geometry": {
-                        "type": "Point",
-                        "coordinates": event.coordinates
+                if (!invalid) { 
+                    newEvent = {
+                        "type": "Feature",
+                        "properties": {
+                            "eventID": Id,
+                            "eventName": event.eventName,
+                            "eventType": event.eventType,
+                            "description": event.description,
+                            "sensorID": event.sensorID,
+                            "chartPoints": event.chartPoints,
+                            "objDetVideo": event.objDetVideo,
+                            "slctRevVideo": event.slctRevVideo,
+                            "priority": event.priority,
+                            "datetime": (event.datetime != null ? event.datetime : functions.buildISOString(new Date(), new Date()))
+                        },
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": event.coordinates
+                        }
                     }
                 }
 
-                data.events.push(newEvent);
+                if (newEvent.type != "Invalid Event Error") { data.events.push(newEvent); }
             }
 
             if (newEvent.properties.priority == 1) {

@@ -2,6 +2,8 @@ const fs = require('fs');
 const fsp = require('fs').promises;
 const path = require('path');
 
+const functions = require('./functions.js');
+
 const complexJsonFile = path.join(__dirname, "../json/complex.json");
 const originalComplexJsonFile = path.join(__dirname, "../json/demo/complex.json");
 
@@ -9,6 +11,15 @@ module.exports = {
     refreshComplex: async function refreshComplex() {
         let data = await fsp.readFile( originalComplexJsonFile, {encoding: 'utf8'});
         data = JSON.parse( data );
+
+        const today = new Date();
+
+        for ( let i in data.connections ) {
+            let complex = data.connections[i];
+            let datetime = new Date(complex.properties.datetime);
+
+            data.connections[i].properties.datetime = (functions.buildISOString(today, datetime));
+        }
 
         fs.writeFile( complexJsonFile, JSON.stringify(data, undefined, 4), function (err) {
             if (err) throw err;
