@@ -158,11 +158,11 @@ module.exports = {
         
             if (found == false) {
                 Id = (maxId + 1); 
-                if ( event.eventName = null ) { newEvent = buildNewObjectError(newEvent, "Event", "eventName"); invalid = true; }
-                if ( event.eventType = null ) { newEvent = buildNewObjectError(newEvent, "Event", "eventType"); invalid = true; }
-                if ( event.description = null ) { newEvent = buildNewObjectError(newEvent, "Event", "description"); invalid = true; }
-                if ( event.sensorID = null ) { newEvent = buildNewObjectError(newEvent, "Event", "sensorID"); invalid = true; }
-                if ( event.priority = null ) { newEvent = buildNewObjectError(newEvent, "Event", "priority"); invalid = true; }
+                if ( event.eventName == null ) { newEvent = buildNewObjectError(newEvent, "Event", "eventName"); invalid = true; }
+                if ( event.eventType == null ) { newEvent = buildNewObjectError(newEvent, "Event", "eventType"); invalid = true; }
+                if ( event.description == null ) { newEvent = buildNewObjectError(newEvent, "Event", "description"); invalid = true; }
+                if ( event.sensorID == null ) { newEvent = buildNewObjectError(newEvent, "Event", "sensorID"); invalid = true; }
+                if ( event.priority == null ) { newEvent = buildNewObjectError(newEvent, "Event", "priority"); invalid = true; }
 
                 if (!invalid) { 
                     newEvent = {
