@@ -1,4 +1,6 @@
 function initializeLayers() {
+    removeAllLayers();
+    
     window.critPriorityEventRange.addTo(window.leafletmap);
     window.highPriorityEventRange.addTo(window.leafletmap);
     window.medPriorityEventRange.addTo(window.leafletmap);
@@ -133,6 +135,27 @@ function clearMap() {
     window.lowPriorityEventRange.clearLayers();
 
     window.complexEvent.clearLayers();
+};
+
+function showOnlyEvents(lowPri, medPri, highPri, critPri) {
+    removeAllLayers();
+
+    if (lowPri) { 
+        window.lowPriorityEvent.addTo(window.leafletmap);
+        window.lowPriorityEventRange.addTo(window.leafletmap);
+    }
+    if (medPri) { 
+        window.medPriorityEvent.addTo(window.leafletmap);
+        window.medPriorityEventRange.addTo(window.leafletmap);
+    }
+    if (highPri) { 
+        window.highPriorityEvent.addTo(window.leafletmap);
+        window.highPriorityEventRange.addTo(window.leafletmap);
+    }
+    if (critPri) { 
+        window.critPriorityEvent.addTo(window.leafletmap);
+        window.critPriorityEventRange.addTo(window.leafletmap);
+    }
 };
 
 function refreshComplex() {

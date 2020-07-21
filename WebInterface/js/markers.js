@@ -212,7 +212,8 @@ async function addMarker(json, sensor, layer) {
     }
 
     // Update the analysis charts
-    buildAnalysisCharts();
+    buildPriorityChart();
+    buildTimeChart();
 };
 
 function addMarkerToLayer(marker, ranges, layer, rangeLayer) {

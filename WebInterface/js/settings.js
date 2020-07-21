@@ -29,6 +29,8 @@ function toggleAccessibility(on) {
             layer.setStyle({fillColor: '#6CA5D6', color: '#6CA5D6'});
         });
 
+        buildPriorityChart();
+
     } else {
         window.accessibility = false; 
         window.critPriorityEvent.eachLayer(function (layer) {
@@ -56,6 +58,8 @@ function toggleAccessibility(on) {
         window.lowPriorityEventRange.eachLayer(function (layer) {
             layer.setStyle({fillColor: '#76CAEC', color: '#76CAEC'});
         });
+
+        buildPriorityChart();
 
     }
 };

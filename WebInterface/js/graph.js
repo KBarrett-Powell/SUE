@@ -231,13 +231,10 @@ function createChart(chartData, isCarousel) {
     else { window.lineGraph = new Chart(ctx, config); }
 }
 
-async function buildAnalysisCharts() {
-
+async function buildPriorityChart() {
     await resetCanvas("priorityChart");
-    await resetCanvas("timeChart");
 
     const pctx = document.getElementById('priorityChart').getContext('2d');
-    const tctx = document.getElementById('timeChart').getContext('2d');
 
     let lowPriority = window.lowPriorityEvent.getLayers();
     let medPriority = window.medPriorityEvent.getLayers();
@@ -250,26 +247,27 @@ async function buildAnalysisCharts() {
     priorityData[2] = highPriority.length;
     priorityData[3] = critPriority.length;
 
-    new Chart(pctx, {
+    let backgroundColours = (window.accessibility == false ? ['rgba(118, 202, 236, 0.5)', 'rgba(254, 221, 128, 0.5)', 'rgba(254, 160, 128, 0.5)', 'rgba(254, 127, 127, 0.5)'] 
+    : ['rgba(108, 165, 214, 0.5)', 'rgba(112, 212, 229, 0.5)', 'rgba(254, 157, 133, 0.5)', 'rgba(236, 108, 113, 0.5)']);
+
+    let borderColours = (window.accessibility == false ? ['rgba(118, 202, 236, 1)', 'rgba(254, 221, 128, 1)', 'rgba(254, 160, 128, 1)', 'rgba(254, 127, 127, 1)'] 
+    : ['rgba(108, 165, 214, 1)', 'rgba(112, 212, 229, 1)', 'rgba(254, 157, 133, 1)', 'rgba(236, 108, 113, 1)']);
+
+    window.priorityChart = new Chart(pctx, {
         type: 'bar',
         data: {
             labels: ["4", "3", "2", "1"],
             datasets: [{
                 label: 'Events by Priority',
                 data: priorityData,
-                backgroundColor: [
-                    'rgba(0, 106, 255, 0.2)',
-                    'rgba(255, 255, 0, 0.2)',
-                    'rgba(255, 80, 0, 0.2)',
-                    'rgba(255, 0, 0, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(0, 106, 255, 1)',
-                    'rgba(255, 255, 0, 1)',
-                    'rgba(255, 80, 0, 1)',
-                    'rgba(255, 0, 0, 1)'
-                ],
-                borderWidth: 1
+                backgroundColor: backgroundColours,
+                borderColor: borderColours,
+                borderWidth: [
+                    1,
+                    1,
+                    1,
+                    1
+                ]
             }]
         },
         options: {
@@ -298,6 +296,17 @@ async function buildAnalysisCharts() {
             maintainAspectRatio: false
         }
     });
+};
+
+async function buildTimeChart() {
+    await resetCanvas("timeChart");
+
+    const tctx = document.getElementById('timeChart').getContext('2d');
+
+    let lowPriority = window.lowPriorityEvent.getLayers();
+    let medPriority = window.medPriorityEvent.getLayers();
+    let highPriority = window.highPriorityEvent.getLayers();
+    let critPriority = window.critPriorityEvent.getLayers();
 
     let eventTimes = {};
     eventTimes = addTimeToDict(eventTimes, lowPriority);
@@ -315,7 +324,7 @@ async function buildAnalysisCharts() {
         data.push(dataObj);
     };
 
-    new Chart(tctx, {
+    window.timeChart = new Chart(tctx, {
         type: 'line',
 		data: {
             labels: labels,
@@ -380,7 +389,7 @@ async function buildAnalysisCharts() {
             responsive: true,
             maintainAspectRatio: false
         }
-    });	
+    });
 };
 
 function addTimeToDict(dict, list) {
@@ -414,16 +423,47 @@ function buildISOString(date, seconds) {
     }
 
     return date.getUTCFullYear() + '-' + pad(date.getUTCMonth() + 1) + '-' + pad(date.getUTCDate()) +
-        'T' + pad(date.getUTCHours()) + ':' + pad(date.getUTCMinutes()) + ':' + pad(seconds) + 'Z';
+        'T' + pad(date.getUTCHours()) + ':' + pad(date.getUTCMinutes()) + ':' + (seconds != null ? pad(seconds) : pad(date.getUTCSeconds())) + 'Z';
 };
 
-function resetCanvas(canvasName){
+function resetCanvas(canvasName) {
+    let containerName = canvasName  + "Container";
+    let container = document.getElementById( containerName );
+
     let oldCanvas = document.getElementById( canvasName );
-    oldCanvas.parentNode.removeChild(oldCanvas); 
+    if (oldCanvas != null) { oldCanvas.parentNode.removeChild( oldCanvas ); }
+
+    let oldChart = container.getElementsByClassName( "chartjs-size-monitor" )[0];
+    if (oldChart != null) { oldChart.parentNode.removeChild( oldChart ); }
 
     let newCanvas = document.createElement('canvas');     
     newCanvas.setAttribute('id', canvasName); 
+    if (canvasName == "priorityChart") { newCanvas.addEventListener('click', handleBarClick, false); }
+    else { newCanvas.addEventListener('click', handleTimeClick, false); }
 
-    let containerName = canvasName  + "Container";
     document.getElementById(containerName).appendChild(newCanvas);
+};
+
+function handleBarClick(evt) {
+    const chart = window.priorityChart;
+    let activeElement = chart.getElementAtEvent(evt);
+
+    if (activeElement[0] != null) {
+        let selectedBar = chart.data.labels[activeElement[0]._index];
+        showOnlyEvents((selectedBar == "4" ? true : false), (selectedBar == "3" ? true : false), (selectedBar == "2" ? true : false), (selectedBar == "1" ? true : false));
+        chart.data.datasets[0].borderWidth = [1,1,1,1];
+        chart.data.datasets[0].borderWidth[activeElement[0]._index] = 2;
+    } else {
+        initializeLayers();
+        chart.data.datasets[0].borderWidth = [1,1,1,1];
+    }
+};
+
+function handleTimeClick(evt) {
+    const chart = window.timeChart;
+    let activeElement = chart.getElementAtEvent(evt);
+
+    //console.log("active element: " + JSON.stringify(activeElement, censor(activeElement)));
+    let answer = chart.data.datasets[activeElement[0]._datasetIndex].data[activeElement[0]._index];
+    console.log("active element: " + JSON.stringify(activeElement[0]._index));
 };
