@@ -60,7 +60,7 @@ async function addComplexMarker(complex) {
 
         toggleLayer(window.complexEvent);
     }
-}
+};
 
 function refineList(list) {
     let refinedList = [];
@@ -94,4 +94,4 @@ function refineList(list) {
     }
 
     return refinedList;
-}
+};

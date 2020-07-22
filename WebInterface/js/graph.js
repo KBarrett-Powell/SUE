@@ -250,8 +250,7 @@ async function buildPriorityChart() {
     let backgroundColours = (window.accessibility == false ? ['rgba(118, 202, 236, 0.5)', 'rgba(254, 221, 128, 0.5)', 'rgba(254, 160, 128, 0.5)', 'rgba(254, 127, 127, 0.5)'] 
     : ['rgba(108, 165, 214, 0.5)', 'rgba(112, 212, 229, 0.5)', 'rgba(254, 157, 133, 0.5)', 'rgba(236, 108, 113, 0.5)']);
 
-    let borderColours = (window.accessibility == false ? ['rgba(118, 202, 236, 1)', 'rgba(254, 221, 128, 1)', 'rgba(254, 160, 128, 1)', 'rgba(254, 127, 127, 1)'] 
-    : ['rgba(108, 165, 214, 1)', 'rgba(112, 212, 229, 1)', 'rgba(254, 157, 133, 1)', 'rgba(236, 108, 113, 1)']);
+    let borderColours = getBorderColours();
 
     window.priorityChart = new Chart(pctx, {
         type: 'bar',
@@ -271,6 +270,8 @@ async function buildPriorityChart() {
             }]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: false,
             legend: {
                 display: false
             },
@@ -291,9 +292,7 @@ async function buildPriorityChart() {
                         stepSize: 1
                     }
                 }]
-            },
-            responsive: true,
-            maintainAspectRatio: false
+            }
         }
     });
 };
@@ -309,6 +308,8 @@ async function buildTimeChart() {
     let critPriority = window.critPriorityEvent.getLayers();
 
     let eventTimes = {};
+    eventTimes = buffEventTimes(eventTimes);
+
     eventTimes = addTimeToDict(eventTimes, lowPriority);
     eventTimes = addTimeToDict(eventTimes, medPriority);
     eventTimes = addTimeToDict(eventTimes, highPriority);
@@ -338,6 +339,7 @@ async function buildTimeChart() {
 		},
 		options: {
             responsive: true,
+            maintainAspectRatio: false,
             legend: {
                 display: false
             },
@@ -354,7 +356,7 @@ async function buildTimeChart() {
                 fontSize: 18,
                 fontFamily: "Georgia, serif",
                 fontStyle: 'normal',
-                text: 'Timeline of Events'
+                text: 'Timeline of Events in The Last 5 Minutes'
             },
             elements: {
                 line: {
@@ -367,7 +369,7 @@ async function buildTimeChart() {
                     type: 'time',
                     time: {
                         unit: 'second',
-                        unitStepSize: 10,
+                        unitStepSize: 30,
                         parser:'HH:mm:ss',
                         displayFormats: {
                             second: 'HH:mm:ss'
@@ -385,11 +387,27 @@ async function buildTimeChart() {
                         stepSize: 1
                     }
                 }]
-            },
-            responsive: true,
-            maintainAspectRatio: false
+            }
         }
     });
+};
+
+function buffEventTimes(eventTimes) {
+    let current = new Date();
+    let updatedCurrent = new Date(Math.round(current.getTime() / 30000) * 30000);
+    
+    let earliestDate = updatedCurrent;
+    earliestDate.setMinutes(earliestDate.getMinutes() - 5);
+
+    while ( earliestDate <= current ) {
+        let isoStr = buildISOString(earliestDate, null);
+        if ( eventTimes[isoStr] == null )  {
+            eventTimes[isoStr] = 0;
+        };
+        earliestDate.setSeconds(earliestDate.getSeconds() + 30);
+    }
+    
+    return eventTimes;
 };
 
 function addTimeToDict(dict, list) {
@@ -398,16 +416,13 @@ function addTimeToDict(dict, list) {
         let dateTime = new Date(event.datetime);
         let timestr = "";
 
-        if (dateTime.getSeconds() < 20) {
-            timestr = buildISOString(dateTime, 0);
-        } else if (dateTime.getSeconds() < 40) {
-            timestr = buildISOString(dateTime, 20);
+        if (dateTime.getSeconds() < 30) {
+            timestr = buildISOString(dateTime, 30);
         } else {
-            timestr = buildISOString(dateTime, 40);
+            timestr = buildISOString(dateTime, 60);
         }
     
         if (dict[timestr] != null) { dict[timestr] = dict[timestr] + 1; }
-        else { dict[timestr] = 1; }
     }
 
     return dict;
@@ -422,8 +437,11 @@ function buildISOString(date, seconds) {
       return number;
     }
 
+    let minutes = date.getUTCMinutes();
+    if (seconds != null && seconds == 60) { minutes = minutes + 1; seconds = 0; }
+
     return date.getUTCFullYear() + '-' + pad(date.getUTCMonth() + 1) + '-' + pad(date.getUTCDate()) +
-        'T' + pad(date.getUTCHours()) + ':' + pad(date.getUTCMinutes()) + ':' + (seconds != null ? pad(seconds) : pad(date.getUTCSeconds())) + 'Z';
+        'T' + pad(date.getUTCHours()) + ':' + pad(minutes) + ':' + (seconds != null ? pad(seconds) : pad(date.getUTCSeconds())) + 'Z';
 };
 
 function resetCanvas(canvasName) {
@@ -451,13 +469,18 @@ function handleBarClick(evt) {
     if (activeElement[0] != null) {
         let selectedBar = chart.data.labels[activeElement[0]._index];
         showOnlyEvents((selectedBar == "4" ? true : false), (selectedBar == "3" ? true : false), (selectedBar == "2" ? true : false), (selectedBar == "1" ? true : false));
-        chart.data.datasets[0].borderWidth = [1,1,1,1];
-        chart.data.datasets[0].borderWidth[activeElement[0]._index] = 2;
+        chart.data.datasets[0].borderColor = getBorderColours();;
+        chart.data.datasets[0].borderColor[activeElement[0]._index] = 'rgba(255, 255, 255, 1)';
     } else {
         initializeLayers();
-        chart.data.datasets[0].borderWidth = [1,1,1,1];
+        chart.data.datasets[0].borderColor = getBorderColours();;
     }
 };
+
+function getBorderColours() {
+    return (window.accessibility == false ? ['rgba(118, 202, 236, 1)', 'rgba(254, 221, 128, 1)', 'rgba(254, 160, 128, 1)', 'rgba(254, 127, 127, 1)'] 
+    : ['rgba(108, 165, 214, 1)', 'rgba(112, 212, 229, 1)', 'rgba(254, 157, 133, 1)', 'rgba(236, 108, 113, 1)']);
+}
 
 function handleTimeClick(evt) {
     const chart = window.timeChart;

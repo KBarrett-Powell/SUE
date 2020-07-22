@@ -7,9 +7,13 @@ module.exports = {
           }
           return number;
         }
+
+        let minutes = curDate.getUTCMinutes() - 1;
+        if ( svdDate.getUTCMinutes() == 9 ) { minutes = minutes - 1; }
+        else if ( svdDate.getUTCMinutes() == 11 ) { minutes = minutes + 1; }
     
         return curDate.getUTCFullYear() + '-' + pad(curDate.getUTCMonth() + 1) + '-' + pad(curDate.getUTCDate()) +
-            'T' + pad(curDate.getUTCHours()) + ':' + pad(curDate.getUTCMinutes() - 1) + ':' + pad(svdDate.getUTCSeconds()) + 'Z';
+            'T' + pad(curDate.getUTCHours()) + ':' + pad(minutes) + ':' + pad(svdDate.getUTCSeconds()) + 'Z';
     },
     buildNewObjectError: function buildNewObjectError(newObj, type, toAdd) {
       if (newObj == null || !newObj.type.includes("Error")) {
@@ -20,7 +24,9 @@ module.exports = {
           }
         };
       } else {
-        newObj.properties.toAdd = "missing";
+        newObj.properties[toAdd] = "missing";
       }
+
+      return newObj;
     }
 }
