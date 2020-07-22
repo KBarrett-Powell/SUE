@@ -7,6 +7,7 @@ ws.onopen = function() {
 
   clearMap();
   initializeLayers();
+  initiateTimeRefresh();
 };
 
 ws.onmessage = function(e) {

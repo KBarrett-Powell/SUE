@@ -392,9 +392,17 @@ async function buildTimeChart() {
     });
 };
 
+function initiateTimeRefresh() {
+    setInterval( function() { 
+
+        buildTimeChart();
+
+    }, 30 * 1000);
+};
+
 function buffEventTimes(eventTimes) {
     let current = new Date();
-    let updatedCurrent = new Date(Math.round(current.getTime() / 30000) * 30000);
+    let updatedCurrent = new Date(Math.floor(current.getTime() / 30000) * 30000);
     
     let earliestDate = updatedCurrent;
     earliestDate.setMinutes(earliestDate.getMinutes() - 5);
