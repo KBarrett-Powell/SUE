@@ -8,18 +8,23 @@ Currently being used to display sensors and events around a city, with sensors b
 ### Chatbot
 The interface features a chatbot through which users can customise the map, removing objects they don't want to see, to reduce potential clutter and assist in their situational understanding development.  
 
-![](examples/Chatbot-example.gif)
+![](examples/Chatbot.gif)
+
+### Analysis Page
+Featuring a bar chart of events sorted by priority, which can be used to focus the map view on events of one priority, and a timeline of events occuring for the last 5 minutes.
+
+![](examples/Analysis.gif)
 
 ### WebSocket
 The gif below shows the submission of a JSON object to the WebSocket (found at ws://localhost:8000) using Smart WebSocket Client for Google Chrome.  
 *More information on how to form and send a WebSOcket request avaliable in WebSocket.md*
 
-![](examples/websocket-update.gif)  
+![](examples/Websocket.gif)  
 
 ### Colour-Blindness Support
 Using a command to enter accessibility mode in the Chatbot, the colour scheme used for events on the map changes to a colour blind friendly scheme.  
 
-![](examples/accessibility-mode.gif)
+![](examples/Accessibility.gif)
 
 ## Recommendations
 It is recommended to run this interface on a:  
