@@ -129,6 +129,7 @@ async function addMarker(json, sensor, layer) {
                 ranges.push(newRange);
                 radius = radius + 5;
             }
+
         } else {
             // Create circle ranges for microphone and human range, and store in ranges list
             for ( let i = 0; i < 5; i ++ ) {
@@ -280,54 +281,55 @@ async function updateMapMarkers(request) {
 function deleteMapMarkers(request) {
 
     if (request.sensorCamera != null && request.sensorCamera.length > 0) { 
-        deleteByLayer(request.sensorCamera, "sensorCamera"); 
+        deleteByLayer(request.sensorCamera, "sensorCamera", null); 
     }
 
     if (request.sensorMicrophone != null && request.sensorMicrophone.length > 0) { 
-        deleteByLayer(request.sensorMicrophone, "sensorMicrophone"); 
+        deleteByLayer(request.sensorMicrophone, "sensorMicrophone", null); 
     }
 
     if (request.sensorHuman != null && request.sensorHuman.length > 0) { 
-        deleteByLayer(request.sensorHuman, "sensorHuman"); 
+        deleteByLayer(request.sensorHuman, "sensorHuman", null); 
     }
 
     if (request.sensorUK != null && request.sensorUK.length > 0) { 
-        deleteByLayer(request.sensorUK, "sensorUK"); 
+        deleteByLayer(request.sensorUK, "sensorUK", null); 
     }
 
     if (request.sensorUS != null && request.sensorUS.length > 0) { 
-        deleteByLayer(request.sensorUS, "sensorUS"); 
+        deleteByLayer(request.sensorUS, "sensorUS", null); 
     }
 
     if (request.critPriorityEvent != null && request.critPriorityEvent.length > 0) { 
-        deleteByLayer(request.critPriorityEvent, "critPriorityEvent"); 
+        deleteByLayer(request.critPriorityEvent, "critPriorityEvent", null); 
     }
 
     if (request.highPriorityEvent != null && request.highPriorityEvent.length > 0) { 
-        deleteByLayer(request.highPriorityEvent, "highPriorityEvent"); 
+        deleteByLayer(request.highPriorityEvent, "highPriorityEvent", null); 
     }
 
     if (request.medPriorityEvent != null && request.medPriorityEvent.length > 0) { 
-        deleteByLayer(request.medPriorityEvent, "medPriorityEvent"); 
+        deleteByLayer(request.medPriorityEvent, "medPriorityEvent", null); 
     }
 
     if (request.lowPriorityEvent != null && request.lowPriorityEvent.length > 0) { 
-        deleteByLayer(request.lowPriorityEvent, "lowPriorityEvent"); 
+        deleteByLayer(request.lowPriorityEvent, "lowPriorityEvent", null); 
     }
 
     if (request.complexEvent != null && request.complexEvent.length > 0) { 
-        deleteByLayer(request.complexEvent, "complexEvent"); 
+        deleteByLayer(request.complexEvent, "complexEvent", null); 
     }
 }
 
 async function updateByLayer(req, win, ownerSensor, isRange) {
     let updated = false;
     let count = 0;
-    let size = window[win].getLayers().length;
+    let layers = window[win].getLayers();
+    let size = layers.length;
 
     let icon = getIcon(req.properties, ownerSensor);
 
-    if (window[win].getLayers().length > 0) {
+    if (size > 0) {
 
         await window[win].eachLayer( async function (layer) {
             count ++;
@@ -340,7 +342,6 @@ async function updateByLayer(req, win, ownerSensor, isRange) {
                 let type = isObjectToUpdate(properties, objID);
               
                 if (type != null) { 
-
                     updated = true;
 
                     // Updating properties
@@ -352,8 +353,7 @@ async function updateByLayer(req, win, ownerSensor, isRange) {
                     let currentIcon = null;
                     if (!isRange) { currentIcon = layer.getIcon(); }
 
-                    if (!isRange && currentIcon != null && currentIcon != icon) { 
-                        console.log("icon needs changing");
+                    if (!isRange && currentIcon != null && currentIcon != icon) {
                         layer.setIcon(icon); 
                     }
 
@@ -381,6 +381,8 @@ async function updateByLayer(req, win, ownerSensor, isRange) {
                     } else {
                         addMarker(req, (req.properties.sensorType != null), win);
                     }
+
+                    updated = true;
                 }
             }
         });
@@ -408,7 +410,6 @@ function getProperties(layer) {
 
 async function deleteByLayer(request, win, idsLst) {
     let layers = window[win].getLayers();
-    
     let type = (win.includes("sensor") ? "sensor" : (win.includes("complex") ? "complex" : "event"));
 
     // Compile list of ids to delete from the layer
@@ -474,7 +475,6 @@ async function updateProperties(marker, update, type) {
         }
         if (update.priority != null) {
             marker.priority = update.priority;
-            // add support for this
         }
         if (update.datetime != null) {
             marker.datetime = update.datetime;
