@@ -34,7 +34,7 @@ module.exports = {
         let medPriorityEvent = [];
         let lowPriorityEvent = [];
     
-        if (request != null && request.size() < data.events.size()) {
+        if (request != null && request.length < data.events.length) {
             
             for ( let i in request ) {
                 let found = false;

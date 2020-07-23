@@ -24,7 +24,7 @@ module.exports = {
         let sensorUK = [];
         let sensorUS = [];
     
-        if (request != null && request.size() < data.sensors.size()) {
+        if (request != null && request.length < data.sensors.length) {
             
             for ( let i in request ) {
                 let found = false;
