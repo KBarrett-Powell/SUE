@@ -2,7 +2,7 @@
 Situational Understanding Explorer. An interface designed to showcase new situational awareness/ understandin research on a city-based map integration. This interface can take inputs in the form of JSON documents and display then as markers on the map, with features to allow user interaction and customisation.  
 Currently being used to display sensors and events around a city, with sensors being data capturers, such as CCTV cameras and microphones, and events being AI detected anomolous events that are discovered within sensor feeds.  
 
-![](examples/SUE-mainpage.png)
+![](examples/SUE-mainpage.PNG)
 
 ## Features
 ### Chatbot
