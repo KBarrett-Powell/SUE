@@ -20,8 +20,5 @@ pipeline:
 # https://rasa.com/docs/rasa/core/policies/
 policies:
   - name: TEDPolicy
-    max_history: 3
     epochs: 100
   - name: MappingPolicy
-  - name: TwoStageFallbackPolicy
-    nlu_threshold: 0.9

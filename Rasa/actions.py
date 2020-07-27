@@ -113,7 +113,15 @@ class ActionAddCameraSensors(Action):
         layerlst = tracker.get_slot("layers")
         if (layerlst[0] == False) :
             layerlst[1] = True
-            layerlst[4] = True          
+            layerlst[4] = True
+        else :
+            layerlst[0] = False
+            layerlst[7] = False     
+            layerlst[8] = False  
+            layerlst[7] = False     
+            layerlst[8] = False  
+            layerlst[1] = True
+            layerlst[4] = True
         
         jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12], layerlst[13], layerlst[14], layerlst[15], layerlst[16], layerlst[17], layerlst[18], layerlst[19])
         jsonObj = "{\"type\":\"alter-layers\",\"layers\":" + json.dumps(jsdict) + "}"
@@ -201,7 +209,15 @@ class ActionAddMicrophoneSensors(Action):
         layerlst = tracker.get_slot("layers")
         if (layerlst[0] == False) :
             layerlst[2] = True
-            layerlst[5] = True      
+            layerlst[5] = True 
+        else :
+            layerlst[0] = False
+            layerlst[7] = False     
+            layerlst[8] = False  
+            layerlst[7] = False     
+            layerlst[8] = False  
+            layerlst[2] = True
+            layerlst[5] = True     
         
         jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12], layerlst[13], layerlst[14], layerlst[15], layerlst[16], layerlst[17], layerlst[18], layerlst[19])
         jsonObj = "{\"type\":\"alter-layers\",\"layers\":" + json.dumps(jsdict) + "}"
@@ -290,6 +306,14 @@ class ActionAddHumanSensors(Action):
         if (layerlst[0] == False) :
             layerlst[3] = True
             layerlst[6] = True 
+        else :
+            layerlst[0] = False
+            layerlst[7] = False     
+            layerlst[8] = False  
+            layerlst[7] = False     
+            layerlst[8] = False  
+            layerlst[3] = True
+            layerlst[6] = True
         
         jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12], layerlst[13], layerlst[14], layerlst[15], layerlst[16], layerlst[17], layerlst[18], layerlst[19])
         jsonObj = "{\"type\":\"alter-layers\",\"layers\":" + json.dumps(jsdict) + "}"
@@ -377,7 +401,17 @@ class ActionAddUKSensors(Action):
         layerlst = tracker.get_slot("layers")
         if (layerlst[0] == True) :
             layerlst[7] = True     
-            layerlst[9] = True  
+            layerlst[9] = True 
+        else :
+            layerlst[0] = True
+            layerlst[1] = False     
+            layerlst[2] = False  
+            layerlst[3] = False     
+            layerlst[4] = False  
+            layerlst[5] = False 
+            layerlst[6] = False 
+            layerlst[7] = True
+            layerlst[9] = True 
         
         jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12], layerlst[13], layerlst[14], layerlst[15], layerlst[16], layerlst[17], layerlst[18], layerlst[19])
         jsonObj = "{\"type\":\"alter-layers\",\"layers\":" + json.dumps(jsdict) + "}"
@@ -465,6 +499,16 @@ class ActionAddUSSensors(Action):
         layerlst = tracker.get_slot("layers")
         if (layerlst[0] == True) :
             layerlst[8] = True     
+            layerlst[10] = True 
+        else :
+            layerlst[0] = True
+            layerlst[1] = False     
+            layerlst[2] = False  
+            layerlst[3] = False     
+            layerlst[4] = False  
+            layerlst[5] = False 
+            layerlst[6] = False 
+            layerlst[8] = True
             layerlst[10] = True 
         
         jsdict = defineDict(layerlst[0], layerlst[1], layerlst[2], layerlst[3], layerlst[4], layerlst[5], layerlst[6], layerlst[7], layerlst[8], layerlst[9], layerlst[10], layerlst[11], layerlst[12], layerlst[13], layerlst[14], layerlst[15], layerlst[16], layerlst[17], layerlst[18], layerlst[19])
