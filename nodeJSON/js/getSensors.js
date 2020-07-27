@@ -98,6 +98,8 @@ module.exports = {
         let sensorUK = [];
         let sensorUS = [];
 
+        let sendDelete = [];
+
         for (let req in request) {
 
             let found = false;
@@ -126,6 +128,7 @@ module.exports = {
                         }
                         if (sensor.sensorType != null) {
                             data.sensors[i].properties.sensorType = sensor.sensorType;
+                            sendDelete.push({"sensorID": sensor.sensorID});
                         }
                         if (sensor.video != null) {
                             data.sensors[i].properties.video = sensor.video;
@@ -138,6 +141,7 @@ module.exports = {
                         }
                         if (sensor.owner != null) {
                             data.sensors[i].properties.owner = sensor.owner;
+                            sendDelete.push({"sensorID": sensor.sensorID});
                         }
 
                         newSensor = data.sensors[i];
@@ -185,22 +189,29 @@ module.exports = {
             }
         }
 
-        fs.writeFile( sensorsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
-            if (err) throw err;
-        });
+        let jsonResp = [];
 
-        let jsonResp = {
+        if (sendDelete.length > 0) {
+            let deleteResp = await this.deleteSensor(sendDelete, false);
+            jsonResp.push(deleteResp);
+        }
+
+        jsonResp.push({
             "type":"update",
             "sensorCamera": sensorCamera,
             "sensorMicrophone": sensorMicrophone,
             "sensorHuman": sensorHuman,
             "sensorUK": sensorUK,
             "sensorUS": sensorUS
-        }
+        });
+
+        fs.writeFile( sensorsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
+            if (err) throw err;
+        });
 
         return jsonResp
     },
-    deleteSensor: async function deleteSensor(request) {
+    deleteSensor: async function deleteSensor(request, deleteFromFile) {
         let data = await fsp.readFile( sensorsJsonFile, {encoding: 'utf8'});
         data = JSON.parse( data );
 
@@ -242,12 +253,14 @@ module.exports = {
                 }
             }
 
-            data.sensors = filteredList;
+            if (deleteFromFile) { data.sensors = filteredList; }
         }
 
-        fs.writeFile( sensorsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
-            if (err) throw err;
-        });
+        if (deleteFromFile) { 
+            fs.writeFile( sensorsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
+                if (err) throw err;
+            });
+        };
 
         let jsonResp = {
             "type":"delete",

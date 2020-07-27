@@ -279,7 +279,6 @@ async function updateMapMarkers(request) {
 
 // Function to go through each object in the request and attempt to delete it from the appropriate map layer
 function deleteMapMarkers(request) {
-
     if (request.sensorCamera != null && request.sensorCamera.length > 0) { 
         deleteByLayer(request.sensorCamera, "sensorCamera", null); 
     }
@@ -423,18 +422,21 @@ async function deleteByLayer(request, win, idsLst) {
             else if (type == "complex") { listOfIDs.push(request[i].properties.complexID); } 
         }
     }
-
+    
     // Clear map layer of all markers
     await window[win].clearLayers();
 
-    let updatedLayers = layers.filter(async function(item) { 
-        let properties = await getProperties(item);
+    let updatedLayers = [];
 
+    for ( let i in layers) {
+        let properties = await getProperties(layers[i]);
         let id = (type == "event" ? properties.eventID : (type == "sensor" ? properties.sensorID : properties.complexID));
 
         // Try to find index of marker id in the list of those to be deleted, return those that aren't in the list
-        return ( listOfIDs.indexOf(id) == -1);
-    });
+        if (listOfIDs.indexOf(id) < 0) {
+            updatedLayers.push(layers[i]);
+        }
+    };
 
     // Add each marker which isn't in the list of ids back on the map layer
     for (let i in updatedLayers) { 

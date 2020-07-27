@@ -95,7 +95,10 @@ wsServer.on('connection', function (wsClient) {
           
         if (parsedMessage.events != null) {
           let update = await events.postEvent(parsedMessage.events);
-          sendAll(SUEClients, update);
+          for ( let i in update ) {
+            sendAll(SUEClients, update[i]);
+          }
+
           let allUpdated = getUpdatedID(update);
           for ( let i in allUpdated ) {
             wsClient.send(JSON.stringify({"success": {"eventID": allUpdated[i]}}));
@@ -104,7 +107,10 @@ wsServer.on('connection', function (wsClient) {
 
         if (parsedMessage.sensors != null) {
           let update = await sensors.postSensor(parsedMessage.sensors);
-          sendAll(SUEClients, update);
+          for ( let i in update ) {
+            sendAll(SUEClients, update[i]);
+          }
+
           let allUpdated = getUpdatedID(update);
           for ( let i in allUpdated ) {
             wsClient.send(JSON.stringify({"success": {"sensorID": allUpdated[i]}}));
@@ -113,7 +119,10 @@ wsServer.on('connection', function (wsClient) {
         
         if (parsedMessage.complex != null) {
           let update = await complex.postComplex(parsedMessage.complex);
-          sendAll(SUEClients, update);
+          for ( let i in update ) {
+            sendAll(SUEClients, update[i]);
+          }
+
           let allUpdated = getUpdatedID(update);
           for ( let i in allUpdated ) {
             wsClient.send(JSON.stringify({"success": {"complexID": allUpdated[i]}}));
@@ -140,8 +149,9 @@ wsServer.on('connection', function (wsClient) {
       } else if (parsedMessage.type.toLowerCase() == "delete") {
 
         if (parsedMessage.events != null) {
-          let response = await events.deleteEvent(parsedMessage.events);
+          let response = await events.deleteEvent(parsedMessage.events, true);
           sendAll(SUEClients, response);
+
           let allUpdated = getUpdatedID(response);
           for ( let i in allUpdated ) {
             wsClient.send(JSON.stringify({"success": {"eventID": allUpdated[i]}}));
@@ -149,8 +159,9 @@ wsServer.on('connection', function (wsClient) {
         } 
         
         if (parsedMessage.sensors != null) {
-          let response = await sensors.deleteSensor(parsedMessage.sensors);
+          let response = await sensors.deleteSensor(parsedMessage.sensors, true);
           sendAll(SUEClients, response);
+
           let allUpdated = getUpdatedID(response);
           for ( let i in allUpdated ) {
             wsClient.send(JSON.stringify({"success": {"sensorID": allUpdated[i]}}));
@@ -160,6 +171,7 @@ wsServer.on('connection', function (wsClient) {
         if (parsedMessage.complex != null) {
           let response = await complex.deleteComplex(parsedMessage.complex);
           sendAll(SUEClients, response);
+
           let allUpdated = getUpdatedID(response);
           for ( let i in allUpdated ) {
             wsClient.send(JSON.stringify({"success": {"complexID": allUpdated[i]}}));

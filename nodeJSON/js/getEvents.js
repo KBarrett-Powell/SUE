@@ -97,6 +97,8 @@ module.exports = {
         let medPriorityEvent = [];
         let lowPriorityEvent = [];
 
+        let sendDelete = [];
+
         for (let req in request) {
 
             let found = false;
@@ -144,6 +146,7 @@ module.exports = {
                         }
                         if (event.priority != null) {
                             data.events[i].properties.priority = event.priority;
+                            sendDelete.push({"eventID": event.eventID});
                         }
                         if (event.datetime != null) {
                             data.events[i].properties.datetime = event.datetime;
@@ -201,21 +204,28 @@ module.exports = {
 
         }
 
+        let jsonResp = [];
+        
+        if (sendDelete.length > 0) {
+            let deleteResp = await this.deleteEvent(sendDelete, false);
+            jsonResp.push(deleteResp);
+        }
+
+        jsonResp.push({
+            "type":"update",
+            "critPriorityEvent": critPriorityEvent,
+            "highPriorityEvent": highPriorityEvent,
+            "medPriorityEvent": medPriorityEvent,
+            "lowPriorityEvent": lowPriorityEvent
+        });
+
         fs.writeFile( eventsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
             if (err) throw err;
         });
 
-        let jsonResp = {
-            "type":"update",
-            "critPriortiyEvent": critPriorityEvent,
-            "highPriorityEvent": highPriorityEvent,
-            "medPriorirtyEvent": medPriorityEvent,
-            "lowPriorityEvent": lowPriorityEvent
-        }
-
         return jsonResp
     },
-    deleteEvent: async function deleteEvent(request) {
+    deleteEvent: async function deleteEvent(request, deleteFromFile) {
         let data = await fsp.readFile( eventsJsonFile, {encoding: 'utf8'});
         data = JSON.parse( data );
 
@@ -251,18 +261,20 @@ module.exports = {
                 }
             }
             
-            data.events = filteredList;
+            if (deleteFromFile) { data.events = filteredList; }
         }
 
-        fs.writeFile( eventsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
-            if (err) throw err;
-        });
+        if (deleteFromFile) { 
+            fs.writeFile( eventsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
+                if (err) throw err;
+            });
+        };
 
         let jsonResp = {
             "type":"delete",
-            "critPriortiyEvent": critPriorityEvent,
+            "critPriorityEvent": critPriorityEvent,
             "highPriorityEvent": highPriorityEvent,
-            "medPriorirtyEvent": medPriorityEvent,
+            "medPriorityEvent": medPriorityEvent,
             "lowPriorityEvent": lowPriorityEvent
         }
 

@@ -132,11 +132,13 @@ module.exports = {
             if (err) throw err;
         });
 
-        let jsonResp = {
+        let jsonResp = [];
+        
+        jsonResp.push({
             "type":"update",
             "complexEvent": complexEvent
-        }
-
+        });
+        
         return jsonResp
     },
     deleteComplex: async function deleteComplex(request) {
