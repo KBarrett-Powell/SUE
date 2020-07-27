@@ -133,17 +133,20 @@ wsServer.on('connection', function (wsClient) {
 
         if (parsedMessage.events != null) {
           let response = await events.getEvents(parsedMessage.events);
-          wsClient.send(response);
+          let allUpdated = getUpdatedObject(JSON.parse(response));
+          wsClient.send(JSON.stringify({"success": {"events": allUpdated}}));
         } 
 
         if (parsedMessage.sensors != null) {
           let response = await sensors.getSensors(parsedMessage.sensors);
-          wsClient.send(response);
+          let allUpdated = getUpdatedObject(JSON.parse(response));
+          wsClient.send(JSON.stringify({"success": {"sensors": allUpdated}}));
         } 
         
         if (parsedMessage.complex != null) {
           let response = await complex.getComplex(parsedMessage.complex);
-          wsClient.send(response);
+          let allUpdated = getUpdatedObject(JSON.parse(response));
+          wsClient.send(JSON.stringify({"success": {"complexes": allUpdated}}));
         }
 
       } else if (parsedMessage.type.toLowerCase() == "delete") {
@@ -216,6 +219,34 @@ function getUpdatedID(response) {
   }
 
   return ids;
+};
+
+function getUpdatedObject(response) {
+  let objects = [];
+
+  for ( let i in response.sensorUK ) {
+    objects.push(response.sensorUK[i].properties);
+  }
+  for ( let i in response.sensorUS ) {
+    objects.push(response.sensorUS[i].properties);
+  }
+  for ( let i in response.critPriorityEvent ) {
+    objects.push(response.critPriorityEvent[i].properties);
+  }
+  for ( let i in response.highPriorityEvent ) {
+    objects.push(response.highPriorityEvent[i].properties);
+  }
+  for ( let i in response.medPriorityEvent ) {
+    objects.push(response.medPriorityEvent[i].properties);
+  }
+  for ( let i in response.lowPriorityEvent ) {
+    objects.push(response.lowPriorityEvent[i].properties);
+  }
+  for ( let i in response.complexEvent ) {
+    objects.push(response.complexEvent[i].properties);
+  }
+
+  return objects;
 };
 
 function sendAll( SUEClients, update ) {

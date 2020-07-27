@@ -31,7 +31,7 @@ module.exports = {
     
         let complexEvent = [];
 
-        if (request != null && request.size() < data.connections.size()) {
+        if (request != null && request.length < data.connections.length) {
             
             for ( let i in request ) {
                 let req = request[i];
