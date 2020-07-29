@@ -6,13 +6,11 @@ function initializeLayers() {
     window.medPriorityEventRange.addTo(window.leafletmap);
     window.lowPriorityEventRange.addTo(window.leafletmap);
 
-    window.sensorCameraRange.addTo(window.leafletmap);
-    window.sensorMicrophoneRange.addTo(window.leafletmap);
-    window.sensorHumanRange.addTo(window.leafletmap);
+    window.sensorUKRange.addTo(window.leafletmap);
+    window.sensorUSRange.addTo(window.leafletmap);
 
-    window.sensorCamera.addTo(window.leafletmap);
-    window.sensorMicrophone.addTo(window.leafletmap);
-    window.sensorHuman.addTo(window.leafletmap);
+    window.sensorUK.addTo(window.leafletmap);
+    window.sensorUS.addTo(window.leafletmap);
 
     window.critPriorityEvent.addTo(window.leafletmap);
     window.highPriorityEvent.addTo(window.leafletmap);
@@ -24,6 +22,7 @@ function initializeLayers() {
 
 function alterLayers(dict) {
     removeAllLayers();
+    window.currentLayers = dict;
     
     for (let i in dict) {
         if (i != "ownerSensors" && dict[i] === true) {
@@ -36,7 +35,7 @@ async function isInLayer(id, layer) {
     let data = await layer.getLayers();
 
     for ( let i in data ) {
-        let properties = JSON.parse(data[i].options.properties);
+        let properties = await getProperties(data[i]);
             
         if (properties.eventID != null && properties.eventID == id) {
             return data[i];
