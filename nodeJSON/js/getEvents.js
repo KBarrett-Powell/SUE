@@ -144,6 +144,12 @@ module.exports = {
                         if (event.slctRevVideo != null) {
                             data.events[i].properties.slctRevVideo = event.slctRevVideo;
                         }
+                        if (event.detImage != null) {
+                          data.events[i].properties.detImage = event.detImage;
+                        }
+                        if (event.detAudio != null) {
+                          data.events[i].properties.detAudio = event.detAudio;
+                        }
                         if (event.priority != null) {
                             data.events[i].properties.priority = event.priority;
                             sendDelete.push({"eventID": event.eventID});
@@ -179,6 +185,8 @@ module.exports = {
                             "chartPoints": event.chartPoints,
                             "objDetVideo": event.objDetVideo,
                             "slctRevVideo": event.slctRevVideo,
+                            "detImage": event.detImage,
+                            "detAudio": event.detAudio,
                             "priority": event.priority,
                             "datetime": (event.datetime != null ? event.datetime : functions.buildISOString(new Date(), new Date()))
                         },
