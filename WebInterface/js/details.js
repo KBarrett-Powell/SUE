@@ -22,6 +22,13 @@ const analysisVideo = document.getElementById("analysisVideo");
 const analysisSource = document.getElementById("videoASource");
 const analysisPlayer = document.getElementById("videoAPlayer");
 
+const analysisAudio = document.getElementById("analysisAudio");
+const detAudioSource = document.getElementById("detAudioSource");
+const detAudioPlayer = document.getElementById("audioPlayerDet");
+
+const analysisImage = document.getElementById("analysisImage");
+const detImageSource = document.getElementById("detImageSource");
+
 const mainVideo = document.getElementById("mainVideo");
 const videoDesc = document.getElementById("videoDesc");
 const videoSource = document.getElementById("videoSource");
@@ -157,6 +164,8 @@ async function toggleDetails(json, coordinates){
     let chartdata = json.chartPoints;
     let objdetfile = ((json.objDetVideo != null) ? videoLink + json.objDetVideo : null);
     let slctRevVideo = ((json.slctRevVideo != null) ? videoLink + json.slctRevVideo : null);
+    let detAudio = ((json.detAudio != null) ? audioLink + json.detAudio : null);
+    let detImage = ((json.detImage != null) ? videoLink + json.detImage : null);
 
     let videofile = null;
     let audiofile = null; 
@@ -181,7 +190,7 @@ async function toggleDetails(json, coordinates){
        
         clearDetailsMedia()
 
-        AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, slctRevVideo, videofile, audiofile, timelineInfo)
+        AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, slctRevVideo, detImage, detAudio, videofile, audiofile, timelineInfo)
 
     } else if (details.classList.contains('hidden') === false) {
 
@@ -195,7 +204,7 @@ async function toggleDetails(json, coordinates){
 
         clearDetailsMedia()
 
-        AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, slctRevVideo, videofile, audiofile, timelineInfo)
+        AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, slctRevVideo, detImage, detAudio, videofile, audiofile, timelineInfo)
     }
 }
 
@@ -220,6 +229,15 @@ function clearDetailsMedia() {
         analysisSource.setAttribute('src', '');
         analysisPlayer.load();
     }
+    if (analysisAudio.style.display != "none") {
+        analysisAudio.style.display = "none";
+        detAudioSource.setAttribute('src', '');
+        detAudioPlayer.load();
+    }
+    if (analysisImage.style.display != "none") {
+        analysisImage.style.display = "none";
+        detImageSource.setAttribute('src', '');
+    }
     if (timeline.style.display != "none") {
         timeline.style.display = "none";
         mainBar.style.overflow = "hidden";
@@ -238,7 +256,7 @@ function clearDetailsMedia() {
     }
 }
 
-function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, slctRevVideo, videofile, audiofile, timelineInfo) {
+function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, slctRevVideo, detImage, detAudio, videofile, audiofile, timelineInfo) {
 
     if (type === "Sensor" || type === "Event") {
         if (type === "Sensor") {
@@ -291,6 +309,16 @@ function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, slctRev
                 analysisVideo.style.display = "block";
                 analysisSource.setAttribute('src', slctRevVideo);
                 analysisPlayer.load();
+            } else if (detImage != null) {
+                analysisImage.style.display = "block";
+                detImageSource.setAttribute('src', detImage);
+
+            }
+
+            if (detAudio != null) {
+                analysisAudio.style.display = "block";
+                detAudioSource.setAttribute('src', detAudio);
+                detAudioPlayer.load();
             }
         }
 
