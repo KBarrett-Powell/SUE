@@ -25,6 +25,8 @@
 |chartPoints|Array|OPTIONAL – Output of AI/ML tool, stored as list of audioOnly / videoOnly / videoAndObjDet points in form: "chartPoints": [ { "videoOnly": [ {"x": 0, "y": 0}, {"x": 1, "y": 3}]}, { "videoAndObjDet": [ {"x": 0, "y": 4}, {"x": 1, "y": 7}]}]|
 |objDetVideo|String|OPTIONAL – Object detection video file name|
 |slctRevVideo|String|OPTIONAL – Selective Relevance video file name|
+|detImage|String|OPTIONAL – Detection image file name|
+|detAudio|String|OPTIONAL – Detection audio file name|
 |priority|Integer|1 – 4 rating of priority (1 being Critical, 4 being Low)|
 |datetime|ISO Datetime|ISO Datetime string in form: "YYYY-MM-DDThh:mm:ssZ" e.g. "2020-03-04T16:10:20Z"|
 |coordinates|Array(Float)|Latitude, Longitude coordinates in form: [lat, long] e.g. [58.145903, 7.989244]|  
