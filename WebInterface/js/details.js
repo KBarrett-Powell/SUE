@@ -34,51 +34,24 @@ const audioPlayer = document.getElementById("audioPlayer");
 
 async function toggleDetailsFromMap(e){
 
-    let info = JSON.parse(this.options.properties);
-    let mapMarker = e.target;
+    let info = await getProperties(this);
 
-    if (mapMarker.isPopupOpen() == false) {
+    if (this.options.open == false) {
+        this.options.open = true;
+        if (window.prvClickedMarker != null) { window.prvClickedMarker.options.open = false; }
+
         showDetailsPanel();
         await toggleDetails(info, e.latlng.toString().slice(7, -1));
-        window.prvClickedMarker = mapMarker;
+        window.prvClickedMarker = this;
 
     } else {
+        this.options.open = false;
+
         await toggleDetails(info, e.latlng.toString().slice(7, -1));
         showSUEPanel();
         window.prvClickedMarker = null;
     }
-}
-
-function toggleMarkerIcon(marker) {
-    if (marker.options.properties.search("ComplexID") != -1) {
-        return (marker.options.icon == complexIcon ? complexSelectIcon : complexIcon);
-
-    } else if (marker.options.properties.search("EventID") != -1) {
-        if (marker.options.properties.search("\"priority\":\"3\"")!= -1) {
-            return (marker.options.icon == yellowIcon ? yellowSelectIcon : yellowIcon);
-
-        } else if (marker.options.properties.search("\"priority\":\"2\"")!= -1) {
-            return (marker.options.icon == orangeIcon ? orangeSelectIcon : orangeIcon);
-
-        } else if (marker.options.properties.search("\"priority\":\"1\"")!= -1) {
-            return (marker.options.icon == redIcon ? redSelectIcon : redIcon);
-
-        } else {
-            return (marker.options.icon == blueIcon ? blueSelectIcon : blueIcon);
-        }
-        
-    } else {
-        if (marker.options.properties.search("\"sensorType\":\"Camera\"")!= -1) {
-            return (marker.options.icon == cameraIcon ? cameraSelectIcon : cameraIcon);
-
-        } else if (marker.options.properties.search("\"sensorType\":\"Human\"")!= -1) {
-            return (marker.options.icon == humanIcon ? humanSelectIcon : humanIcon);
-
-        } else {
-            return (marker.options.icon == microphoneIcon ? microphoneSelectIcon : microphoneIcon);
-        }
-    }
-}
+};
 
 function showSUEPanel() {
     const panel = document.getElementById("searchpanel");
@@ -101,7 +74,7 @@ function showSUEPanel() {
         panel.classList.remove("hidden");
         toggle.classList.add("active");
     }
-}
+};
 
 function showAnalysisPanel() {
     const panel = document.getElementById("analysispanel");
@@ -124,7 +97,7 @@ function showAnalysisPanel() {
         panel.classList.remove("hidden");
         toggle.classList.add("active");
     }
-}
+};
 
 function showDetailsPanel() {
     const panel = document.getElementById("detailspanel");
@@ -147,7 +120,7 @@ function showDetailsPanel() {
         panel.classList.remove("hidden");
         toggle.classList.add("active");
     }
-}
+};
 
 async function toggleDetails(json, coordinates){
 
@@ -163,7 +136,7 @@ async function toggleDetails(json, coordinates){
 
     if (type == "Event") {
 
-        let sensor = JSON.parse((await findSensor(json.sensorID)).options.properties);
+        let sensor = await getProperties(await findSensor(json.sensorID));
 
         if (sensor != null) {
             videofile = ((sensor.video != null) ? videoLink + sensor.video : null);
@@ -197,7 +170,7 @@ async function toggleDetails(json, coordinates){
 
         AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, slctRevVideo, videofile, audiofile, timelineInfo)
     }
-}
+};
 
 function clearDetailsMedia() {
     detailsID.innerHTML = "";
@@ -221,6 +194,10 @@ function clearDetailsMedia() {
         analysisPlayer.load();
     }
     if (timeline.style.display != "none") {
+        while (timeline.firstChild) {
+            timeline.removeChild(timeline.lastChild);
+        }
+
         timeline.style.display = "none";
         mainBar.style.overflow = "hidden";
     }
@@ -236,7 +213,7 @@ function clearDetailsMedia() {
         audioPlayer.load();
         if (audioPlayer.classList.contains("sensorAudio")) { videoPlayer.classList.remove("sensorAudio"); }
     }
-}
+};
 
 function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, slctRevVideo, videofile, audiofile, timelineInfo) {
 
@@ -358,4 +335,4 @@ function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, slctRev
         mainVideo.style.display = "none";
         mainAudio.style.display = "none";
     }
-}
+};
