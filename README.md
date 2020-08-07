@@ -52,9 +52,6 @@ View the dashboard by opening a web browser and going to **http://localhost:8082
 A dictionary of time stamps and properties will be stored with each marker, through the use of a timeline chart marking the number of events  
 found at each time point, users will be able to see previous points in time. Such as where a moving sensor was when it detected an event.  
 
-### WebSocket Update Event Priority and Sensor Type/Owner
-These properties have yet to be implemented in websocket updates due to how they are stored within SUE.  
-
 ### Online Hosting
 Plans to host SUE online, so it can be quickly tested by anyone, are in motion.  
 
