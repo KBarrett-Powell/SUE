@@ -201,9 +201,8 @@ async function showTimePoint() {
         "critPriorityEventRange", "highPriorityEventRange", "medPriorityEventRange", "lowPriorityEventRange", "complexEvent"]
     
     for (let i in mapLayers) {
-        let isSensor = mapLayers[i].includes("sensor");
+        let type = (mapLayers[i].includes("complex") ? "complex" : (mapLayers[i].includes("sensor") ? "sensor" : "event"));
         let isRange = mapLayers[i].includes("Range");
-        let isComplex = mapLayers[i].includes("complex");
         let ownerSensor = (mapLayers[i].includes("UK") || mapLayers[i].includes("US")) ? true : false;
 
         await window[mapLayers[i]].eachLayer( async function (layer) {
@@ -215,7 +214,7 @@ async function showTimePoint() {
                 // Making layer visible 
                 if (layer instanceof L.Marker) {
                     layer.setOpacity(1);
-                } else if (isSensor) {
+                } else if (type == "sensor") {
                     layer.setStyle({fillOpacity: 0.2});
                 } else {
                     if (layer.options.radius == (90 * 1/4)) {
@@ -237,7 +236,7 @@ async function showTimePoint() {
                 }
     
                 // Updates specific to just sensor and event markers
-                if (!isComplex && !isRange) { 
+                if (type != "complex" && !isRange) { 
     
                     // Changing icon for sensor type, owner or event priority change
                     let currentIcon = layer.getIcon(); 
@@ -253,7 +252,7 @@ async function showTimePoint() {
                     layer.setOpacity(0);
                 } else {
                     layer.setStyle({fillOpacity: 0});
-                    if (!isSensor) { layer.setStyle({weight: 0}); }
+                    if (type != "sensor") { layer.setStyle({weight: 0}); }
                 }
             }
         });

@@ -365,7 +365,7 @@ async function buildTimeChart() {
             },
             elements: {
                 line: {
-                    tension: 0.2
+                    tension: 0
                 }
             },
 			scales: {

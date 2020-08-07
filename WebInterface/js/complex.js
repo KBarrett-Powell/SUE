@@ -26,7 +26,7 @@ async function addComplexMarker(complex) {
     let events = await findEvents(complex.properties.events);
 
     for ( let i in events ) {
-        let item = await getProperties(events[i]);
+        let item = await getProperties(events[i], false);
 
         let coordinates = item.coordinates;
        

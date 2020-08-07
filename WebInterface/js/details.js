@@ -34,7 +34,7 @@ const audioPlayer = document.getElementById("audioPlayer");
 
 async function toggleDetailsFromMap(e){
 
-    let info = await getProperties(this);
+    let info = await getProperties(this, false);
 
     if (this.options.open == false) {
         this.options.open = true;
@@ -136,7 +136,7 @@ async function toggleDetails(json, coordinates){
 
     if (type == "Event") {
 
-        let sensor = await getProperties(await findSensor(json.sensorID));
+        let sensor = await getProperties(await findSensor(json.sensorID), false);
 
         if (sensor != null) {
             videofile = ((sensor.video != null) ? videoLink + sensor.video : null);

@@ -226,7 +226,7 @@ async function getProperties(layer, graph) {
         let allProperties = (JSON.parse(layer.options.properties));
         let keys = Object.keys(allProperties);
         if (graph) { properties = allProperties[keys[0]]; }
-        else { properties = await compileProperties(allProperties, keys); }
+        else { properties = await compileProperties(allProperties, keys, layer.options.id); }
 
     } catch {
         console.log("No properties found on layer");
@@ -235,10 +235,10 @@ async function getProperties(layer, graph) {
     return properties;
 };
 
-function compileProperties(properties, keys) {
+function compileProperties(properties, keys, id) {
     let fullProperties = {};
-    let type = (fullProperties.sensorType != null ? "sensor" : (fullProperties.events != null ? "complex" : "event"));
-
+    let type = properties[keys[0]].sensorType != null ? "sensor" : (properties[keys[0]].complexID != null ? "complex" : "event");
+    
     let currentTime = null;
     if ( window.timePoint != null ) {
         let splitTime = window.timePoint.split(":");
@@ -246,6 +246,7 @@ function compileProperties(properties, keys) {
         currentTime.setHours(splitTime[0]);
         currentTime.setUTCMinutes(splitTime[1]);
         currentTime.setUTCSeconds(splitTime[2]);
+        currentTime.setUTCMilliseconds(0);
     };
 
     for ( let i in keys ) {
