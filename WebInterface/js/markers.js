@@ -100,7 +100,7 @@ async function addMarker(json, sensor, layer) {
         let objID = json.properties.sensorID;
 
         // Create default sensor marker with camera icon
-        let sensorMarker = L.marker(coordinates, {id: objID, properties: JSON.stringify(properties), open: false}).on('click', toggleDetailsFromMap);
+        let sensorMarker = L.marker(coordinates, {id: objID, properties: JSON.stringify(properties), open: false, hidden: false}).on('click', toggleDetailsFromMap);
         sensorMarker.bindPopup(json.properties.sensorName);
         let radius = 10;
 
@@ -110,7 +110,7 @@ async function addMarker(json, sensor, layer) {
         if (sensorType == "Camera"){
             // Create semicircle ranges for camera range, and store in ranges list
             for ( let i = 0; i < 5; i ++ ) {
-                let newRange = L.semiCircle(coordinates, {radius: radius, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true, id: objID, properties: JSON.stringify(rangeProperties)}).setDirection(json.properties.rangeDirection, 90);
+                let newRange = L.semiCircle(coordinates, {radius: radius, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true, id: objID, properties: JSON.stringify(rangeProperties), hidden: false}).setDirection(json.properties.rangeDirection, 90);
                 ranges.push(newRange);
                 radius = radius + 5;
             }
@@ -118,7 +118,7 @@ async function addMarker(json, sensor, layer) {
         } else {
             // Create circle ranges for microphone and human range, and store in ranges list
             for ( let i = 0; i < 5; i ++ ) {
-                let newRange = L.circle(coordinates, {radius: radius, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true, id: objID, properties: JSON.stringify(rangeProperties)});
+                let newRange = L.circle(coordinates, {radius: radius, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true, id: objID, properties: JSON.stringify(rangeProperties), hidden: false});
                 ranges.push(newRange);
                 radius = radius + 5;
             }
@@ -173,7 +173,7 @@ async function addMarker(json, sensor, layer) {
         }
 
         // Create an event marker with the icon determined above
-        let eventmarker = L.marker(coordinates, {id: objID, icon: iconChoice, properties: JSON.stringify(properties), open: false}).on('click', toggleDetailsFromMap);
+        let eventmarker = L.marker(coordinates, {id: objID, icon: iconChoice, properties: JSON.stringify(properties), open: false, hidden: false}).on('click', toggleDetailsFromMap);
         eventmarker.bindPopup(json.properties.eventName);
         
         // Creating a varying outer range for events determined randomly from list of avaliable ranges
@@ -181,8 +181,8 @@ async function addMarker(json, sensor, layer) {
         let rad = rangeRadius[Math.floor(Math.random() * rangeRadius.length)];
 
         // Add range circles to list
-        ranges.push(L.circle(coordinates, {radius: eventRadius*1/4, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.6, weight: 3, gradient: true, id: objID, properties: JSON.stringify(rangeProperties)}));
-        ranges.push(L.circle(coordinates, {radius: rad, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.4, weight: 3, gradient: true, id: objID, properties: JSON.stringify(rangeProperties)}));
+        ranges.push(L.circle(coordinates, {radius: eventRadius*1/4, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.6, weight: 3, gradient: true, id: objID, properties: JSON.stringify(rangeProperties), hidden: false}));
+        ranges.push(L.circle(coordinates, {radius: rad, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.4, weight: 3, gradient: true, id: objID, properties: JSON.stringify(rangeProperties), hidden: false}));
         
         // Add event marker and its ranges to the appropriate layer
         if (json.properties.priority == 4) {

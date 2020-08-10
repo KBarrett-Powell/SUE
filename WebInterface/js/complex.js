@@ -2,7 +2,7 @@ window.currentComplex = [];
 
 async function processComplexEvent(json) {
     let currentComplexLst = window.currentComplex;
-    currentComplexLst.push(json);
+    if (json != null) { currentComplexLst.push(json); }
 
     let refinedList = await refineList(currentComplexLst); 
     window.currentComplex = refinedList;
@@ -39,7 +39,7 @@ async function addComplexMarker(complex) {
         eventDetails.push(obj);
     }
 
-    if (complex.properties.events != null && complex.properties.events.length > 0) {
+    if (events.length > 0 && complex.properties.events != null && complex.properties.events.length > 0) {
 
         lat = lat / eventCoordinates.length;
         long = long / eventCoordinates.length;
@@ -62,9 +62,9 @@ async function addComplexMarker(complex) {
         L.polyline(coordinates, {color: "#ee133b", properties: JSON.stringify(finishedProperties)}).addTo(window.complexEvent);
         complexevent = L.marker(markerCoordinates, {icon: complexIcon, properties: JSON.stringify(finishedProperties), open: false}).on('click', toggleDetailsFromMap).addTo(window.complexEvent);
         complexevent.bindPopup(complex.properties.complexName)
-
-        toggleLayer(window.complexEvent);
     }
+    
+    toggleLayer(window.complexEvent);
 };
 
 function refineList(list) {

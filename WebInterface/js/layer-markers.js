@@ -198,10 +198,10 @@ async function showTimePoint() {
 
     let mapLayers = ["sensorCamera", "sensorMicrophone", "sensorHuman", "sensorCameraRange", "sensorMicrophoneRange", "sensorHumanRange", 
         "sensorUK", "sensorUS", "sensorUKRange", "sensorUSRange", "critPriorityEvent", "highPriorityEvent", "medPriorityEvent", "lowPriorityEvent",
-        "critPriorityEventRange", "highPriorityEventRange", "medPriorityEventRange", "lowPriorityEventRange", "complexEvent"]
+        "critPriorityEventRange", "highPriorityEventRange", "medPriorityEventRange", "lowPriorityEventRange"]
     
     for (let i in mapLayers) {
-        let type = (mapLayers[i].includes("complex") ? "complex" : (mapLayers[i].includes("sensor") ? "sensor" : "event"));
+        let type = (mapLayers[i].includes("sensor") ? "sensor" : "event");
         let isRange = mapLayers[i].includes("Range");
         let ownerSensor = (mapLayers[i].includes("UK") || mapLayers[i].includes("US")) ? true : false;
 
@@ -212,6 +212,7 @@ async function showTimePoint() {
 
                 // Updating map marker information
                 // Making layer visible 
+                layer.options.hidden = false;
                 if (layer instanceof L.Marker) {
                     layer.setOpacity(1);
                 } else if (type == "sensor") {
@@ -236,8 +237,7 @@ async function showTimePoint() {
                 }
     
                 // Updates specific to just sensor and event markers
-                if (type != "complex" && !isRange) { 
-    
+                if (!isRange) { 
                     // Changing icon for sensor type, owner or event priority change
                     let currentIcon = layer.getIcon(); 
                     let icon = await getIcon(properties, ownerSensor);
@@ -246,8 +246,10 @@ async function showTimePoint() {
                         layer.setIcon(icon); 
                     }
                 }
+
             } else { 
                 // Hiding map marker
+                layer.options.hidden = true;
                 if (layer instanceof L.Marker) {
                     layer.setOpacity(0);
                 } else {
@@ -256,7 +258,9 @@ async function showTimePoint() {
                 }
             }
         });
-    }    
+    }
+    
+    processComplexEvent(null);   
 };
 
 // Find information on sensor with id - USED FOR EVENT DETAILS
@@ -290,25 +294,25 @@ async function findEvents(list) {
 
         found = await window.critPriorityEvent.getLayersByID(list[i]);
 
-        if (found.length > 0) { 
+        if (found.length > 0 && found[0].options.hidden == false) { 
             discoveredItems.push(found[0]);
 
         } else {
             found = await window.highPriorityEvent.getLayersByID(list[i]);
 
-            if (found.length > 0) { 
+            if (found.length > 0 && found[0].options.hidden == false) { 
                 discoveredItems.push(found[0]);
              
             } else {
                 found = await window.medPriorityEvent.getLayersByID(list[i]);
     
-                if (found.length > 0) {
+                if (found.length > 0 && found[0].options.hidden == false) {
                     discoveredItems.push(found[0]);
                  
                 } else {
                     found = await window.lowPriorityEvent.getLayersByID(list[i]);
         
-                    if (found.length > 0) {
+                    if (found.length > 0 && found[0].options.hidden == false) {
                         discoveredItems.push(found[0]); 
                      
                     }
