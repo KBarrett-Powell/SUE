@@ -1,3 +1,6 @@
+window.barIndex = null
+window.timePoint = null;
+
 function plotChartPoints(){
     if (analysisCarousel.style.display != "none" || analysisChart.style.display != "none") {
         let duration = (mainAudio.style.display === "none" ? videoPlayer.duration : audioPlayer.duration);
@@ -250,7 +253,7 @@ async function buildPriorityChart() {
     let backgroundColours = (window.accessibility == false ? ['rgba(118, 202, 236, 0.5)', 'rgba(254, 221, 128, 0.5)', 'rgba(254, 160, 128, 0.5)', 'rgba(254, 127, 127, 0.5)'] 
     : ['rgba(108, 165, 214, 0.5)', 'rgba(112, 212, 229, 0.5)', 'rgba(254, 157, 133, 0.5)', 'rgba(236, 108, 113, 0.5)']);
 
-    let borderColours = getBorderColours();
+    let borderColours = getBarBorderColours();
 
     window.priorityChart = new Chart(pctx, {
         type: 'bar',
@@ -310,13 +313,14 @@ async function buildTimeChart() {
     let eventTimes = {};
     eventTimes = buffEventTimes(eventTimes);
 
-    eventTimes = addTimeToDict(eventTimes, lowPriority);
-    eventTimes = addTimeToDict(eventTimes, medPriority);
-    eventTimes = addTimeToDict(eventTimes, highPriority);
-    eventTimes = addTimeToDict(eventTimes, critPriority);
+    eventTimes = await addTimeToDict(eventTimes, lowPriority);
+    eventTimes = await addTimeToDict(eventTimes, medPriority);
+    eventTimes = await addTimeToDict(eventTimes, highPriority);
+    eventTimes = await addTimeToDict(eventTimes, critPriority);
 
     let labels = [];
     let data = [];
+
     for ( let key in eventTimes ) {
         let simpleTime = moment(key).format('HH:mm:ss');
         labels.push(simpleTime);
@@ -325,17 +329,22 @@ async function buildTimeChart() {
         data.push(dataObj);
     };
 
+    let datasets = [{
+        label: '# Of Events',
+        backgroundColor: getTimeLineColour(labels),
+        borderColor: 'rgba(255, 0, 0, 0.2)',
+        data: data,
+        fill: false,
+        pointHitRadius: 15,
+        pointRadius: getTimeLineRadi(labels),
+        pointHoverRadius: 8
+    }];
+
     window.timeChart = new Chart(tctx, {
         type: 'line',
 		data: {
             labels: labels,
-			datasets: [{
-				label: '# Of Events',
-				backgroundColor: 'rgba(255, 0, 0, 0.2)',
-				borderColor: 'rgba(255, 0, 0, 0.2)',
-				data: data,
-				fill: false
-			}]
+			datasets: datasets
 		},
 		options: {
             responsive: true,
@@ -347,10 +356,6 @@ async function buildTimeChart() {
 				mode: 'index',
 				intersect: false,
 			},
-			hover: {
-				mode: 'nearest',
-				intersect: true
-            },
             title: {
                 display: true,
                 fontSize: 18,
@@ -360,7 +365,7 @@ async function buildTimeChart() {
             },
             elements: {
                 line: {
-                    tension: 0.2
+                    tension: 0
                 }
             },
 			scales: {
@@ -418,19 +423,19 @@ function buffEventTimes(eventTimes) {
     return eventTimes;
 };
 
-function addTimeToDict(dict, list) {
+async function addTimeToDict(dict, list) {
     for ( let i in list ) {
-        let event = JSON.parse(list[i].options.properties);
+        let event = await getProperties(list[i], true);
         let dateTime = new Date(event.datetime);
         let timestr = "";
 
-        if (dateTime.getSeconds() < 30) {
+        if ( dateTime.getSeconds() < 30 ) {
             timestr = buildISOString(dateTime, 30);
         } else {
             timestr = buildISOString(dateTime, 60);
         }
     
-        if (dict[timestr] != null) { dict[timestr] = dict[timestr] + 1; }
+        if ( dict[timestr] != null ) { dict[timestr] = dict[timestr] + 1; }
     }
 
     return dict;
@@ -439,14 +444,14 @@ function addTimeToDict(dict, list) {
 function buildISOString(date, seconds) {
 
     function pad(number) {
-      if (number < 10) {
+      if ( number < 10 ) {
         return '0' + number;
       }
       return number;
     }
 
     let minutes = date.getUTCMinutes();
-    if (seconds != null && seconds == 60) { minutes = minutes + 1; seconds = 0; }
+    if ( seconds != null && seconds == 60 ) { minutes = minutes + 1; seconds = 0; }
 
     return date.getUTCFullYear() + '-' + pad(date.getUTCMonth() + 1) + '-' + pad(date.getUTCDate()) +
         'T' + pad(date.getUTCHours()) + ':' + pad(minutes) + ':' + (seconds != null ? pad(seconds) : pad(date.getUTCSeconds())) + 'Z';
@@ -464,7 +469,7 @@ function resetCanvas(canvasName) {
 
     let newCanvas = document.createElement('canvas');     
     newCanvas.setAttribute('id', canvasName); 
-    if (canvasName == "priorityChart") { newCanvas.addEventListener('click', handleBarClick, false); }
+    if ( canvasName == "priorityChart" ) { newCanvas.addEventListener('click', handleBarClick, false); }
     else { newCanvas.addEventListener('click', handleTimeClick, false); }
 
     document.getElementById(containerName).appendChild(newCanvas);
@@ -475,26 +480,81 @@ function handleBarClick(evt) {
     let activeElement = chart.getElementAtEvent(evt);
 
     if (activeElement[0] != null) {
+        window.barIndex = activeElement[0]._index;
+
         let selectedBar = chart.data.labels[activeElement[0]._index];
         showOnlyEvents((selectedBar == "4" ? true : false), (selectedBar == "3" ? true : false), (selectedBar == "2" ? true : false), (selectedBar == "1" ? true : false));
-        chart.data.datasets[0].borderColor = getBorderColours();;
-        chart.data.datasets[0].borderColor[activeElement[0]._index] = 'rgba(255, 255, 255, 1)';
+        buildPriorityChart();
+
     } else {
+        window.barIndex = null;
+
         initializeLayers();
-        chart.data.datasets[0].borderColor = getBorderColours();;
+        buildPriorityChart();
     }
 };
 
-function getBorderColours() {
-    return (window.accessibility == false ? ['rgba(118, 202, 236, 1)', 'rgba(254, 221, 128, 1)', 'rgba(254, 160, 128, 1)', 'rgba(254, 127, 127, 1)'] 
-    : ['rgba(108, 165, 214, 1)', 'rgba(112, 212, 229, 1)', 'rgba(254, 157, 133, 1)', 'rgba(236, 108, 113, 1)']);
-}
+function getBarBorderColours() {
+    let colours = [];
+    if ( window.accessibility == false ) {
+        colours = ['rgba(118, 202, 236, 1)', 'rgba(254, 221, 128, 1)', 'rgba(254, 160, 128, 1)', 'rgba(254, 127, 127, 1)'] 
+    } else {
+        colours = ['rgba(108, 165, 214, 1)', 'rgba(112, 212, 229, 1)', 'rgba(254, 157, 133, 1)', 'rgba(236, 108, 113, 1)']
+    }
+
+    if ( window.barIndex != null ) {
+        colours[window.barIndex] = 'rgba(102, 102, 102, 1)';
+    }
+
+    return colours;
+};
+
+function getTimeLineRadi(labels) {
+    let radi = [];
+    for ( let i = 0; i < 11; i ++ ) {
+        radi.push(5);
+    }
+
+    let index = null;
+    if ( window.timePoint != null ) { index = labels.indexOf(window.timePoint); }
+
+    if ( index != null && index >= 0 ) {
+        radi[index] = 8;
+    }
+
+    return radi;
+};
+
+function getTimeLineColour(labels) {
+    let colours = [];
+    for ( let i = 0; i < 11; i ++ ) {
+        colours.push('rgba(255, 0, 0, 0.2)');
+    }
+
+    let index = null;
+    if ( window.timePoint != null ) { index = labels.indexOf(window.timePoint); }
+
+    if ( index != null && index >= 0 ) {
+        colours[index] = 'rgba(255, 0, 0, 0.4)';
+    }
+
+    return colours;
+};
 
 function handleTimeClick(evt) {
     const chart = window.timeChart;
     let activeElement = chart.getElementAtEvent(evt);
 
-    //console.log("active element: " + JSON.stringify(activeElement, censor(activeElement)));
-    let answer = chart.data.datasets[activeElement[0]._datasetIndex].data[activeElement[0]._index];
-    console.log("active element: " + JSON.stringify(activeElement[0]._index));
+    if ( activeElement[0] != null ) {
+        window.timePoint = chart.data.labels[activeElement[0]._index];
+
+        buildTimeChart();
+        showTimePoint();
+
+    } else {
+        window.timePoint = null;
+        
+        buildTimeChart();
+        showTimePoint();
+    }
 };

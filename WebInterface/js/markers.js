@@ -1,30 +1,3 @@
-// Create all map layer groups
-window.sensorCamera = L.layerGroup();
-window.sensorMicrophone = L.layerGroup();
-window.sensorHuman = L.layerGroup();
-
-window.sensorCameraRange = L.layerGroup();
-window.sensorMicrophoneRange = L.layerGroup();
-window.sensorHumanRange = L.layerGroup();
-
-window.sensorUK = L.layerGroup();
-window.sensorUS = L.layerGroup();
-
-window.sensorUKRange = L.layerGroup();
-window.sensorUSRange = L.layerGroup();
-
-window.critPriorityEvent = L.layerGroup();
-window.highPriorityEvent = L.layerGroup();
-window.medPriorityEvent = L.layerGroup();
-window.lowPriorityEvent = L.layerGroup();
-
-window.critPriorityEventRange = L.layerGroup();
-window.highPriorityEventRange = L.layerGroup();
-window.medPriorityEventRange = L.layerGroup();
-window.lowPriorityEventRange = L.layerGroup();
-
-window.complexEvent = L.layerGroup();
-
 const eventRadius = 90;
 
 // Define base icon
@@ -113,9 +86,21 @@ async function addMarker(json, sensor, layer) {
     let coordinates = json.geometry.coordinates;
     let ranges = [];
 
+    let time = new Date();
+    if ( sensor ) { time.setUTCMinutes(time.getUTCMinutes() - 5); }
+    else { time = new Date(json.properties.datetime); }
+
+    let updateTime = buildISOString( time, null );
+    json.properties.coordinates = coordinates;
+
+    let properties = { [updateTime]: json.properties };
+    let rangeProperties = { [updateTime]: {"sensorType": json.properties.sensorType, "coordinates": coordinates, "rangeDirection": json.properties.rangeDirection}};
+
     if (sensor) {
+        let objID = json.properties.sensorID;
+
         // Create default sensor marker with camera icon
-        let sensorMarker = L.marker(coordinates, {properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap);
+        let sensorMarker = L.marker(coordinates, {id: objID, properties: JSON.stringify(properties), open: false, hidden: false}).on('click', toggleDetailsFromMap);
         sensorMarker.bindPopup(json.properties.sensorName);
         let radius = 10;
 
@@ -125,7 +110,7 @@ async function addMarker(json, sensor, layer) {
         if (sensorType == "Camera"){
             // Create semicircle ranges for camera range, and store in ranges list
             for ( let i = 0; i < 5; i ++ ) {
-                let newRange = L.semiCircle(coordinates, {radius: radius, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true, properties: JSON.stringify(json.properties)}).setDirection(json.properties.rangeDirection, 90);
+                let newRange = L.semiCircle(coordinates, {radius: radius, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true, id: objID, properties: JSON.stringify(rangeProperties), hidden: false}).setDirection(json.properties.rangeDirection, 90);
                 ranges.push(newRange);
                 radius = radius + 5;
             }
@@ -133,7 +118,7 @@ async function addMarker(json, sensor, layer) {
         } else {
             // Create circle ranges for microphone and human range, and store in ranges list
             for ( let i = 0; i < 5; i ++ ) {
-                let newRange = L.circle(coordinates, {radius: radius, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true, properties: JSON.stringify(json.properties)});
+                let newRange = L.circle(coordinates, {radius: radius, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true, id: objID, properties: JSON.stringify(rangeProperties), hidden: false});
                 ranges.push(newRange);
                 radius = radius + 5;
             }
@@ -164,6 +149,8 @@ async function addMarker(json, sensor, layer) {
         addMarkerToLayer(sensorMarker, ranges, window[layer], window[layer + "Range"]);
     
     } else {
+        let objID = json.properties.eventID;
+
         let iconChoice = null;
         let colourChoice = "";
 
@@ -186,7 +173,7 @@ async function addMarker(json, sensor, layer) {
         }
 
         // Create an event marker with the icon determined above
-        let eventmarker = L.marker(coordinates, {icon: iconChoice, properties: JSON.stringify(json.properties)}).on('click', toggleDetailsFromMap);
+        let eventmarker = L.marker(coordinates, {id: objID, icon: iconChoice, properties: JSON.stringify(properties), open: false, hidden: false}).on('click', toggleDetailsFromMap);
         eventmarker.bindPopup(json.properties.eventName);
         
         // Creating a varying outer range for events determined randomly from list of avaliable ranges
@@ -194,8 +181,8 @@ async function addMarker(json, sensor, layer) {
         let rad = rangeRadius[Math.floor(Math.random() * rangeRadius.length)];
 
         // Add range circles to list
-        ranges.push(L.circle(coordinates, {radius: eventRadius*1/4, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.6, weight: 3, gradient: true, properties: JSON.stringify(json.properties)}));
-        ranges.push(L.circle(coordinates, {radius: rad, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.4, weight: 3, gradient: true, properties: JSON.stringify(json.properties)}));
+        ranges.push(L.circle(coordinates, {radius: eventRadius*1/4, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.6, weight: 3, gradient: true, id: objID, properties: JSON.stringify(rangeProperties), hidden: false}));
+        ranges.push(L.circle(coordinates, {radius: rad, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.4, weight: 3, gradient: true, id: objID, properties: JSON.stringify(rangeProperties), hidden: false}));
         
         // Add event marker and its ranges to the appropriate layer
         if (json.properties.priority == 4) {
@@ -232,291 +219,190 @@ function addMarkerToLayer(marker, ranges, layer, rangeLayer) {
     toggleLayer(rangeLayer);
 };
 
-// Function to go through each object in the request and attempt to find and update it on the appropriate map layer
-// If not found, a new marker is added to that layer
-async function updateMapMarkers(request) {
-
-    for (let i in request.sensorCamera) {
-        updateByLayer(request.sensorCamera[i], "sensorCamera", false, false);
-    }
-
-    for (let i in request.sensorMicrophone) {
-        updateByLayer(request.sensorMicrophone[i], "sensorMicrophone", false, false);
-    }
-
-    for (let i in request.sensorHuman) {
-        updateByLayer(request.sensorHuman[i], "sensorHuman", false, false);
-    }
-
-    for (let i in request.sensorUK) {
-        updateByLayer(request.sensorUK[i], "sensorUK", true, false);
-    }
-
-    for (let i in request.sensorUS) {
-        updateByLayer(request.sensorUS[i], "sensorUS", true, false);
-    }
-    
-    for (let i in request.critPriorityEvent) {
-        updateByLayer(request.critPriorityEvent[i], "critPriorityEvent", null, false);
-    }
-
-    for (let i in request.highPriorityEvent) {
-        updateByLayer(request.highPriorityEvent[i], "highPriorityEvent", null, false);
-    }
-
-    for (let i in request.medPriorityEvent) {
-        updateByLayer(request.medPriorityEvent[i], "medPriorityEvent", null, false);
-    }
-
-    for (let i in request.lowPriorityEvent) {
-        updateByLayer(request.lowPriorityEvent[i], "lowPriorityEvent", null, false);
-    }
-
-    for (let i in request.complexEvent) {
-        await updateByLayer(request.complexEvent[i], "complexEvent", null, false);
-    }
-};
-
-// Function to go through each object in the request and attempt to delete it from the appropriate map layer
-function deleteMapMarkers(request) {
-    if (request.sensorCamera != null && request.sensorCamera.length > 0) { 
-        deleteByLayer(request.sensorCamera, "sensorCamera", null); 
-    }
-
-    if (request.sensorMicrophone != null && request.sensorMicrophone.length > 0) { 
-        deleteByLayer(request.sensorMicrophone, "sensorMicrophone", null); 
-    }
-
-    if (request.sensorHuman != null && request.sensorHuman.length > 0) { 
-        deleteByLayer(request.sensorHuman, "sensorHuman", null); 
-    }
-
-    if (request.sensorUK != null && request.sensorUK.length > 0) { 
-        deleteByLayer(request.sensorUK, "sensorUK", null); 
-    }
-
-    if (request.sensorUS != null && request.sensorUS.length > 0) { 
-        deleteByLayer(request.sensorUS, "sensorUS", null); 
-    }
-
-    if (request.critPriorityEvent != null && request.critPriorityEvent.length > 0) { 
-        deleteByLayer(request.critPriorityEvent, "critPriorityEvent", null); 
-    }
-
-    if (request.highPriorityEvent != null && request.highPriorityEvent.length > 0) { 
-        deleteByLayer(request.highPriorityEvent, "highPriorityEvent", null); 
-    }
-
-    if (request.medPriorityEvent != null && request.medPriorityEvent.length > 0) { 
-        deleteByLayer(request.medPriorityEvent, "medPriorityEvent", null); 
-    }
-
-    if (request.lowPriorityEvent != null && request.lowPriorityEvent.length > 0) { 
-        deleteByLayer(request.lowPriorityEvent, "lowPriorityEvent", null); 
-    }
-
-    if (request.complexEvent != null && request.complexEvent.length > 0) { 
-        deleteByLayer(request.complexEvent, "complexEvent", null); 
-    }
-}
-
-async function updateByLayer(req, win, ownerSensor, isRange) {
-    let updated = false;
-    let count = 0;
-    let layers = window[win].getLayers();
-    let size = layers.length;
-
-    let icon = getIcon(req.properties, ownerSensor);
-
-    if (size > 0) {
-
-        await window[win].eachLayer( async function (layer) {
-            count ++;
-
-            let properties = await getProperties(layer);
-            
-            if (properties != null) {
-                // Get ID and check if layer is the right one to update
-                let objID = (req.properties.eventID != null ? req.properties.eventID : (req.properties.sensorID != null ? req.properties.sensorID : req.properties.complexID));
-                let type = isObjectToUpdate(properties, objID);
-              
-                if (type != null) { 
-                    updated = true;
-
-                    // Updating properties
-                    if (!isRange) { layer.setPopupContent((type == "Event" ? req.properties.eventName : type == "Sensor" ? req.properties.sensorName : req.properties.complexName)); }
-                    layer.options.properties = JSON.stringify(await updateProperties(properties, req.properties, type, ownerSensor));
-
-                    // Updating map marker information
-                    // Changing icon for sensor type, owner or event priority change
-                    let currentIcon = null;
-                    if (!isRange) { currentIcon = layer.getIcon(); }
-
-                    if (!isRange && currentIcon != null && currentIcon != icon) {
-                        layer.setIcon(icon); 
-                    }
-
-                    // Update location of object
-                    let currentLocation = layer.getLatLng();
-                    let newLocation = req.geometry.coordinates;
-
-                    if (currentLocation.lat != newLocation[0] || currentLocation.lng != newLocation[1]) { 
-                        layer.setLatLng(newLocation); 
-                    }
-
-                    // Update direction of sensor range if changed
-                    if (isRange && properties.rangeDirection != null && properties.rangeDirection != req.properties.rangeDirection) { 
-                        layer.setDirection(direction, 90);
-                    }
-
-                    // Update range of sensor or event
-                    if (type != "Complex" && !isRange) { updateByLayer(req, win + "Range", ownerSensor, true); }
-                }
-
-                // If correct layer not found, add a new marker to the map
-                if (updated == false && count == size && !isRange) {
-                    if (req.properties.complexID != null) {
-                        await processComplexEvent(req);
-                    } else {
-                        addMarker(req, (req.properties.sensorType != null), win);
-                    }
-
-                    updated = true;
-                }
-            }
-        });
-    } else if (!isRange) {
-        // If layer is empty, like when the SUE interface has just been opened and is being initialised, do not attempt update just add new marker
-        if (req.properties.complexID != null) {
-            await processComplexEvent(req);
-        } else {
-            addMarker(req, (req.properties.sensorType != null), win);
-        }
-    }
-}
-
 // Try to parse properties from the layer into JSON
-function getProperties(layer) {
+async function getProperties(layer, graph) {
     let properties = null;
     try {
-        properties = JSON.parse(layer.options.properties);
+        let allProperties = (JSON.parse(layer.options.properties));
+        let keys = Object.keys(allProperties);
+        if (graph) { properties = allProperties[keys[0]]; }
+        else { properties = await compileProperties(allProperties, keys, layer.options.id); }
+
     } catch {
         console.log("No properties found on layer");
     }
 
     return properties;
-}
+};
 
-async function deleteByLayer(request, win, idsLst) {
-    let layers = window[win].getLayers();
-    let type = (win.includes("sensor") ? "sensor" : (win.includes("complex") ? "complex" : "event"));
-
-    // Compile list of ids to delete from the layer
-    let listOfIDs = [];
-    if (idsLst != null && idsLst.length > 0) {
-        listOfIDs = idsLst
-    } else {
-        for (let i in request) {
-            if (type == "event") { listOfIDs.push(request[i].properties.eventID); } 
-            else if (type == "sensor") { listOfIDs.push(request[i].properties.sensorID); } 
-            else if (type == "complex") { listOfIDs.push(request[i].properties.complexID); } 
-        }
-    }
+function compileProperties(properties, keys, id) {
+    let fullProperties = {};
+    let type = properties[keys[0]].sensorType != null ? "sensor" : (properties[keys[0]].complexID != null ? "complex" : "event");
     
-    // Clear map layer of all markers
-    await window[win].clearLayers();
-
-    let updatedLayers = [];
-
-    for ( let i in layers) {
-        let properties = await getProperties(layers[i]);
-        let id = (type == "event" ? properties.eventID : (type == "sensor" ? properties.sensorID : properties.complexID));
-
-        // Try to find index of marker id in the list of those to be deleted, return those that aren't in the list
-        if (listOfIDs.indexOf(id) < 0) {
-            updatedLayers.push(layers[i]);
-        }
+    let currentTime = null;
+    if ( window.timePoint != null ) {
+        let splitTime = window.timePoint.split(":");
+        currentTime = new Date();
+        currentTime.setHours(splitTime[0]);
+        currentTime.setUTCMinutes(splitTime[1]);
+        currentTime.setUTCSeconds(splitTime[2]);
+        currentTime.setUTCMilliseconds(0);
     };
 
-    // Add each marker which isn't in the list of ids back on the map layer
-    for (let i in updatedLayers) { 
-        updatedLayers[i].addTo(window[win]);
+    for ( let i in keys ) {
+        let propertiesTime = null;
+        if ( window.timePoint != null ) {
+            propertiesTime = new Date(keys[i]);
+        }
+
+        if ( currentTime == null || propertiesTime < currentTime ) {
+            
+            let item = properties[keys[i]];
+
+            if (i == 0) { 
+                fullProperties = item;
+
+            } else if (type.toLowerCase() == "event") {
+                if (item.eventName != null) {
+                    fullProperties.eventName = item.eventName;
+                }
+                if (item.eventType != null) {
+                    fullProperties.eventType = item.eventType;
+                }
+                if (item.description != null) {
+                    fullProperties.description = item.description;
+                }
+                if (item.sensorID != null) {
+                    fullProperties.sensorID = item.sensorID;
+                }
+                if (item.chartPoints != null) {
+                    fullProperties.chartPoints = item.chartPoints;
+                }
+                if (item.objDetVideo != null) {
+                    fullProperties.objDetVideo = item.objDetVideo;
+                }
+                if (item.slctRevVideo != null) {
+                    fullProperties.slctRevVideo = item.slctRevVideo;
+                }
+                if (item.priority != null) {
+                    fullProperties.priority = item.priority;
+                }
+                if (item.datetime != null) {
+                    fullProperties.datetime = item.datetime;
+                }
+        
+            } else if (type.toLowerCase() == "sensor") {
+                if (item.sensorName != null) {
+                    fullProperties.sensorName = item.sensorName;
+                }
+                if (item.sensorType != null) {
+                    fullProperties.sensorType = item.sensorType;
+                }
+                if (item.video != null) {
+                    fullProperties.video = item.video;
+                }
+                if (item.audio != null) {
+                    fullProperties.audio = item.audio;
+                }
+                if (item.owner != null) {
+                    fullProperties.owner = item.owner;
+                }
+                if (item.rangeDirection != null) {
+                    fullProperties.rangeDirection = item.rangeDirection;
+                }
+            
+            } else {
+                if (item.complexName != null) {
+                    fullProperties.complexName = item.complexName;
+                }
+                if (item.events != null) {
+                    fullProperties.events = item.events;
+                }
+                if (item.datetime != null) {
+                    fullProperties.datetime = item.datetime;
+                }
+            }
+
+            if ( type.toLowerCase() != "complex" && item.coordinates != null ) {
+                fullProperties.coordinates = item.coordinates;
+            }
+        }
     }
 
-    // Delete related ranges in same way
-    if (type != "complex" && !win.includes("Range")) { deleteByLayer(null, win  + "Range", listOfIDs); }
-}
+    return fullProperties;
+};
 
 // Update all marker properties
-async function updateProperties(marker, update, type) {
+async function updateProperties(marker, update, type, isRange) {
+    let properties = {};
 
-    if (type == "Event") {
-        // if (marker.timeline == null || update.geometry.coordinates != marker.timeline[Object.keys(marker.timeline).length - 1]) {
-        //     marker.timeline[currentTime] = update.geometry.coordinates;
-        // }
-        if (update.eventName != null) {
-            marker.eventName = update.eventName;
+    if (!isRange && type.toLowerCase() == "event") {
+        if (update.eventName != null && update.eventName != marker.eventName) {
+            properties.eventName = update.eventName;
         }
-        if (update.eventType != null) {
-            marker.eventType = update.eventType;
+        if (update.eventType != null && update.eventType != marker.eventType) {
+            properties.eventType = update.eventType;
         }
-        if (update.description != null) {
-            marker.description = update.description;
+        if (update.description != null && update.description != marker.description) {
+            properties.description = update.description;
         }
-        if (update.sensorID != null) {
-            marker.sensorID = update.sensorID;
+        if (update.sensorID != null && update.sensorID != marker.sensorID) {
+            properties.sensorID = update.sensorID;
         }
-        if (update.chartPoints != null) {
-            marker.chartPoints = update.chartPoints;
+        if (update.chartPoints != null && update.chartPoints != marker.chartPoints) {
+            properties.chartPoints = update.chartPoints;
         }
-        if (update.objDetVideo != null) {
-            marker.objDetVideo = update.objDetVideo;
+        if (update.objDetVideo != null && update.objDetVideo != marker.objDetVideo) {
+            properties.objDetVideo = update.objDetVideo;
         }
-        if (update.slctRevVideo != null) {
-            marker.slctRevVideo = update.slctRevVideo;
+        if (update.slctRevVideo != null && update.slctRevVideo != marker.slctRevVideo) {
+            properties.slctRevVideo = update.slctRevVideo;
         }
-        if (update.priority != null) {
-            marker.priority = update.priority;
+        if (update.priority != null && update.priority != marker.priority) {
+            properties.priority = update.priority;
         }
-        if (update.datetime != null) {
-            marker.datetime = update.datetime;
+        if (update.datetime != null && update.datetime != marker.datetime) {
+            properties.datetime = update.datetime;
         }
 
-        return Promise.resolve(marker);
-
-    } else if (type == "Sensor") {
-        if (update.sensorName != null) {
-            marker.sensorName = update.sensorName;
+    } else if (type.toLowerCase() == "sensor") {
+        if (!isRange && update.sensorName != null && update.sensorName != marker.sensorName) {
+            properties.sensorName = update.sensorName;
         }
-        if (update.sensorType != null) {
-            marker.sensorType = update.sensorType;
+        if (update.sensorType != null && update.sensorType != marker.sensorType) {
+            properties.sensorType = update.sensorType;
         }
-        if (update.video != null) {
-            marker.video = update.video;
+        if (!isRange && update.video != null && update.video != marker.video) {
+            properties.video = update.video;
         }
-        if (update.audio != null) {
-            marker.audio = update.audio;
+        if (!isRange && update.audio != null && update.audio != marker.audio) {
+            properties.audio = update.audio;
         }
-        if (update.owner != null) {
-            marker.owner = update.owner;
+        if (!isRange && update.owner != null && update.owner != marker.owner) {
+            properties.owner = update.owner;
         }
-
-        return Promise.resolve(marker);
-    
-    } else {
-        if (update.complexName != null) {
-            marker.complexName = update.complexName;
-        }
-        if (update.events != null) {
-            marker.events = update.events;
-        }
-        if (update.datetime != null) {
-            marker.datetime = update.datetime;
+        if (isRange && update.rangeDirection != null && update.rangeDirection != marker.rangeDirection) {
+            properties.rangeDirection = update.rangeDirection;
         }
 
-        return Promise.resolve(marker);
+    } else if (!isRange) {
+        if (update.complexName != null && update.complexName != marker.complexName) {
+            properties.complexName = update.complexName;
+        }
+        if (update.events != null && update.events != marker.events) {
+            properties.events = update.events;
+        }
+        if (update.datetime != null && update.datetime != marker.datetime) {
+            properties.datetime = update.datetime;
+        }
     }
-}
+
+    if ( type.toLowerCase() != "complex" && update.coordinates != null && update.coordinates != marker.coordinates) {
+        properties.coordinates = update.coordinates;
+    }
+
+    return Promise.resolve(properties);
+};
 
 // Get icon by sensor type/owner, event priority, or complex event
 function getIcon(properties, ownerSensor) {
@@ -535,86 +421,4 @@ function getIcon(properties, ownerSensor) {
     } else {
         return complexIcon;
     }
-};
-
-// If object ids match then return object type
-function isObjectToUpdate(properties, objID) {
-    if (properties.eventID != null && properties.eventID == objID) {
-        return "Event";
-    } else if (properties.eventID == null && properties.sensorID != null && properties.sensorID == objID) {
-        return "Sensor";
-    } else if (properties.complexID != null && properties.complexID == objID) {
-        return "Complex";
-    }
-    return null;
-}
-
-// Find information on sensor with id - USED FOR EVENT DETAILS
-async function findSensor(id) {
-    let found = null;
-
-    // Search through sensorUK and sensorUS layers to try and find sensor with matching id
-    found = await isInLayer(id, window.sensorUK);
-
-    if (found != null && !isEmpty(found)) { 
-        return found;
-
-    } else {
-        found = await isInLayer(id, window.sensorUS);
-
-        if (found != null && !isEmpty(found)) { 
-            return found
-        }
-    };
-    return null;
-};
-
-// Find information on sensor with id - USED FOR COMPLEX EVENT DETAILS
-async function findEvents(list) {
-    let discoveredItems = [];
-
-    // Search through all event layers to try and find events with ids detailed in the list
-    for ( let i in list ) {
-        let found = null;
-
-        found = await isInLayer(list[i], window.critPriorityEvent);
-
-        if (found != null && !isEmpty(found)) { 
-            discoveredItems.push(found);
-
-        } else {
-            found = await isInLayer(list[i], window.highPriorityEvent);
-
-            if (found != null && !isEmpty(found)) { 
-                discoveredItems.push(found);
-             
-            } else {
-                found = await isInLayer(list[i], window.medPriorityEvent);
-    
-                if (found != null && !isEmpty(found)) {
-                    discoveredItems.push(found);
-                 
-                } else {
-                    found = await isInLayer(list[i], window.lowPriorityEvent);
-        
-                    if (found != null && !isEmpty(found)) {
-                        discoveredItems.push(found); 
-                     
-                    }
-                }
-            }
-        }
-    }
-
-    return discoveredItems;
-};
-
-// Simple function to determine whether a list of objects is empty or not
-function isEmpty(obj) {
-    for ( let key in obj ) {
-        if ( obj.hasOwnProperty(key) ) {
-            return false;
-        }
-    }
-    return true;
 };

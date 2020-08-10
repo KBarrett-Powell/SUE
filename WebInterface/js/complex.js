@@ -2,7 +2,7 @@ window.currentComplex = [];
 
 async function processComplexEvent(json) {
     let currentComplexLst = window.currentComplex;
-    currentComplexLst.push(json);
+    if (json != null) { currentComplexLst.push(json); }
 
     let refinedList = await refineList(currentComplexLst); 
     window.currentComplex = refinedList;
@@ -26,20 +26,20 @@ async function addComplexMarker(complex) {
     let events = await findEvents(complex.properties.events);
 
     for ( let i in events ) {
-        let item = JSON.parse(events[i].options.properties);
+        let item = await getProperties(events[i], false);
 
-        let coordstr = events[i].getLatLng();
+        let coordinates = item.coordinates;
        
-        lat += coordstr.lat;
-        long += coordstr.lng;
+        lat += coordinates[0];
+        long += coordinates[1];
 
-        let obj = {datetime: item.datetime, name: item.eventName, description: item.eventType + " - " + item.description, coordinates: "[" + coordstr.lat + ", " + coordstr.lng + "]", priority: item.priority};
+        let obj = {datetime: item.datetime, name: item.eventName, description: item.eventType + " - " + item.description, coordinates: coordinates, priority: item.priority};
 
-        eventCoordinates.push(coordstr);
+        eventCoordinates.push(coordinates);
         eventDetails.push(obj);
     }
 
-    if (complex.properties.events != null && complex.properties.events.length > 0) {
+    if (events.length > 0 && complex.properties.events != null && complex.properties.events.length > 0) {
 
         lat = lat / eventCoordinates.length;
         long = long / eventCoordinates.length;
@@ -54,12 +54,17 @@ async function addComplexMarker(complex) {
         let cmplxproperties = complex.properties;
         cmplxproperties.eventDetails = eventDetails;
 
-        L.polyline(coordinates, {color: "#ee133b", properties: JSON.stringify(cmplxproperties)}).addTo(window.complexEvent);
-        complexevent = L.marker(markerCoordinates, {icon: complexIcon, properties: JSON.stringify(cmplxproperties)}).on('click', toggleDetailsFromMap).addTo(window.complexEvent);
-        complexevent.bindPopup(complex.properties.complexName)
 
-        toggleLayer(window.complexEvent);
+        let datetime = new Date(complex.properties.datetime);
+        let updateTime = buildISOString( datetime, null );
+        let finishedProperties = { [updateTime]: cmplxproperties };
+
+        L.polyline(coordinates, {color: "#ee133b", properties: JSON.stringify(finishedProperties)}).addTo(window.complexEvent);
+        complexevent = L.marker(markerCoordinates, {icon: complexIcon, properties: JSON.stringify(finishedProperties), open: false}).on('click', toggleDetailsFromMap).addTo(window.complexEvent);
+        complexevent.bindPopup(complex.properties.complexName)
     }
+    
+    toggleLayer(window.complexEvent);
 };
 
 function refineList(list) {

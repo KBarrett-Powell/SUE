@@ -14,3 +14,15 @@ L.tileLayer('http://localhost:8081/tile/{z}/{x}/{y}.png', {
 L.control.zoom({
     position:'bottomright'
 }).addTo(window.leafletmap);
+
+L.LayerGroup.include({
+    getLayersByID: function (id) {
+        let layers = [];
+        for (var i in this._layers) {
+            if (this._layers[i].options.id == id) {
+                layers.push(this._layers[i]);
+            }
+        }
+        return layers;
+    }
+});

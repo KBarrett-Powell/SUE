@@ -1,3 +1,30 @@
+// Create all map layer groups
+window.sensorCamera = L.layerGroup();
+window.sensorMicrophone = L.layerGroup();
+window.sensorHuman = L.layerGroup();
+
+window.sensorCameraRange = L.layerGroup();
+window.sensorMicrophoneRange = L.layerGroup();
+window.sensorHumanRange = L.layerGroup();
+
+window.sensorUK = L.layerGroup();
+window.sensorUS = L.layerGroup();
+
+window.sensorUKRange = L.layerGroup();
+window.sensorUSRange = L.layerGroup();
+
+window.critPriorityEvent = L.layerGroup();
+window.highPriorityEvent = L.layerGroup();
+window.medPriorityEvent = L.layerGroup();
+window.lowPriorityEvent = L.layerGroup();
+
+window.critPriorityEventRange = L.layerGroup();
+window.highPriorityEventRange = L.layerGroup();
+window.medPriorityEventRange = L.layerGroup();
+window.lowPriorityEventRange = L.layerGroup();
+
+window.complexEvent = L.layerGroup();
+
 function initializeLayers() {
     removeAllLayers();
     
@@ -6,13 +33,11 @@ function initializeLayers() {
     window.medPriorityEventRange.addTo(window.leafletmap);
     window.lowPriorityEventRange.addTo(window.leafletmap);
 
-    window.sensorCameraRange.addTo(window.leafletmap);
-    window.sensorMicrophoneRange.addTo(window.leafletmap);
-    window.sensorHumanRange.addTo(window.leafletmap);
+    window.sensorUKRange.addTo(window.leafletmap);
+    window.sensorUSRange.addTo(window.leafletmap);
 
-    window.sensorCamera.addTo(window.leafletmap);
-    window.sensorMicrophone.addTo(window.leafletmap);
-    window.sensorHuman.addTo(window.leafletmap);
+    window.sensorUK.addTo(window.leafletmap);
+    window.sensorUS.addTo(window.leafletmap);
 
     window.critPriorityEvent.addTo(window.leafletmap);
     window.highPriorityEvent.addTo(window.leafletmap);
@@ -30,22 +55,6 @@ function alterLayers(dict) {
             window[i].addTo(window.leafletmap);
         }
     }; 
-};
-
-async function isInLayer(id, layer) {
-    let data = await layer.getLayers();
-
-    for ( let i in data ) {
-        let properties = JSON.parse(data[i].options.properties);
-            
-        if (properties.eventID != null && properties.eventID == id) {
-            return data[i];
-        } else if (properties.sensorID != null && properties.sensorType != null && properties.sensorID == id) {
-            return data[i];
-        } else if (properties.complexID != null && properties.complexID == id) {
-            return data[i];
-        }
-    };
 };
 
 function removeAllLayers() {
