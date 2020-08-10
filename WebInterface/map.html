@@ -136,12 +136,24 @@
                                     <h4 id="chartTitle">Footage Analysis:</h4>
                                     <canvas id="analysischart"></canvas>
                                 </div>
+                                
+                                <div id="analysisAudio" style="display:none;">
+                                    <h4 id="audioDetect">Detected Audio:</h4>
+                                    <audio id="audioPlayerDet" controls autoplay loop onplay="plotChartPoints()" >
+                                        <source id="detAudioSource" src="" type="audio/wav">
+                                        </audio>
+                                </div>
                     
                                 <div id="analysisVideo" class="chart-container" style="display:none;">
                                     <h4>Footage Analysis:</h4>
                                     <video id="videoAPlayer" controls autoplay loop>
                                         <source id="videoASource" src="" type="video/mp4">
                                     </video>
+                                </div>
+                                
+                                <div id="analysisImage" style="display:none;">
+                                    <h4>Footage Analysis:</h4>
+                                    <img id="detImageSource" src="" />
                                 </div>
                                     
                                 <div id="mainVideo" style="display:none;">
