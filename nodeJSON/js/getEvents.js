@@ -154,6 +154,12 @@ module.exports = {
                         if (req.slctRevVideo != null && properties.slctRevVideo != req.slctRevVideo) {
                             newObject.slctRevVideo = req.slctRevVideo;
                         }
+                        if (req.detImage != null && properties.detImage != req.detImage) {
+                            newObject.detImage = req.detImage;
+                        }
+                        if (req.detAudio != null && properties.detAudio != req.detAudio) {
+                            newObject.detAudio = req.detAudio;
+                        }
                         if (req.priority != null && properties.priority != req.priority) {
                             newObject.priority = req.priority;
                             sendDelete.push({"eventID": req.eventID});
@@ -196,6 +202,8 @@ module.exports = {
                                 "chartPoints": req.chartPoints,
                                 "objDetVideo": req.objDetVideo,
                                 "slctRevVideo": req.slctRevVideo,
+                                "detImage": req.detImage,
+                                "detAudio": req.detAudio,
                                 "priority": req.priority,
                                 "coordinates": req.coordinates
                             }
