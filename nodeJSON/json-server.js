@@ -92,93 +92,144 @@ wsServer.on('connection', function (wsClient) {
         wsClient.send(complexlst);
                 
       } else if (parsedMessage.type.toLowerCase() == "post") {
+
+        let postResponse = {};
           
         if (parsedMessage.events != null) {
-          let update = await events.postEvent(parsedMessage.events);
-          for ( let i in update ) {
-            sendAll(SUEClients, update[i]);
-          }
+          let response = await events.postEvent(parsedMessage.events);
 
-          let allUpdated = getUpdatedID(update);
-          for ( let i in allUpdated ) {
-            wsClient.send(JSON.stringify({"success": {"eventID": allUpdated[i]}}));
+          let eventLst = [];
+          for ( let i in response ) {
+            let updatedIDs = await getUpdatedID(response[i]);
+
+            for ( let j in updatedIDs ) {
+              eventLst.push({"eventID": updatedIDs[j]});
+            }
+            
+            sendAll(SUEClients, response[i]);
           }
+          postResponse.events = eventLst;
         } 
 
         if (parsedMessage.sensors != null) {
-          let update = await sensors.postSensor(parsedMessage.sensors);
-          for ( let i in update ) {
-            sendAll(SUEClients, update[i]);
-          }
+          let response = await sensors.postSensor(parsedMessage.sensors);
 
-          let allUpdated = getUpdatedID(update);
-          for ( let i in allUpdated ) {
-            wsClient.send(JSON.stringify({"success": {"sensorID": allUpdated[i]}}));
+          let sensorLst = [];
+          for ( let i in response ) {
+            let updatedIDs = await getUpdatedID(response[i]);
+
+            for ( let j in updatedIDs ) {
+              sensorLst.push({"sensorID": updatedIDs[j]});
+            }
+            
+            sendAll(SUEClients, response[i]);
           }
+          postResponse.sensors = sensorLst;
         } 
         
         if (parsedMessage.complex != null) {
-          let update = await complex.postComplex(parsedMessage.complex);
-          for ( let i in update ) {
-            sendAll(SUEClients, update[i]);
-          }
+          let response = await complex.postComplex(parsedMessage.complex);
 
-          let allUpdated = getUpdatedID(update);
-          for ( let i in allUpdated ) {
-            wsClient.send(JSON.stringify({"success": {"complexID": allUpdated[i]}}));
+          let complexLst = [];
+          for ( let i in response ) {
+            let updatedIDs = await getUpdatedID(response[i]);
+
+            for ( let j in updatedIDs ) {
+              complexLst.push({"complexID": updatedIDs[j]});
+            }
+            
+            sendAll(SUEClients, response[i]);
           }
+          postResponse.complex = complexLst;
         }
 
+        if ( Object.keys(postResponse).length > 0 ) {
+          wsClient.send(JSON.stringify({"POST - success": postResponse}));
+        } else {
+          wsClient.send(JSON.stringify({"POST - fail": "No Items Returned"}));
+        }
+        
       } else if (parsedMessage.type.toLowerCase() == "get") {
+
+        let getResponse = {};
 
         if (parsedMessage.events != null) {
           let response = await events.getEvents(parsedMessage.events);
-          let allUpdated = getUpdatedObject(JSON.parse(response));
-          wsClient.send(JSON.stringify({"success": {"events": allUpdated}}));
+          let allObjects = await getUpdatedObjects(JSON.parse(response));
+          getResponse.events = allObjects;
         } 
 
         if (parsedMessage.sensors != null) {
           let response = await sensors.getSensors(parsedMessage.sensors);
-          let allUpdated = getUpdatedObject(JSON.parse(response));
-          wsClient.send(JSON.stringify({"success": {"sensors": allUpdated}}));
+          let allObjects = await getUpdatedObjects(JSON.parse(response));
+          getResponse.sensors = allObjects;
         } 
         
         if (parsedMessage.complex != null) {
           let response = await complex.getComplex(parsedMessage.complex);
-          let allUpdated = getUpdatedObject(JSON.parse(response));
-          wsClient.send(JSON.stringify({"success": {"complexes": allUpdated}}));
+          let allObjects = await getUpdatedObjects(JSON.parse(response));
+          getResponse.complex = allObjects;
+        }
+
+        if (Object.keys(getResponse).length > 0) {
+          wsClient.send(JSON.stringify({"GET - success": getResponse}));
+        } else {
+          wsClient.send(JSON.stringify({"GET - fail": "No Items Returned"}));
         }
 
       } else if (parsedMessage.type.toLowerCase() == "delete") {
 
+        let deleteResponse = {};
+          
         if (parsedMessage.events != null) {
-          let response = await events.deleteEvent(parsedMessage.events, true);
+          let response = await events.deleteEvent(parsedMessage.events,);
+          
           sendAll(SUEClients, response);
 
-          let allUpdated = getUpdatedID(response);
-          for ( let i in allUpdated ) {
-            wsClient.send(JSON.stringify({"success": {"eventID": allUpdated[i]}}));
+          let eventLst = [];
+          let updatedIDs = await getUpdatedID(response);
+
+          for ( let i in updatedIDs ) {
+            eventLst.push({"eventID": updatedIDs[i]});
           }
-        } 
         
+          deleteResponse.events = eventLst;
+        } 
+
         if (parsedMessage.sensors != null) {
           let response = await sensors.deleteSensor(parsedMessage.sensors, true);
+          
           sendAll(SUEClients, response);
 
-          let allUpdated = getUpdatedID(response);
-          for ( let i in allUpdated ) {
-            wsClient.send(JSON.stringify({"success": {"sensorID": allUpdated[i]}}));
+          let sensorLst = [];
+          let updatedIDs = getUpdatedID(response);
+          
+          for ( let i in updatedIDs ) {
+            sensorLst.push({"sensorID": updatedIDs[i]});
           }
+
+          deleteResponse.sensors = sensorLst;
         } 
-        
+
         if (parsedMessage.complex != null) {
           let response = await complex.deleteComplex(parsedMessage.complex);
+          
           sendAll(SUEClients, response);
 
-          let allUpdated = getUpdatedID(response);
-          for ( let i in allUpdated ) {
-            wsClient.send(JSON.stringify({"success": {"complexID": allUpdated[i]}}));
+          let complexLst = [];
+          let updatedIDs = getUpdatedID(response);
+
+          for ( let i in updatedIDs ) {
+            complexLst.push({"complexID": updatedIDs[i]});
           }
+
+          deleteResponse.complex = complexLst;
+        }
+
+        if ( Object.keys(deleteResponse).length > 0 ) {
+          wsClient.send(JSON.stringify({"DELETE - success": deleteResponse}));
+        } else {
+          wsClient.send(JSON.stringify({"DELETE - fail": "No Items Deleted"}));
         }
       }
     }
@@ -197,53 +248,50 @@ function getUpdatedID(response) {
   let ids = [];
 
   for ( let i in response.sensorUK ) {
-    ids.push(response.sensorUK[i].properties.sensorID);
+    ids.push(response.sensorUK[i].sensorID);
   }
   for ( let i in response.sensorUS ) {
-    ids.push(response.sensorUS[i].properties.sensorID);
+    ids.push(response.sensorUS[i].sensorID);
   }
   for ( let i in response.critPriorityEvent ) {
-    ids.push(response.critPriorityEvent[i].properties.eventID);
+    ids.push(response.critPriorityEvent[i].eventID);
   }
   for ( let i in response.highPriorityEvent ) {
-    ids.push(response.highPriorityEvent[i].properties.eventID);
+    ids.push(response.highPriorityEvent[i].eventID);
   }
   for ( let i in response.medPriorityEvent ) {
-    ids.push(response.medPriorityEvent[i].properties.eventID);
+    ids.push(response.medPriorityEvent[i].eventID);
   }
   for ( let i in response.lowPriorityEvent ) {
-    ids.push(response.lowPriorityEvent[i].properties.eventID);
+    ids.push(response.lowPriorityEvent[i].eventID);
   }
   for ( let i in response.complexEvent ) {
-    ids.push(response.complexEvent[i].properties.complexID);
+    ids.push(response.complexEvent[i].complexID);
   }
 
   return ids;
 };
 
-function getUpdatedObject(response) {
+function getUpdatedObjects(response) {
   let objects = [];
 
   for ( let i in response.sensorUK ) {
-    objects.push(response.sensorUK[i].properties);
+    objects.push(response.sensorUK[i]);
   }
   for ( let i in response.sensorUS ) {
-    objects.push(response.sensorUS[i].properties);
+    objects.push(response.sensorUS[i]);
   }
   for ( let i in response.critPriorityEvent ) {
-    objects.push(response.critPriorityEvent[i].properties);
+    objects.push(response.critPriorityEvent[i]);
   }
   for ( let i in response.highPriorityEvent ) {
-    objects.push(response.highPriorityEvent[i].properties);
+    objects.push(response.highPriorityEvent[i]);
   }
   for ( let i in response.medPriorityEvent ) {
-    objects.push(response.medPriorityEvent[i].properties);
+    objects.push(response.medPriorityEvent[i]);
   }
   for ( let i in response.lowPriorityEvent ) {
-    objects.push(response.lowPriorityEvent[i].properties);
-  }
-  for ( let i in response.complexEvent ) {
-    objects.push(response.complexEvent[i].properties);
+    objects.push(response.lowPriorityEvent[i]);
   }
 
   return objects;
@@ -252,7 +300,7 @@ function getUpdatedObject(response) {
 function sendAll( SUEClients, update ) {
   if (update != null) {
     for (var i = 0; i < SUEClients.length; i ++) {
-        SUEClients[i].send(JSON.stringify(update));
+      SUEClients[i].send(JSON.stringify(update));
     }
   }
 }; 
