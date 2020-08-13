@@ -148,7 +148,7 @@ async function updateByLayer(req, win, ownerSensor, isRange) {
         if (req.properties.complexID != null) {
             await processComplexEvent(req);
         } else {
-            addMarker(req, (req.properties.sensorType != null), win);
+            addMarker(req, (req.properties.initial != null), win);
         }
     }
 };
@@ -207,7 +207,7 @@ async function showTimePoint() {
 
         await window[mapLayers[i]].eachLayer( async function (layer) {
             let properties = await getProperties(layer, false);
-                
+
             if (properties != null && Object.keys(properties).length > 0) {
 
                 // Updating map marker information

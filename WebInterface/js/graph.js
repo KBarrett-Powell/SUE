@@ -425,14 +425,14 @@ function buffEventTimes(eventTimes) {
 
 async function addTimeToDict(dict, list) {
     for ( let i in list ) {
-        let event = await getProperties(list[i], true);
-        let dateTime = new Date(event.datetime);
+        let datetime = await getProperties(list[i], true);
+        let date = new Date(datetime);
         let timestr = "";
 
-        if ( dateTime.getSeconds() < 30 ) {
-            timestr = buildISOString(dateTime, 30);
+        if ( date.getSeconds() < 30 ) {
+            timestr = buildISOString(date, 30);
         } else {
-            timestr = buildISOString(dateTime, 60);
+            timestr = buildISOString(date, 60);
         }
     
         if ( dict[timestr] != null ) { dict[timestr] = dict[timestr] + 1; }

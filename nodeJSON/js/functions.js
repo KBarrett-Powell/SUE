@@ -45,10 +45,7 @@ module.exports = {
       for ( let i in keys ) {    
         let item = properties[keys[i]];
 
-        if (i == 0) { 
-          fullProperties = item;
-  
-        } else if (type.toLowerCase() == "event") {
+        if (type.toLowerCase() == "event") {
 
           if (item.eventName != null) {
             fullProperties.eventName = item.eventName;

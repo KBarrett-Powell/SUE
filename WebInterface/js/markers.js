@@ -83,34 +83,27 @@ const complexIcon = new mapIcon({
 
 // Add map marker function
 async function addMarker(json, sensor, layer) {
-    let coordinates = json.geometry.coordinates;
     let ranges = [];
 
-    let time = new Date();
-    if ( sensor ) { time.setUTCMinutes(time.getUTCMinutes() - 5); }
-    else { time = new Date(json.properties.datetime); }
-
-    let updateTime = buildISOString( time, null );
-    json.properties.coordinates = coordinates;
-
-    let properties = { [updateTime]: json.properties };
-    let rangeProperties = { [updateTime]: {"sensorType": json.properties.sensorType, "coordinates": coordinates, "rangeDirection": json.properties.rangeDirection}};
+    let keys = await Object.keys(json.properties);
+    let current = compileProperties(json.properties, keys);
+    let coordinates = current.coordinates;
 
     if (sensor) {
-        let objID = json.properties.sensorID;
+        let objID = json.sensorID;
 
         // Create default sensor marker with camera icon
-        let sensorMarker = L.marker(coordinates, {id: objID, properties: JSON.stringify(properties), open: false, hidden: false}).on('click', toggleDetailsFromMap);
-        sensorMarker.bindPopup(json.properties.sensorName);
+        let sensorMarker = L.marker(coordinates, {id: objID, properties: JSON.stringify(json.properties), open: false, hidden: false}).on('click', toggleDetailsFromMap);
+        sensorMarker.bindPopup(current.sensorName);
         let radius = 10;
 
-        let sensorType = json.properties.sensorType;
+        let sensorType = current.sensorType;
 
         // Fill in Sensor Type map layers
         if (sensorType == "Camera"){
             // Create semicircle ranges for camera range, and store in ranges list
             for ( let i = 0; i < 5; i ++ ) {
-                let newRange = L.semiCircle(coordinates, {radius: radius, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true, id: objID, properties: JSON.stringify(rangeProperties), hidden: false}).setDirection(json.properties.rangeDirection, 90);
+                let newRange = L.semiCircle(coordinates, {radius: radius, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true, id: objID, properties: JSON.stringify(json.properties), hidden: false}).setDirection(current.rangeDirection, 90);
                 ranges.push(newRange);
                 radius = radius + 5;
             }
@@ -118,7 +111,7 @@ async function addMarker(json, sensor, layer) {
         } else {
             // Create circle ranges for microphone and human range, and store in ranges list
             for ( let i = 0; i < 5; i ++ ) {
-                let newRange = L.circle(coordinates, {radius: radius, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true, id: objID, properties: JSON.stringify(rangeProperties), hidden: false});
+                let newRange = L.circle(coordinates, {radius: radius, fillColor: '#999', fillOpacity: 0.2, weight: 0, gradient: true, id: objID, properties: JSON.stringify(json.properties), hidden: false});
                 ranges.push(newRange);
                 radius = radius + 5;
             }
@@ -149,49 +142,49 @@ async function addMarker(json, sensor, layer) {
         addMarkerToLayer(sensorMarker, ranges, window[layer], window[layer + "Range"]);
     
     } else {
-        let objID = json.properties.eventID;
+        let objID = json.eventID;
 
         let iconChoice = null;
         let colourChoice = "";
 
         // Get colour and icon choice based on event priority and whether accessibility mode is on or not
-        if (json.properties.priority == 4) {
+        if (current.priority == 4) {
             iconChoice = (window.accessibility == false ? blueIcon : cbBlueIcon);
             colourChoice = (window.accessibility == false ? '#76CAEC' : '#6CA5D6');
 
-        } else if (json.properties.priority == 3) {
+        } else if (current.priority == 3) {
             iconChoice = (window.accessibility == false ? yellowIcon : cbYellowIcon);
             colourChoice = (window.accessibility == false ? '#FEDD80' : '#70D4E5');
         
-        } else if (json.properties.priority == 2) {
+        } else if (current.priority == 2) {
             iconChoice = (window.accessibility == false ? orangeIcon : cbOrangeIcon);
             colourChoice = (window.accessibility == false ? '#FEA080' : '#FE9D85');
         
-        } else if (json.properties.priority == 1) {
+        } else if (current.priority == 1) {
             iconChoice = (window.accessibility == false ? redIcon : cbRedIcon);
             colourChoice = (window.accessibility == false ? '#FE7F7F' : '#EC6C71');
         }
 
         // Create an event marker with the icon determined above
-        let eventmarker = L.marker(coordinates, {id: objID, icon: iconChoice, properties: JSON.stringify(properties), open: false, hidden: false}).on('click', toggleDetailsFromMap);
-        eventmarker.bindPopup(json.properties.eventName);
+        let eventmarker = L.marker(coordinates, {id: objID, icon: iconChoice, properties: JSON.stringify(json.properties), open: false, hidden: false}).on('click', toggleDetailsFromMap);
+        eventmarker.bindPopup(current.eventName);
         
         // Creating a varying outer range for events determined randomly from list of avaliable ranges
         let rangeRadius = [90, 80, 70, 60, 50, 40, 30];
         let rad = rangeRadius[Math.floor(Math.random() * rangeRadius.length)];
 
         // Add range circles to list
-        ranges.push(L.circle(coordinates, {radius: eventRadius*1/4, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.6, weight: 3, gradient: true, id: objID, properties: JSON.stringify(rangeProperties), hidden: false}));
-        ranges.push(L.circle(coordinates, {radius: rad, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.4, weight: 3, gradient: true, id: objID, properties: JSON.stringify(rangeProperties), hidden: false}));
+        ranges.push(L.circle(coordinates, {radius: eventRadius*1/4, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.6, weight: 3, gradient: true, id: objID, properties: JSON.stringify(json.properties), hidden: false}));
+        ranges.push(L.circle(coordinates, {radius: rad, fillColor: colourChoice, color: colourChoice, fillOpacity: 0.4, weight: 3, gradient: true, id: objID, properties: JSON.stringify(json.properties), hidden: false}));
         
         // Add event marker and its ranges to the appropriate layer
-        if (json.properties.priority == 4) {
+        if (current.priority == 4) {
             addMarkerToLayer(eventmarker, ranges, window.lowPriorityEvent, window.lowPriorityEventRange);
 
-        } else if (json.properties.priority == 3) {
+        } else if (current.priority == 3) {
             addMarkerToLayer(eventmarker, ranges, window.medPriorityEvent, window.medPriorityEventRange);
 
-        } else if (json.properties.priority == 2) {
+        } else if (current.priority == 2) {
             addMarkerToLayer(eventmarker, ranges, window.highPriorityEvent, window.highPriorityEventRange);
 
         } else {
@@ -225,8 +218,8 @@ async function getProperties(layer, graph) {
     try {
         let allProperties = (JSON.parse(layer.options.properties));
         let keys = Object.keys(allProperties);
-        if (graph) { properties = allProperties[keys[0]]; }
-        else { properties = await compileProperties(allProperties, keys, layer.options.id); }
+        if (graph) { properties = keys[0]; }
+        else { properties = await compileProperties(allProperties, keys, true); }
 
     } catch {
         console.log("No properties found on layer");
@@ -235,12 +228,12 @@ async function getProperties(layer, graph) {
     return properties;
 };
 
-function compileProperties(properties, keys, id) {
+function compileProperties(properties, keys, time) {
     let fullProperties = {};
-    let type = properties[keys[0]].sensorType != null ? "sensor" : (properties[keys[0]].complexID != null ? "complex" : "event");
+    let type = properties.initial != null ? "sensor" : (properties[keys[0]].events != null ? "complex" : "event");
     
     let currentTime = null;
-    if ( window.timePoint != null ) {
+    if ( window.timePoint != null && time ) {
         let splitTime = window.timePoint.split(":");
         currentTime = new Date();
         currentTime.setHours(splitTime[0]);
@@ -251,18 +244,14 @@ function compileProperties(properties, keys, id) {
 
     for ( let i in keys ) {
         let propertiesTime = null;
-        if ( window.timePoint != null ) {
+        if ( window.timePoint != null && keys[i] != "initial" && time ) {
             propertiesTime = new Date(keys[i]);
         }
 
         if ( currentTime == null || propertiesTime < currentTime ) {
-            
             let item = properties[keys[i]];
 
-            if (i == 0) { 
-                fullProperties = item;
-
-            } else if (type.toLowerCase() == "event") {
+            if (type.toLowerCase() == "event") {
                 if (item.eventName != null) {
                     fullProperties.eventName = item.eventName;
                 }
