@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
         <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
 
         <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.min.css" />
         <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css" />
@@ -33,11 +34,11 @@
     </head>
 
     <body>
-        <div class="wrapper">
+        <!-- <div class="wrapper"> -->
             <div class="sidebar" id="detailsdiv">
 
                 <div class="main-title">
-                    <h1 class="text-center title">Situational Understanding Explorer</h1>
+                    <h1 class="title"><b>S</b>ituational <b>U</b>nderstanding <b>E</b>xplorer</h1>
                 </div>
 
                 <div class="row">
@@ -57,24 +58,23 @@
                         </div>
                     </div>
 
-                    <div class="information">
-                        
+                    <div class="sidebar-contents">
+                            
                         <div class="overlay-page" id="searchpanel" >
                             <div class="sidebar-header">
                                 <span><h3>Chat With SUE</h3></span>
                             </div>
-        
+            
                             <div class="sidebar-main">
                                 <div class="chat-container cnlChat"></div>
                             </div>
                         </div>
 
                         <div class="overlay-page hidden" id="analysispanel">
-
                             <div class="sidebar-header">
                                 <span><h3>Data Analysis</h3></span>
                             </div>
-        
+            
                             <div class="sidebar-main mapanalysis">
                                 <div id="priorityChartContainer">
                                     <canvas id="priorityChart"></canvas>
@@ -90,7 +90,7 @@
                                 <h3 id="detailsID" class="hidden"></h3>
                                 <span><h3 id="detailsName"></h3></span>
                             </div>
-        
+            
                             <div class="sidebar-main" id="side-main">
                                 <span id="detailsText" style="white-space: pre-line"></span>
 
@@ -99,7 +99,6 @@
                                 <div class="row">
                                     <div class="col">
                                         <div id="analysisCarousel" class="carousel slide" data-interval="false" style="display:none;">
-
                                             <div class="carousel-inner">
 
                                                 <div class="carousel-item  active">
@@ -108,7 +107,7 @@
                                                         <canvas id="carochart"></canvas>
                                                     </div>
                                                 </div>
-                                            
+                                                
                                                 <div class="carousel-item ">
                                                     <div id="objDetVideo" class="chart-container">
                                                         <h4>Object Detection Video:</h4>
@@ -117,9 +116,9 @@
                                                         </video>
                                                     </div>
                                                 </div>
-        
+            
                                             </div>
-                                          
+                                            
                                             <a class="carousel-control-prev" href="#analysisCarousel" role="button" data-slide="prev">
                                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                                 <span class="sr-only">Previous</span>
@@ -136,14 +135,14 @@
                                     <h4 id="chartTitle">Footage Analysis:</h4>
                                     <canvas id="analysischart"></canvas>
                                 </div>
-                    
+                        
                                 <div id="analysisVideo" class="chart-container" style="display:none;">
                                     <h4>Footage Analysis:</h4>
                                     <video id="videoAPlayer" controls autoplay loop>
                                         <source id="videoASource" src="" type="video/mp4">
                                     </video>
                                 </div>
-                                    
+                                        
                                 <div id="mainVideo" style="display:none;">
                                     <h4 id="videoDesc">Captured Footage:</h4>
                                     <video id="videoPlayer" controls autoplay loop onplay="plotChartPoints()">
@@ -155,21 +154,23 @@
                                     <h4 id="audioDesc">Captured Audio:</h4>
                                     <audio id="audioPlayer" controls autoplay loop onplay="plotChartPoints()" >
                                         <source id="audioSource" src="" type="audio/wav">
-                                        </audio>                
-                                    </div>
+                                    </audio>  
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>         
-    
-                <div class="outer-wrap" id="maindiv">
-                    <div id="mapdiv">
-                        <div id="map"></div>
-                    </div>
+                    </div>     
+                </div>    
+            </div> 
+
+            <div class="slider"></div>
+
+            <div class="map-wrapper" id="maindiv">
+                <div id="mapdiv">
+                    <div id="map"></div>
                 </div>
-            </div>         
-        </div>
+            </div>
+
+        <!-- </div> -->
 
         <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
         <script src="/node_modules/leaflet-semicircle/Semicircle.js"></script>

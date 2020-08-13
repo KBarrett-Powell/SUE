@@ -1,192 +1,84 @@
 body {
-    font-family: "Georgia, serif";
+    font-family: "Open Sans";
     background-color: hsl(210, 100%, 15%);
 }
 
+/* ******* Overlay Styles ******* */
 .wrapper {
     display: flex;
+    height: 100vh;
     width: 100vw;
+    max-width: 100vw;
     align-items: stretch;
 }
 
-.outer-wrap {
+.sidebar {
+    float: left;
     height: 100vh;
-    width: 60vw;
-    max-width: 60vw;
-    margin-left: 40vw;
-    /* position: relative; */
+    width: 600px;
+    background-color: hsl(210, 100%, 15%);
+    color: hsl(210, 20%, 100%);
+    overflow: auto;
 }
 
-.outer-wrap div div#map {
+.slider {
+    float: left;
     height: 100vh;
-    width: 60vw;
-    max-width: 60vw;
-    margin-left: 40vw;
+    width: 10px;
+    margin-left: 600px;
+    cursor: ew-resize;
+    background-image: linear-gradient(to right, hsl(190, 70%, 20%), hsl(190, 70%, 25%), hsl(190, 70%, 20%));
 }
 
-/* ******* Overlay Styles ******* */
-#map {
-    z-index: 1;
+.map-wrapper {
+    position: relative;
+    margin-left: 610px;
+    height: 100vh;
+    overflow: auto;
 }
 
-#map, div.overlay-title, div.sidebar, div.overlay-skip {
+#map, div.sidebar {
     position: absolute;
     top: 0;
     bottom: 0; 
     right: 0;
-}
-
-#map, div.overlay-title, div.sidebar {    
     left: 0;
 }
 
-div.overlay-title, div.overlay-skip {
-    z-index: 2;
-    opacity: .9;
+#map {
+    width: 100%;
+    height: 100%;
 }
 
-div.overlay-title, div.overlay-skip {
-    background-color: white;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    height: 70px;
-    margin-top: 5px;
-    border-radius: 3px;
-}
-
-div.overlay-title {
-    width: 500px;
-    margin-left: 5px;
-    color: hsl(210, 90%, 30%);
-}
-
-.text-center {
+.title {
     max-height: 58px;
-    font-size: 2.5vw;
-}
-
-.sidebar {
-    width: 40vw;
-    /* margin-left: -500px; */
-    min-height: 100vh;
-    /* height: 670px;
-    margin-top: 80px; */
-    z-index: 1;
-    background-color: hsl(210, 100%, 15%);
-    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
-    color: hsl(210, 20%, 100%);
-    transition: width 1s;
-}
-
-.sidebar.hidden {
-    margin-left: -40vw;
-}
-
-div.hidden h3{
-    display: none;
-}
-
-div.overlay-skip {
-    float: right;
-    width: 100px;
-    margin-right: 10px;
+    font-size: 2.3vw;
     text-align: center;
 }
 
+.title b {
+    font-size: 2.6vw;
+    font-weight: normal;
+}
+
+.row { 
+    margin-right: 0px;
+}
+
 .nav-buttons {
-    width: 3.5vw;
-    max-width: 3.5vw;
-    margin-left: 1vw;
-    z-index: 3;
+    width: 12%;
+    max-width: 12%;
+    margin-left: 10px;
 }
 
-.information {
-    z-index: 3;
-}
-
-div.overlay-page-toggle {
-    width: 4vw;
-    /* margin-top: 5.95vw; */
+.sidebar-contents {
+    width: 86%;
 }
 /* ******* END Overlay Styles ******* */
 
-/* ******* Time Style Slider ******* */
-div.overlay-skip label {
-    color: hsl(210, 90%, 25%);
-}
-
-.switch {
-    margin-top: 5px;
-    position: relative;
-    display: inline-block;
-    width: 45px;
-    height: 28px;
-}
-  
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    -webkit-transition: .4s;
-    transition: .4s;
-}
-  
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 20px;
-    width: 20px;
-    left: 3px;
-    bottom: 4px;
-    background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
-}
-
-.slider.round {
-    border-radius: 34px;
-}
-  
-.slider.round:before {
-    border-radius: 50%;
-}
-  
-input:checked + .slider {
-    background-color: #2196F3;
-}
-  
-input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
-}
-  
-input:checked + .slider:before {
-    -webkit-transform: translateX(19px);
-    -ms-transform: translateX(19px);
-    transform: translateX(19px);
-}
-/* ******* END Time Style Slider ******* */
-
 /* ******* Full Page Editing ******* */
-.title {
-    padding-top: 10px;
-}
-
-.fa {
-    margin-top: 3px;
-}
-
-div.hidden {
-    width: 0%;
-    transition: width 1s;
+div.hidden h3{
+    display: none;
 }
 
 h3.hidden {
@@ -194,21 +86,36 @@ h3.hidden {
 }
 /* ******* END Full Page Editing ******* */
 
-/* ******* List Overlay ******* */
-.btn-sort {
-    background-color: hsl(210, 50%, 100%);
-    border-bottom: 1px;
-    border-radius: 16px;
-    text-align: left;
-    padding: 5px 10px;
+/* ******* Sidebar Sections ******* */
+div.hidden div.mapanalysis {
+    display: none;
+}
+/* ******* END Sidebar Sections ******* */
+
+/* ******* Toggle Button ******* */
+.toggle-btn {
+    z-index: 3;
 }
 
-.btn-sort i {
-    margin-left: 5px;
+.toggle-btn button {
+    background-color: hsl(210, 20%, 100%);
+    margin-top: 0px;
+    width: 75%;
 }
 
-.sortButton {
-    margin: 0px 5px 0px 0px;
+.toggle-btn button:hover {
+    background-color: hsl(210, 60%, 95%);
+}
+
+.toggle-btn button.active {
+    width: 100%;
+    border-radius: 0px;
+}
+
+.toggle-btn h4 {
+    color: hsl(210, 90%, 25%);
+    font-size: 20px;
+    margin-bottom: 0px;
 }
 
 .btn-list {
@@ -219,130 +126,42 @@ h3.hidden {
     text-align: left;
 }
 
-.badge {
-    background-color: hsl(210, 100%, 25%);
-    margin-top: 3px;
-}
-
-.smllist {
-    margin: 5px 5px 0px 5px;
-    border-radius: 3px;
-}
-
-div#eventlist, div#sensorlist {
-    background-color: hsl(210, 80%, 92%);
-    border-radius: 2px;
-}
-
-.listitems {
-    background-color: hsl(210, 100%, 94%);
-    width: 98%;
-    margin-left: 1%;
-    border-radius: 2px;
-}
-
-.listitem {
-    width: 98%;
-    margin-left: 1%;
-    padding: 5px;
-    font-size: 14px;
-    background-color: hsl(210, 80%, 80%);
-}
-
-.listitem button {
-    width: 100%;
-    background-color: hsl(210, 80%, 80%);
-    border: none;
-}
-
-button.list-group-item {
-    padding: 5px 13px;
-}
-
-.sml-btn {
-    margin-top: 1px;
-    width: 98%;
-    margin-left: 1%;
-    padding: 0px;
-    background-color: hsl(210, 90%, 85%);
-}
-
-.sml-btn button {
-    background-color: hsl(210, 80%, 85%);
-    padding: 5px 10px;
-    margin-top: 0px;
-    font-size: 15px;
-}
-
-div.hidden div.mapanalysis {
-    display: none;
-}
-/* ******* END List Overlay ******* */
-
-/* ******* Toggle Button ******* */
-.toggle-btn {
-    z-index: 3;
-}
-
-.toggle-btn button {
-    background-color: hsl(210, 20%, 100%);
-    margin-top: 0px;
-    width: 3vw;
-}
-
-.toggle-btn button:hover {
-    background-color: hsl(210, 60%, 95%);
-}
-
-.toggle-btn button.active {
-    width: 4vw;
-    border-radius: 0px;
-}
-
-.toggle-btn h4 {
-    color: hsl(210, 90%, 25%);
-    font-size: 1.5vw;
-    margin-bottom: 0px;
-}
-
 .page-btn {
     margin: 5px 0px;
     padding: 5px;
-    height: 12vh;
+    height: 90px;
 }
 
 .page-btn h4 {
     writing-mode: vertical-lr;
     text-orientation: sideways;
     transform: rotate(180deg);
-    margin: 4px 0px;
+    margin: 4px 6px;
 }
 /* ******* END Toggle Button ******* */
 
 /* ******* Details Left Overlay ******* */
 .main-title {
-    padding: 5px 0px 1vw 0px;
+    padding: 17px 0px;
     border-bottom-style: groove;
     border-color: hsl(210, 60%, 95%);
     color: hsl(210, 60%, 95%);
 }
 
 .overlay-page {
+    display: block;
     margin: 5px 0px 0px 0px;
-    width: 36vw;
     border-radius: 1px;
-    height: 87vh;
     background-color: hsl(210, 20%, 99%);
     overflow: hidden;
 }
 
 .overlay-page-toggle {
     margin: 5px 0px 0px 0px;
-    height: 87vh;
     overflow: hidden;
 }
 
-div.overlay-page.hidden { 
+.overlay-page.hidden { 
     display: none;
 }
 
@@ -664,7 +483,12 @@ audio#audioPlayer {
     .toggle-btn h4 {
        font-size: 18px;
     }
-    .text-center {
-       font-size: 34px;
+
+    .title {
+        font-size: 32px;
+    }
+
+    .title b {
+        font-size: 38px;
     }
 }

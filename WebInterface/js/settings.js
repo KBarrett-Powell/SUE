@@ -75,3 +75,23 @@ function togglePage(e) {
         showSUEPanel();
     }
 };
+
+const minOffset = 400;
+const maxOffset = 800;
+
+$('.slider').mousedown( function( ev, handler ) {
+  $(document).mousemove( function( ev, handler ) {
+    let offset = ev.pageX;
+    
+    offset = offset < minOffset ? minOffset : offset;
+    offset = offset > maxOffset ? maxOffset : offset;
+    
+    $('.sidebar').css('width', offset);
+    $('.slider').css('marginLeft', offset);
+    $('.map-wrapper').css('marginLeft', offset + 10);
+  });
+});
+
+$(document).mouseup( function(e) {
+  $(document).unbind('mousemove');
+});
