@@ -16,9 +16,15 @@ module.exports = {
 
         for ( let i in data.events ) {
             let event = data.events[i];
-            let datetime = new Date(event.properties.datetime);
+            let keys = Object.keys(event.properties);
 
-            data.events[i].properties.datetime = (functions.buildISOString(today, datetime));
+            for ( let j in keys ) {
+                let datetime = new Date(keys[j]);
+                let datestr = functions.buildISOString(today, datetime);
+                     
+                event.properties[datestr] = event.properties[keys[j]];
+                delete event.properties[keys[j]];
+            }
         }
 
         fs.writeFile( eventsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
@@ -43,18 +49,19 @@ module.exports = {
                 for ( let j in data.events ) {
         
                     let event  = data.events[j];
+                    let properties = await functions.compileProperties(event.properties, "event");
             
-                    if ( event.properties.eventID == req.eventID ) {
+                    if ( event.eventID == req.eventID ) {
                         found = true;
             
-                        if (event.properties.priority == 1) {
-                            critPriorityEvent.push(event);
-                        } else if (event.properties.priority == 2) {
-                            highPriorityEvent.push(event);
-                        } else if (event.properties.priority == 3) {
-                            medPriorityEvent.push(event);
+                        if (properties.priority == 1) {
+                            critPriorityEvent.push(data.events[i]);
+                        } else if (properties.priority == 2) {
+                            highPriorityEvent.push(data.events[i]);
+                        } else if (properties.priority == 3) {
+                            medPriorityEvent.push(data.events[i]);
                         } else {
-                            lowPriorityEvent.push(event);
+                            lowPriorityEvent.push(data.events[i]);
                         }
 
                         break;
@@ -64,15 +71,16 @@ module.exports = {
         } else {
             for ( let i in data.events ) {
                 let event = data.events[i];
+                let properties = await functions.compileProperties(event.properties, "event");
 
-                if (event.properties.priority == 1) {
-                    critPriorityEvent.push(event);
-                } else if (event.properties.priority == 2) {
-                    highPriorityEvent.push(event);
-                } else if (event.properties.priority == 3) {
-                    medPriorityEvent.push(event);
+                if (properties.priority == 1) {
+                    critPriorityEvent.push(data.events[i]);
+                } else if (properties.priority == 2) {
+                    highPriorityEvent.push(data.events[i]);
+                } else if (properties.priority == 3) {
+                    medPriorityEvent.push(data.events[i]);
                 } else {
-                    lowPriorityEvent.push(event);
+                    lowPriorityEvent.push(data.events[i]);
                 }
             }
         }
@@ -99,7 +107,7 @@ module.exports = {
 
         let sendDelete = [];
 
-        for (let req in request) {
+        for (let i in request) {
 
             let found = false;
             let invalid = false;
@@ -108,51 +116,60 @@ module.exports = {
 
             let newEvent = null;
 
-            let event = request[req];
+            let req = request[i];
         
-            for ( i in data.events ) {
-                let item  = data.events[i];
+            for ( let j in data.events ) {
+                let event  = data.events[j];
+                let properties = await functions.compileProperties(event.properties, "event");
 
-                maxId = item.properties.eventID;
+                maxId = event.eventID;
 
-                if (event.eventID != null) {
+                if (req.eventID != null) {
                     
-                    if ( item.properties.eventID == event.eventID ) {
+                    if ( event.eventID == req.eventID ) {
                         found = true;
+                        let newObject = {};
 
-                        if (event.coordinates != null) {
-                            data.events[i].geometry.coordinates = event.coordinates;
+                        if (req.coordinates != null && properties.coordinates != req.coordinates) {
+                            newObject.coordinates = req.coordinates;
                         }
-                        if (event.eventName != null) {
-                            data.events[i].properties.eventName = event.eventName;
+                        if (req.eventName != null && properties.eventName != req.eventName) {
+                            newObject.eventName = req.eventName;
                         }
-                        if (event.eventType != null) {
-                            data.events[i].properties.eventType = event.eventType;
+                        if (req.eventType != null && properties.eventType != req.eventType) {
+                            newObject.eventType = req.eventType;
                         }
-                        if (event.description != null) {
-                            data.events[i].properties.description = event.description;
+                        if (req.description != null && properties.description != req.description) {
+                            newObject.description = req.description;
                         }
-                        if (event.sensorID != null) {
-                            data.events[i].properties.sensorID = event.sensorID;
+                        if (req.sensorID != null && properties.sensorID != req.sensorID) {
+                            newObject.sensorID = req.sensorID;
                         }
-                        if (event.chartPoints != null) {
-                            data.events[i].properties.chartPoints = event.chartPoints;
+                        if (req.chartPoints != null && properties.chartPoints != req.chartPoints) {
+                            newObject.chartPoints = req.chartPoints;
                         }
-                        if (event.objDetVideo != null) {
-                            data.events[i].properties.objDetVideo = event.objDetVideo;
+                        if (req.objDetVideo != null && properties.objDetVideo != req.objDetVideo) {
+                            newObject.objDetVideo = req.objDetVideo;
                         }
-                        if (event.slctRevVideo != null) {
-                            data.events[i].properties.slctRevVideo = event.slctRevVideo;
+                        if (req.slctRevVideo != null && properties.slctRevVideo != req.slctRevVideo) {
+                            newObject.slctRevVideo = req.slctRevVideo;
                         }
-                        if (event.priority != null) {
-                            data.events[i].properties.priority = event.priority;
-                            sendDelete.push({"eventID": event.eventID});
+                        if (req.priority != null && properties.priority != req.priority) {
+                            newObject.priority = req.priority;
+                            sendDelete.push({"eventID": req.eventID});
                         }
-                        if (event.datetime != null) {
-                            data.events[i].properties.datetime = event.datetime;
+                        if (req.datetime != null && properties.datetime != req.datetime) {
+                            newObject.datetime = req.datetime;
                         }
 
-                        newEvent = data.events[i];
+                        if (Object.keys(newObject).length > 0) {
+                            let today = new Date();
+                            let datestr = functions.buildISOString(today, null);
+
+                            data.events[j].properties[datestr] = newObject;
+
+                            newEvent = data.events[j];
+                        }
 
                         break;
                     }
@@ -161,30 +178,27 @@ module.exports = {
         
             if (found == false) {
                 Id = (maxId + 1); 
-                if ( event.eventName == null ) { newEvent = buildNewObjectError(newEvent, "Event", "eventName"); invalid = true; }
-                if ( event.eventType == null ) { newEvent = buildNewObjectError(newEvent, "Event", "eventType"); invalid = true; }
-                if ( event.description == null ) { newEvent = buildNewObjectError(newEvent, "Event", "description"); invalid = true; }
-                if ( event.sensorID == null ) { newEvent = buildNewObjectError(newEvent, "Event", "sensorID"); invalid = true; }
-                if ( event.priority == null ) { newEvent = buildNewObjectError(newEvent, "Event", "priority"); invalid = true; }
+                if ( req.eventName == null ) { newEvent = buildNewObjectError(newEvent, "Event", "eventName"); invalid = true; }
+                if ( req.eventType == null ) { newEvent = buildNewObjectError(newEvent, "Event", "eventType"); invalid = true; }
+                if ( req.description == null ) { newEvent = buildNewObjectError(newEvent, "Event", "description"); invalid = true; }
+                if ( req.sensorID == null ) { newEvent = buildNewObjectError(newEvent, "Event", "sensorID"); invalid = true; }
+                if ( req.priority == null ) { newEvent = buildNewObjectError(newEvent, "Event", "priority"); invalid = true; }
 
                 if (!invalid) { 
                     newEvent = {
-                        "type": "Feature",
+                        "eventID": Id,
                         "properties": {
-                            "eventID": Id,
-                            "eventName": event.eventName,
-                            "eventType": event.eventType,
-                            "description": event.description,
-                            "sensorID": event.sensorID,
-                            "chartPoints": event.chartPoints,
-                            "objDetVideo": event.objDetVideo,
-                            "slctRevVideo": event.slctRevVideo,
-                            "priority": event.priority,
-                            "datetime": (event.datetime != null ? event.datetime : functions.buildISOString(new Date(), new Date()))
-                        },
-                        "geometry": {
-                            "type": "Point",
-                            "coordinates": event.coordinates
+                            [functions.buildISOString(new Date(), new Date())]: {
+                                "eventName": req.eventName,
+                                "eventType": req.eventType,
+                                "description": req.description,
+                                "sensorID": req.sensorID,
+                                "chartPoints": req.chartPoints,
+                                "objDetVideo": req.objDetVideo,
+                                "slctRevVideo": req.slctRevVideo,
+                                "priority": req.priority,
+                                "coordinates": req.coordinates
+                            }
                         }
                     }
                 }
@@ -243,14 +257,15 @@ module.exports = {
 
         if (listOfIDs.length > 0) {
             for ( let i in data.events ) {
-                let event = data.events[i].properties;
+                let event = data.events[i];
+                let properties = await functions.compileProperties(event.properties, "event");
 
                 if ( listOfIDs.indexOf(event.eventID) >= 0 ) {
-                    if (event.priority == 1) {
+                    if (properties.priority == 1) {
                         critPriorityEvent.push(data.events[i]);
-                    } else if (event.priority == 2) {
+                    } else if (properties.priority == 2) {
                         highPriorityEvent.push(data.events[i]);
-                    } else if (event.priority == 3) {
+                    } else if (properties.priority == 3) {
                         medPriorityEvent.push(data.events[i]);
                     } else {
                         lowPriorityEvent.push(data.events[i]);

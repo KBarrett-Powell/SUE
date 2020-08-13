@@ -56,17 +56,17 @@ module.exports = {
                         let properties = await functions.compileProperties(sensor.properties, "sensor");
             
                         if (properties.sensorType == "Camera") {
-                            sensorCamera.push(sensor);
+                            sensorCamera.push(data.sensors[i]);
                         } else if (properties.sensorType == "Microphone") {
-                            sensorMicrophone.push(sensor);
+                            sensorMicrophone.push(data.sensors[i]);
                         } else {
-                            sensorHuman.push(sensor);
+                            sensorHuman.push(data.sensors[i]);
                         } 
                         
                         if (properties.owner == "UK") {
-                            sensorUK.push(sensor);
+                            sensorUK.push(data.sensors[i]);
                         } else {
-                            sensorUS.push(sensor);
+                            sensorUS.push(data.sensors[i]);
                         }
 
                         break;
@@ -77,21 +77,20 @@ module.exports = {
         } else {
             for ( let i in data.sensors ) {
                 let sensor = data.sensors[i];
-
                 let properties = await functions.compileProperties(sensor.properties, "sensor");
 
                 if (properties.sensorType == "Camera") {
-                    sensorCamera.push(sensor);
+                    sensorCamera.push(data.sensors[i]);
                 } else if (properties.sensorType == "Microphone") {
-                    sensorMicrophone.push(sensor);
+                    sensorMicrophone.push(data.sensors[i]);
                 } else {
-                    sensorHuman.push(sensor);
+                    sensorHuman.push(data.sensors[i]);
                 } 
                 
                 if (properties.owner == "UK") {
-                    sensorUK.push(sensor);
+                    sensorUK.push(data.sensors[i]);
                 } else {
-                    sensorUS.push(sensor);
+                    sensorUS.push(data.sensors[i]);
                 }
             }
         }
@@ -105,6 +104,7 @@ module.exports = {
             "sensorUS": sensorUS
         }
 
+        console.log("jsonResp: " + JSON.stringify(jsonResp));
         return JSON.stringify(jsonResp);
     }, 
     postSensor: async function postSensor(request) {
@@ -166,7 +166,7 @@ module.exports = {
                             sendDelete.push({"sensorID": req.sensorID});
                         }
 
-                        if (Object.keys(newObject) > 0) {
+                        if (Object.keys(newObject).length > 0) {
                             let today = new Date();
                             let datestr = functions.buildISOString(today, null);
 

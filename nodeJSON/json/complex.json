@@ -6,22 +6,10 @@
                 "complexName": "Complex Event 1",
                 "events": [
                     2,
-                    3
-                ],
-                "datetime": "2020-03-04T16:10:35Z",
-                "skip": 5
-            }
-        },
-        {
-            "properties": {
-                "complexID": 2,
-                "complexName": "Complex Event 2",
-                "events": [
-                    2,
                     3,
                     4
                 ],
-                "datetime": "2020-03-04T16:10:55Z",
+                "datetime": "2020-08-13T17:23:35Z",
                 "skip": 5
             }
         }
