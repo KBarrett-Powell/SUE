@@ -2,6 +2,8 @@ const fs = require('fs');
 const fsp = require('fs').promises;
 const path = require('path');
 
+const functions = require('./functions.js');
+
 const sensorsJsonFile = path.join(__dirname, "../json/sensors.json");
 const originalSensorsJsonFile = path.join(__dirname, "../json/demo/sensors.json");
 
@@ -9,6 +11,23 @@ module.exports = {
     refreshSensors: async function refreshSensors() {
         let data = await fsp.readFile( originalSensorsJsonFile, {encoding: 'utf8'});
         data = JSON.parse( data );
+
+        const today = new Date();
+
+        for ( let i in data.sensors ) {
+            let sensor = data.sensors[i];
+            let keys = Object.keys(sensor.properties);
+
+            for ( let j in keys ) {
+                if ( keys[j] != "initial" ) {
+                    let datetime = new Date(keys[j]);
+                    let datestr = functions.buildISOString(today, datetime);
+                     
+                    sensor.properties[datestr] = sensor.properties[keys[j]];
+                    delete sensor.properties[keys[j]];
+                }
+            }
+        }
 
         fs.writeFile( sensorsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
             if (err) throw err;
@@ -27,25 +46,24 @@ module.exports = {
         if (request != null && request.length < data.sensors.length) {
             
             for ( let i in request ) {
-                let found = false;
                 let req = request[i];
     
                 for ( let j in data.sensors ) {
         
                     let sensor  = data.sensors[j];
             
-                    if ( sensor.properties.sensorID == req.sensorID ) {
-                        found = true;
+                    if ( sensor.sensorID == req.sensorID ) {
+                        let properties = await functions.compileProperties(sensor.properties, "sensor");
             
-                        if (sensor.properties.sensorType == "Camera") {
+                        if (properties.sensorType == "Camera") {
                             sensorCamera.push(sensor);
-                        } else if (sensor.properties.sensorType == "Microphone") {
+                        } else if (properties.sensorType == "Microphone") {
                             sensorMicrophone.push(sensor);
                         } else {
                             sensorHuman.push(sensor);
                         } 
                         
-                        if (sensor.properties.owner == "UK") {
+                        if (properties.owner == "UK") {
                             sensorUK.push(sensor);
                         } else {
                             sensorUS.push(sensor);
@@ -60,15 +78,17 @@ module.exports = {
             for ( let i in data.sensors ) {
                 let sensor = data.sensors[i];
 
-                if (sensor.properties.sensorType == "Camera") {
+                let properties = await functions.compileProperties(sensor.properties, "sensor");
+
+                if (properties.sensorType == "Camera") {
                     sensorCamera.push(sensor);
-                } else if (sensor.properties.sensorType == "Microphone") {
+                } else if (properties.sensorType == "Microphone") {
                     sensorMicrophone.push(sensor);
                 } else {
                     sensorHuman.push(sensor);
                 } 
                 
-                if (sensor.properties.owner == "UK") {
+                if (properties.owner == "UK") {
                     sensorUK.push(sensor);
                 } else {
                     sensorUS.push(sensor);
@@ -100,7 +120,7 @@ module.exports = {
 
         let sendDelete = [];
 
-        for (let req in request) {
+        for (let i in request) {
 
             let found = false;
             let maxId = 0;
@@ -108,43 +128,52 @@ module.exports = {
 
             let newSensor = null;
 
-            let sensor = request[req];
+            let req = request[i];
         
-            for ( i in data.sensors ) {
-                let item  = data.sensors[i];
+            for ( let j in data.sensors ) {
+                let sensor  = data.sensors[j];
+                let properties = await functions.compileProperties(sensor.properties, "sensor");
 
-                maxId = item.properties.sensorID;
+                maxId = sensor.sensorID;
 
-                if (sensor.sensorID != null) {
+                if (req.sensorID != null) {
                     
-                    if ( item.properties.sensorID == sensor.sensorID ) {
+                    if ( sensor.sensorID == req.sensorID ) {
                         found = true;
+                        let newObject = {};
 
-                        if (sensor.coordinates != null) {
-                            data.sensors[i].geometry.coordinates = sensor.coordinates;
+                        if (req.coordinates != null && properties.coordinates != req.coordinates) {
+                            newObject.coordinates = req.coordinates;
                         }
-                        if (sensor.sensorName != null) {
-                            data.sensors[i].properties.sensorName = sensor.sensorName;
+                        if (req.sensorName != null && properties.sensorName != req.sensorName) {
+                            newObject.sensorName = req.sensorName;
                         }
-                        if (sensor.sensorType != null) {
-                            data.sensors[i].properties.sensorType = sensor.sensorType;
-                            sendDelete.push({"sensorID": sensor.sensorID});
+                        if (req.sensorType != null && properties.sensorType != req.sensorType) {
+                            newObject.sensorType = req.sensorType;
+                            sendDelete.push({"sensorID": req.sensorID});
                         }
-                        if (sensor.video != null) {
-                            data.sensors[i].properties.video = sensor.video;
+                        if (req.video != null && properties.video != req.video) {
+                            newObject.video = req.video;
                         }
-                        if (sensor.audio != null) {
-                            data.sensors[i].properties.audio = sensor.audio;
+                        if (req.audio != null && properties.audio != req.audio) {
+                            newObject.audio = req.audio;
                         }
-                        if (sensor.rangeDirection != null) {
-                            data.sensors[i].properties.rangeDirection = sensor.rangeDirection;
+                        if (req.rangeDirection != null && properties.rangeDirection != req.rangeDirection) {
+                            newObject.rangeDirection = req.rangeDirection;
                         }
-                        if (sensor.owner != null) {
-                            data.sensors[i].properties.owner = sensor.owner;
-                            sendDelete.push({"sensorID": sensor.sensorID});
+                        if (req.owner != null && properties.owner != req.owner) {
+                            newObject.owner = req.owner;
+                            sendDelete.push({"sensorID": req.sensorID});
                         }
 
-                        newSensor = data.sensors[i];
+                        if (Object.keys(newObject) > 0) {
+                            let today = new Date();
+                            let datestr = functions.buildISOString(today, null);
+
+                            data.sensors[j].properties[datestr] = newObject;
+
+                            newSensor = data.sensors[j];
+                        }
 
                         break;
                     }
@@ -155,34 +184,32 @@ module.exports = {
                 Id = maxId + 1; 
 
                 newSensor = {
-                    "type": "Feature",
+                    "sensorID": Id,
                     "properties": {
-                        "sensorID": Id,
-                        "sensorName": sensor.sensorName,
-                        "sensorType": sensor.sensorType,
-                        "video": sensor.video,
-                        "audio": sensor.audio,
-                        "rangeDirection": sensor.rangeDirection,
-                        "owner": sensor.owner
-                    },
-                    "geometry": {
-                        "type": "Point",
-                        "coordinates": sensor.coordinates
+                        "initial": {
+                            "sensorName": req.sensorName,
+                            "sensorType": req.sensorType,
+                            "video": req.video,
+                            "audio": req.audio,
+                            "rangeDirection": req.rangeDirection,
+                            "owner": req.owner,
+                            "coordinates": req.coordinates
+                        }
                     }
                 }
 
                 data.sensors.push(newSensor);
             }
 
-            if (newSensor.properties.sensorType == "Camera") {
+            if (newSensor.properties.initial.sensorType == "Camera") {
                 sensorCamera.push(newSensor);
-            } else if (newSensor.properties.sensorType == "Microphone") {
+            } else if (newSensor.properties.initial.sensorType == "Microphone") {
                 sensorMicrophone.push(newSensor);
             } else {
                 sensorHuman.push(newSensor);
             } 
             
-            if (newSensor.properties.owner == "UK") {
+            if (newSensor.properties.initial.owner == "UK") {
                 sensorUK.push(newSensor);
             } else {
                 sensorUS.push(newSensor);
@@ -230,19 +257,20 @@ module.exports = {
 
         if (listOfIDs.length > 0) {
             for ( let i in data.sensors ) {
-                let sensor = data.sensors[i].properties;
+                let sensor = data.sensors[i];
+                let properties = await functions.compileProperties(sensor.properties, "sensor");
 
                 if ( listOfIDs.indexOf(sensor.sensorID) >= 0 ) {
 
-                    if (sensor.sensorType == "Camera") {
+                    if (properties.sensorType == "Camera") {
                         sensorCamera.push(data.sensors[i]);
-                    } else if (sensor.sensorType == "Microphone") {
+                    } else if (properties.sensorType == "Microphone") {
                         sensorMicrophone.push(data.sensors[i]);
                     } else {
                         sensorHuman.push(data.sensors[i]);
                     } 
                     
-                    if (sensor.owner == "UK") {
+                    if (properties.owner == "UK") {
                         sensorUK.push(data.sensors[i]);
                     } else {
                         sensorUS.push(data.sensors[i]);

@@ -1,146 +1,139 @@
 {
     "sensors" : [
         {
-            "type": "Feature",
+            "sensorID": 1,
             "properties": {
-                "sensorID": 1,
-                "sensorName": "Microphone On Kristian IVs Gate",
-                "sensorType": "Microphone",
-                "audio": "Shooting.wav",
-                "owner": "US"
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [58.1483891, 7.9921463]
+                "initial": {
+                    "sensorName": "Microphone On Kristian IVs Gate",
+                    "sensorType": "Microphone",
+                    "audio": "Shooting.wav",
+                    "owner": "US",
+                    "coordinates": [58.1483891, 7.9921463]
+                }
             }
         },
 
         {
-            "type": "Feature",
+            "sensorID": 2,
             "properties": {
-                "sensorID": 2,
-                "sensorName": "CCTV In Kristiansand Cathedral",
-                "sensorType": "Camera",
-                "video": "Abuse.mp4",
-                "rangeDirection": 225,
-                "owner": "UK"
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [58.1462350, 7.9948500]
+                "initial": {
+                    "sensorName": "CCTV In Kristiansand Cathedral",
+                    "sensorType": "Camera",
+                    "video": "Abuse.mp4",
+                    "rangeDirection": 225,
+                    "owner": "UK",
+                    "coordinates": [58.1462350, 7.9948500]
+                }
             }
         },
 
         {
-            "type": "Feature",
+            "sensorID": 3,
             "properties": {
-                "sensorID": 3,
-                "sensorName": "CCTV In NAV Kristiansand",
-                "sensorType": "Camera",
-                "video": "Fighting.mp4",
-                "rangeDirection": 40,
-                "owner": "UK"
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [58.1473814, 7.9950737]
+                "initial": {
+                    "sensorName": "CCTV In NAV Kristiansand",
+                    "sensorType": "Camera",
+                    "video": "Fighting.mp4",
+                    "rangeDirection": 40,
+                    "owner": "UK",
+                    "coordinates": [58.1473814, 7.9950737]
+                }
             }
         },
 
         {
-            "type": "Feature",
+            "sensorID": 4,
             "properties": {
-                "sensorID": 4,
-                "sensorName": "CCTV On Holbergs Gate",
-                "sensorType": "Camera",
-                "video": "RoadAccidents.mp4",
-                "rangeDirection": 270,
-                "owner": "US"
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [58.1484550, 7.99798]
+                "initial": {
+                    "sensorName": "CCTV On Holbergs Gate",
+                    "sensorType": "Camera",
+                    "video": "RoadAccidents.mp4",
+                    "rangeDirection": 270,
+                    "owner": "US",
+                    "coordinates": [58.1484550, 7.99798]
+                }
             }
         },
 
         {
-            "type": "Feature",
+            "sensorID": 5,
             "properties": {
-                "sensorID": 5,
-                "sensorName": "CCTV On Vestre Strandgate",
-                "sensorType": "Camera",
-                "video": "MilitaryParade.mp4",
-                "rangeDirection": 220,
-                "owner": "US"
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [58.1461430, 7.9888040]
+                "initial": {
+                    "sensorName": "CCTV On Vestre Strandgate",
+                    "sensorType": "Camera",
+                    "video": "MilitaryParade.mp4",
+                    "rangeDirection": 220,
+                    "owner": "US",
+                    "coordinates": [58.1461430, 7.9888040]
+                }
             }
         },
 
         {
-            "type": "Feature",
+            "sensorID": 6,
             "properties": {
-                "sensorID": 6,
-                "sensorName": "CCTV On Fjellgata",
-                "sensorType": "Camera",
-                "video": "MilitaryParade.mp4",
-                "rangeDirection": 180,
-                "owner": "US"
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [58.1483010, 7.9892622]
-            }
-        },
-
-
-        {
-            "type": "Feature",
-            "properties": {
-                "sensorID": 7,
-                "sensorName": "CCTV On Tordenskjolds Gate",
-                "sensorType": "Camera",
-                "video": "MilitaryParade.mp4",
-                "rangeDirection": 20,
-                "owner": "US"
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [58.1469808, 7.9879347]
+                "initial": {
+                    "sensorName": "CCTV On Fjellgata",
+                    "sensorType": "Camera",
+                    "video": "MilitaryParade.mp4",
+                    "rangeDirection": 180,
+                    "owner": "US",
+                    "coordinates": [58.1483010, 7.9892622]
+                }
             }
         },
 
         {
-            "type": "Feature",
+            "sensorID": 7,
             "properties": {
-                "sensorID": 8,
-                "sensorName": "CCTV On Festningsgata",
-                "sensorType": "Camera",
-                "video": "MilitaryParade.mp4",
-                "rangeDirection": 90,
-                "owner": "UK"
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [58.1483275, 7.9944433]
+                "initial": {
+                    "sensorName": "CCTV On Tordenskjolds Gate",
+                    "sensorType": "Camera",
+                    "video": "MilitaryParade.mp4",
+                    "rangeDirection": 20,
+                    "owner": "US",
+                    "coordinates": [58.1469808, 7.9879347]
+                },
+                "2020-03-04T16:09:40Z": {
+                    "rangeDirection": 30,
+                    "coordinates": [58.1473609, 7.9884335]
+                },
+                "2020-03-04T16:10:10Z": {
+                    "rangeDirection": 40,
+                    "coordinates": [58.1477409, 7.9889324]
+                },
+                "2020-03-04T16:10:40Z": {
+                    "rangeDirection": 50,
+                    "coordinates": [58.148121, 7.9894312]
+                }
             }
         },
 
         {
-            "type": "Feature",
+            "sensorID": 8,
             "properties": {
-                "sensorID": 9,
-                "sensorName": "CCTV On Vestre Strandgate",
-                "sensorType": "Camera",
-                "video": "MilitaryParade.mp4",
-                "rangeDirection": 220,
-                "owner": "UK"
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [58.1459030, 7.9892440]
+                "initial": {
+                    "sensorName": "CCTV On Festningsgata",
+                    "sensorType": "Camera",
+                    "video": "MilitaryParade.mp4",
+                    "rangeDirection": 90,
+                    "owner": "UK",
+                    "coordinates": [58.1483275, 7.9944433]
+                }
+            }
+        },
+
+        {
+            "sensorID": 9,
+            "properties": {
+                "initial": {
+                    "sensorName": "CCTV On Vestre Strandgate",
+                    "sensorType": "Camera",
+                    "video": "MilitaryParade.mp4",
+                    "rangeDirection": 220,
+                    "owner": "UK",
+                    "coordinates": [58.1459030, 7.9892440]
+                }
             }
         }
     ]
