@@ -196,26 +196,28 @@ wsServer.on('connection', function (wsClient) {
 function getUpdatedID(response) {
   let ids = [];
 
-  for ( let i in response.sensorUK ) {
-    ids.push(response.sensorUK[i].properties.sensorID);
-  }
-  for ( let i in response.sensorUS ) {
-    ids.push(response.sensorUS[i].properties.sensorID);
-  }
-  for ( let i in response.critPriorityEvent ) {
-    ids.push(response.critPriorityEvent[i].properties.eventID);
-  }
-  for ( let i in response.highPriorityEvent ) {
-    ids.push(response.highPriorityEvent[i].properties.eventID);
-  }
-  for ( let i in response.medPriorityEvent ) {
-    ids.push(response.medPriorityEvent[i].properties.eventID);
-  }
-  for ( let i in response.lowPriorityEvent ) {
-    ids.push(response.lowPriorityEvent[i].properties.eventID);
-  }
-  for ( let i in response.complexEvent ) {
-    ids.push(response.complexEvent[i].properties.complexID);
+  for ( let j in response ) {
+    for ( let i in response[j].sensorUK ) {
+      ids.push(response[j].sensorUK[i].properties.sensorID);
+    }
+    for ( let i in response[j].sensorUS ) {
+      ids.push(response[j].sensorUS[i].properties.sensorID);
+    }
+    for ( let i in response[j].critPriorityEvent ) {
+      ids.push(response[j].critPriorityEvent[i].properties.eventID);
+    }
+    for ( let i in response[j].highPriorityEvent ) {
+      ids.push(response[j].highPriorityEvent[i].properties.eventID);
+    }
+    for ( let i in response[j].medPriorityEvent ) {
+      ids.push(response[j].medPriorityEvent[i].properties.eventID);
+    }
+    for ( let i in response[j].lowPriorityEvent ) {
+      ids.push(response[j].lowPriorityEvent[i].properties.eventID);
+    }
+    for ( let i in response[j].complexEvent ) {
+      ids.push(response[j].complexEvent[i].properties.complexID);
+    }
   }
 
   return ids;
