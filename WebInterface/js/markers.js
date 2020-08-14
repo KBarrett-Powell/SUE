@@ -219,7 +219,10 @@ async function getProperties(layer, graph) {
         let allProperties = (JSON.parse(layer.options.properties));
         let keys = Object.keys(allProperties);
         if (graph) { properties = keys[0]; }
-        else { properties = await compileProperties(allProperties, keys, true); }
+        else {
+          allProperties.id = layer.options.id;
+          properties = await compileProperties(allProperties, keys, true);
+        }
 
     } catch {
         console.log("No properties found on layer");
@@ -279,6 +282,7 @@ function compileProperties(properties, keys, time) {
                 if (item.datetime != null) {
                     fullProperties.datetime = item.datetime;
                 }
+                fullProperties.eventID = properties.id
         
             } else if (type.toLowerCase() == "sensor") {
                 if (item.sensorName != null) {
@@ -299,6 +303,7 @@ function compileProperties(properties, keys, time) {
                 if (item.rangeDirection != null) {
                     fullProperties.rangeDirection = item.rangeDirection;
                 }
+                fullProperties.sensorID = properties.id
             
             } else {
                 if (item.complexName != null) {
@@ -310,6 +315,7 @@ function compileProperties(properties, keys, time) {
                 if (item.datetime != null) {
                     fullProperties.datetime = item.datetime;
                 }
+                fullProperties.complexID = properties.id
             }
 
             if ( type.toLowerCase() != "complex" && item.coordinates != null ) {
