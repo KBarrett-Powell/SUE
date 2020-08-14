@@ -285,9 +285,7 @@ function compileProperties(properties, keys, time) {
                 if (item.priority != null) {
                     fullProperties.priority = item.priority;
                 }
-                if (item.datetime != null) {
-                    fullProperties.datetime = item.datetime;
-                }
+                fullProperties.datetime = keys[i];
                 fullProperties.eventID = properties.id
         
             } else if (type.toLowerCase() == "sensor") {
@@ -318,9 +316,7 @@ function compileProperties(properties, keys, time) {
                 if (item.events != null) {
                     fullProperties.events = item.events;
                 }
-                if (item.datetime != null) {
-                    fullProperties.datetime = item.datetime;
-                }
+                fullProperties.datetime = keys[i];
                 fullProperties.complexID = properties.id
             }
 
