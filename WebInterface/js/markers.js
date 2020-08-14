@@ -276,6 +276,12 @@ function compileProperties(properties, keys, time) {
                 if (item.slctRevVideo != null) {
                     fullProperties.slctRevVideo = item.slctRevVideo;
                 }
+                if (item.detAudio != null) {
+                    fullProperties.detAudio = item.detAudio;
+                }
+                if (item.detImage != null) {
+                    fullProperties.detImage = item.detImage;
+                }
                 if (item.priority != null) {
                     fullProperties.priority = item.priority;
                 }
