@@ -110,7 +110,7 @@ function toggleLayer(layer) {
 
 function clearMap() {
 
-    const details = document.getElementById("detailspanel");
+    const details = document.getElementById("markerPanel");
 
     if (details.classList.contains('hidden') === false) {
 

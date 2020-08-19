@@ -38,20 +38,22 @@
             <div class="sidebar" id="detailsdiv">
 
                 <div class="main-title">
-                    <h1 class="title"><b>S</b>ituational <b>U</b>nderstanding <b>E</b>xplorer</h1>
+                    <h1 class="title">
+                        <b>S</b>ituational <b>U</b>nderstanding <b>E</b>xplorer
+                    </h1>
                 </div>
 
                 <div class="row">
                     <div class="nav-buttons">
                         <div class="overlay-page-toggle" id="togglePages">
                             <div class="toggle-btn">
-                                <button class="btn btn-block btn-list page-btn active" id="toggleSearch" onclick="togglePage(this)">
+                                <button class="btn btn-block btn-list page-btn active" id="chatToggle" onclick="togglePage(this)">
                                     <h4>SUE</h4>
                                 </button>
-                                <button class="btn btn-block btn-list page-btn" id="toggleAnalysis" onclick="togglePage(this)">
+                                <button class="btn btn-block btn-list page-btn" id="analysisToggle" onclick="togglePage(this)">
                                     <h4>Analysis</h4>
                                 </button>
-                                <button class="btn btn-block btn-list page-btn" id="toggleMarker" onclick="togglePage(this)">
+                                <button class="btn btn-block btn-list page-btn" id="markerToggle" onclick="togglePage(this)">
                                     <h4>Marker</h4>
                                 </button>
                             </div>
@@ -60,9 +62,9 @@
 
                     <div class="sidebar-contents">
                             
-                        <div class="overlay-page" id="searchpanel" >
+                        <div class="overlay-page" id="chatPanel" >
                             <div class="sidebar-header">
-                                <span><h3>Chat With SUE</h3></span>
+                                <h3>Chat With SUE</h3>
                             </div>
             
                             <div class="sidebar-main">
@@ -70,9 +72,9 @@
                             </div>
                         </div>
 
-                        <div class="overlay-page hidden" id="analysispanel">
+                        <div class="overlay-page hidden" id="analysisPanel">
                             <div class="sidebar-header">
-                                <span><h3>Data Analysis</h3></span>
+                                <h3>Data Analysis</h3>
                             </div>
             
                             <div class="sidebar-main mapanalysis">
@@ -85,84 +87,84 @@
                             </div>
                         </div>
 
-                        <div class="overlay-page hidden" id="detailspanel" >
+                        <div class="overlay-page hidden" id="markerPanel" >
                             <div class="sidebar-header">
                                 <h3 id="detailsID" class="hidden"></h3>
-                                <span><h3 id="detailsName"></h3></span>
+                                <h3 id="detailsName"></h3>
                             </div>
             
-                            <div class="sidebar-main" id="side-main">
-                                <span id="detailsText" style="white-space: pre-line"></span>
+                            <div class="sidebar-main" id="markerDetails">
+                                <h4><span id="detailsText" style="white-space: pre-line"></span></h4>
 
                                 <div class="timeline" id="eventTimeline" style="display: none"></div>
 
-                                <div class="row">
-                                    <div class="col">
+                                <div class="row carouselRow">
+                                    <div class="col carouselCol">
                                         <div id="analysisCarousel" class="carousel slide" data-interval="false" style="display:none;">
                                             <div class="carousel-inner">
 
-                                                <div class="carousel-item  active">
-                                                    <div id="caroChart" class="chart-container">
-                                                        <h4>Footage Analysis Chart:</h4>
-                                                        <canvas id="carochart"></canvas>
+                                                <div id="analysisChartDiv" class="carousel-item">
+                                                    <h4>Analysis Chart:</h4>
+                                                    <div id="analysisChartContainer" class="chart-container">
+                                                        <canvas id="analysisChart"></canvas>
+                                                    </div>
+                                                </div>
+
+                                                <div id="analysisImageDiv" class="carousel-item">
+                                                    <h4>Image Analysis:</h4>
+                                                    <div class="chart-container">
+                                                        <img id="analysisImage" src="" />
                                                     </div>
                                                 </div>
                                                 
-                                                <div class="carousel-item ">
-                                                    <div id="objDetVideo" class="chart-container">
-                                                        <h4>Object Detection Video:</h4>
-                                                        <video id="objDetPlayer" controls autoplay loop>
-                                                            <source id="objDetSource" src="" type="video/mp4">
+                                                <div id="objDetVideoDiv" class="carousel-item">
+                                                    <h4>Object Detection Video:</h4>
+                                                    <div class="chart-container">
+                                                        <video id="objDetVideo" controls autoplay loop>
+                                                            <source id="objDetVideoSrc" src="" type="video/mp4">
                                                         </video>
                                                     </div>
                                                 </div>
-            
+
+                                                <div id="analysisVideoDiv" class="carousel-item">
+                                                    <h4>Video Analysis:</h4>
+                                                    <div class="chart-container">
+                                                        <video id="analysisVideo" controls autoplay loop>
+                                                            <source id="analysisVideoSrc" src="" type="video/mp4">
+                                                        </video>
+                                                    </div>
+                                                </div>
+
+                                                <div id="analysisAudioDiv" class="carousel-item">
+                                                    <h4>Audio Analysis:</h4>
+                                                    <div class="chart-container">
+                                                        <audio id="analysisAudio" controls autoplay loop >
+                                                            <source id="analysisAudioSrc" src="" type="audio/wav">
+                                                        </audio>
+                                                    </div>
+                                                </div>
                                             </div>
                                             
-                                            <a class="carousel-control-prev" href="#analysisCarousel" role="button" data-slide="prev">
+                                            <a id="carouselPrev" class="carousel-control-prev" href="#analysisCarousel" role="button" data-slide="prev">
                                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                                 <span class="sr-only">Previous</span>
                                             </a>
-                                            <a class="carousel-control-next" href="#analysisCarousel" role="button" data-slide="next">
+                                            <a id="carouselNext" class="carousel-control-next" href="#analysisCarousel" role="button" data-slide="next">
                                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                                 <span class="sr-only">Next</span>
                                             </a>
                                         </div>
                                     </div>
                                 </div>
-
-                                <div id="analysisChart" class="chart-container" style="display:none;">
-                                    <h4 id="chartTitle">Footage Analysis:</h4>
-                                    <canvas id="analysischart"></canvas>
-                                </div>
-                                
-                                <div id="analysisAudio" style="display:none;">
-                                    <h4 id="audioDetect">Detected Audio:</h4>
-                                    <audio id="audioPlayerDet" controls autoplay loop onplay="plotChartPoints()" >
-                                        <source id="detAudioSource" src="" type="audio/wav">
-                                        </audio>
-                                </div>
-                    
-                                <div id="analysisVideo" class="chart-container" style="display:none;">
-                                    <h4>Footage Analysis:</h4>
-                                    <video id="videoAPlayer" controls autoplay loop>
-                                        <source id="videoASource" src="" type="video/mp4">
-                                    </video>
-                                </div>
-                                
-                                <div id="analysisImage" style="display:none;">
-                                    <h4>Footage Analysis:</h4>
-                                    <img id="detImageSource" src="" />
-                                </div>
                                     
-                                <div id="mainVideo" style="display:none;">
+                                <div id="sensorVideo" class="sensorFootage" style="display:none;">
                                     <h4 id="videoDesc">Captured Footage:</h4>
                                     <video id="videoPlayer" controls autoplay loop onplay="plotChartPoints()">
                                         <source id="videoSource" src="" type="video/mp4">
                                     </video>                
                                 </div>
 
-                                <div id="mainAudio" style="display:none;">
+                                <div id="sensorAudio" class="sensorFootage" style="display:none;">
                                     <h4 id="audioDesc">Captured Audio:</h4>
                                     <audio id="audioPlayer" controls autoplay loop onplay="plotChartPoints()" >
                                         <source id="audioSource" src="" type="audio/wav">

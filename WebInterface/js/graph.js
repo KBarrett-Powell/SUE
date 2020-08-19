@@ -2,16 +2,17 @@ window.barIndex = null
 window.timePoint = null;
 
 function plotChartPoints(){
-    if (analysisCarousel.style.display != "none" || analysisChart.style.display != "none") {
-        let duration = (mainAudio.style.display === "none" ? videoPlayer.duration : audioPlayer.duration);
-        let interval = (mainAudio.style.display === "none" ? 270 : 1000);
-        let chartChoice = (analysisCarousel.style.display === "none" ? false : true);
+    if (analysisCarousel.style.display != "none") {
+        let duration = (sensorVideo.style.display != "none" ? videoPlayer.duration : audioPlayer.duration);
+        let interval = (sensorAudio.style.display === "none" ? 270 : 1000);
+
+        let id = document.getElementById("detailsID").textContent;
 
         let refreshInterval = setInterval( function() { 
 
-            refreshChart(chartChoice);
+            refreshChart();
 
-            if ((chartChoice && analysisCarousel.style.display === "none") || (!chartChoice && analysisChart.style.display === "none")) {
+            if (document.getElementById("detailsID").textContent != id) {
                 clearInterval(refreshInterval);
                 clearTimeout(refreshTimeout);
             }
@@ -24,133 +25,72 @@ function plotChartPoints(){
     }
 };
 
-function refreshChart(isCarousel) {
-    if (isCarousel === true) {
-        window.caroGraph.config.data.datasets.forEach(function(dataset) {
-            if (dataset.label === "videoOnly" && window.videoOnly.length > 0) {
-                dataset.data.push({
-                    x: window.videoOnly[0].x,
-                    y: window.videoOnly[0].y
-                });
-                if (window.videoOnly[0].y > 0.0) {
-                    dataset.data[dataset.data.length - 1].fill =  true;
-                    dataset.data[dataset.data.length - 1].backgroundColor =  "blue";
-                }
-                
-                window.videoOnly.shift();
-
-            } else if (dataset.label === "videoAndObjDet" && window.videoAndObjDet.length > 0) {
-                dataset.data.push({
-                    x: window.videoAndObjDet[0].x,
-                    y: window.videoAndObjDet[0].y
-                });
-                
-                window.videoAndObjDet.shift();
-
-            } else if (dataset.label === "audioOnly" && window.audioOnly.length > 0) {
-                dataset.data.push({
-                    x: window.audioOnly[0].x,
-                    y: window.audioOnly[0].y
-                });
-                
-                window.audioOnly.shift();
+function refreshChart() {
+    window.analysisChart.config.data.datasets.forEach(function(dataset) {
+        if (dataset.label === "videoOnly" && window.videoOnly.length > 0) {
+            dataset.data.push({
+                x: window.videoOnly[0].x,
+                y: window.videoOnly[0].y
+            });
+            if (window.videoOnly[0].y > 0.0) {
+                dataset.data[dataset.data.length - 1].fill =  true;
+                dataset.data[dataset.data.length - 1].backgroundColor =  "blue";
             }
-        });
-
-        window.caroGraph.update();
-
-    } else {
-        window.lineGraph.config.data.datasets.forEach(function(dataset) {
-            if (dataset.label === "videoOnly" && window.videoOnly.length > 0) {
-                dataset.data.push({
-                    x: window.videoOnly[0].x,
-                    y: window.videoOnly[0].y
-                });
-                if (window.videoOnly[0].y > 0.0) {
-                    dataset.data[dataset.data.length - 1].fill =  true;
-                    dataset.data[dataset.data.length - 1].backgroundColor =  "blue";
-                }
                 
-                window.videoOnly.shift();
+            window.videoOnly.shift();
 
-            } else if (dataset.label === "videoAndObjDet" && window.videoAndObjDet.length > 0) {
-                dataset.data.push({
-                    x: window.videoAndObjDet[0].x,
-                    y: window.videoAndObjDet[0].y
-                });
+        } else if (dataset.label === "videoAndObjDet" && window.videoAndObjDet.length > 0) {
+            dataset.data.push({
+                x: window.videoAndObjDet[0].x,
+                y: window.videoAndObjDet[0].y
+            });
                 
-                window.videoAndObjDet.shift();
+            window.videoAndObjDet.shift();
 
-            } else if (dataset.label === "audioOnly" && window.audioOnly.length > 0) {
-                dataset.data.push({
-                    x: window.audioOnly[0].x,
-                    y: window.audioOnly[0].y
-                });
+        } else if (dataset.label === "audioOnly" && window.audioOnly.length > 0) {
+            dataset.data.push({
+                x: window.audioOnly[0].x,
+                y: window.audioOnly[0].y
+            });
                 
-                window.audioOnly.shift();
-            }
-        });
+            window.audioOnly.shift();
+        }
+    });
 
-        window.lineGraph.update();
-    }
-}
+    window.analysisChart.update();
+};
 
-function clearChart(isCarousel) {
-    if (isCarousel === true) {
-        window.caroGraph.config.data.datasets.forEach(function(dataset) {
-            if (dataset.label == "videoOnly") {
-                window.videoOnly.unshift(dataset.data);
-                window.videoOnly = [];
-                dataset.data = [];
+function clearChart() {
+    window.analysisChart.config.data.datasets.forEach(function(dataset) {
+        if (dataset.label == "videoOnly") {
+            window.videoOnly.unshift(dataset.data);
+            window.videoOnly = [];
+            dataset.data = [];
 
-            } else if (dataset.label == "videoAndObjDet") {
-                window.videoAndObjDet.unshift(dataset.data);
-                window.videoAndObjDet = [];
-                dataset.data = [];
+        } else if (dataset.label == "videoAndObjDet") {
+            window.videoAndObjDet.unshift(dataset.data);
+            window.videoAndObjDet = [];
+            dataset.data = [];
 
-            } else {
-                window.audioOnly.unshift(dataset.data);
-                window.audioOnly = [];
-                dataset.data = [];
-            }
-        });
+        } else {
+            window.audioOnly.unshift(dataset.data);
+            window.audioOnly = [];
+            dataset.data = [];
+        }
+    });
 
-        window.caroGraph.update();
-    } else {
-        window.lineGraph.config.data.datasets.forEach(function(dataset) {
-            if (dataset.label == "videoOnly") {
-                window.videoOnly.unshift(dataset.data);
-                window.videoOnly = [];
-                dataset.data = [];
+    window.analysisChart.update();
+};
 
-            } else if (dataset.label == "videoAndObjDet") {
-                window.videoAndObjDet.unshift(dataset.data);
-                window.videoAndObjDet = [];
-                dataset.data = [];
-
-            } else {
-                window.audioOnly.unshift(dataset.data);
-                window.audioOnly = [];
-                dataset.data = [];
-            }
-        });
-
-        window.lineGraph.update();
-    }
-}
-
-function createChart(chartData, isCarousel) {
+async function createChart(chartData) {
     // operations on data
     // ' to "
     // {([0-9]+): ([0-9]+).([0-9]+e*-*[0-9]*)} to  [\1,\2.\3]
     // "videoAndObjDet": {"\(\)": \[([0-9]+),([0-9]+).([0-9]+e*-*[0-9]*)\]}  to x: \1, y: \2.\3 
 
-    let chart = null;
+    await resetCanvas("analysisChart");
 
-    if (isCarousel === true) {chart = document.getElementById("carochart");}
-    else {chart = document.getElementById("analysischart");}
-    
-    const ctx = chart.getContext('2d');
+    const ctx = document.getElementById("analysisChart").getContext('2d');
 
     let mydatasets = [];
     let max = 800;
@@ -230,9 +170,8 @@ function createChart(chartData, isCarousel) {
         }
     };
 
-    if (isCarousel === true) { window.caroGraph = new Chart(ctx, config); }
-    else { window.lineGraph = new Chart(ctx, config); }
-}
+    window.analysisChart = new Chart(ctx, config);
+};
 
 async function buildPriorityChart() {
     await resetCanvas("priorityChart");
@@ -250,10 +189,11 @@ async function buildPriorityChart() {
     priorityData[2] = highPriority.length;
     priorityData[3] = critPriority.length;
 
-    let backgroundColours = (window.accessibility == false ? ['rgba(118, 202, 236, 0.5)', 'rgba(254, 221, 128, 0.5)', 'rgba(254, 160, 128, 0.5)', 'rgba(254, 127, 127, 0.5)'] 
-    : ['rgba(108, 165, 214, 0.5)', 'rgba(112, 212, 229, 0.5)', 'rgba(254, 157, 133, 0.5)', 'rgba(236, 108, 113, 0.5)']);
+    let backgroundColours = getBarBackgroundColours();
 
     let borderColours = getBarBorderColours();
+
+    let hoverColours = getHoverBackgroundColours();
 
     window.priorityChart = new Chart(pctx, {
         type: 'bar',
@@ -264,6 +204,7 @@ async function buildPriorityChart() {
                 data: priorityData,
                 backgroundColor: backgroundColours,
                 borderColor: borderColours,
+                hoverBackgroundColor: hoverColours,
                 borderWidth: [
                     1,
                     1,
@@ -470,9 +411,9 @@ function resetCanvas(canvasName) {
     let newCanvas = document.createElement('canvas');     
     newCanvas.setAttribute('id', canvasName); 
     if ( canvasName == "priorityChart" ) { newCanvas.addEventListener('click', handleBarClick, false); }
-    else { newCanvas.addEventListener('click', handleTimeClick, false); }
+    else if ( canvasName == "timeChart" ) { newCanvas.addEventListener('click', handleTimeClick, false); }
 
-    document.getElementById(containerName).appendChild(newCanvas);
+    container.appendChild(newCanvas);
 };
 
 function handleBarClick(evt) {
@@ -494,6 +435,24 @@ function handleBarClick(evt) {
     }
 };
 
+function getBarBackgroundColours() {
+    let colours = [];
+    let darkerColours = [];
+    if ( window.accessibility == false ) {
+        colours = ['rgba(118, 202, 236, 0.5)', 'rgba(254, 221, 128, 0.5)', 'rgba(254, 160, 128, 0.5)', 'rgba(254, 127, 127, 0.5)'];
+        darkerColours = ['rgba(118, 202, 236, 0.85)', 'rgba(254, 221, 128, 0.85)', 'rgba(254, 160, 128, 0.85)', 'rgba(254, 127, 127, 0.85)']; 
+    } else {
+        colours = ['rgba(108, 165, 214, 0.5)', 'rgba(112, 212, 229, 0.5)', 'rgba(254, 157, 133, 0.5)', 'rgba(236, 108, 113, 0.5)'];
+        darkerColours = ['rgba(108, 165, 214, 0.85)', 'rgba(112, 212, 229, 0.85)', 'rgba(254, 157, 133, 0.85)', 'rgba(236, 108, 113, 0.85)']; 
+    }
+
+    if ( window.barIndex != null ) {
+        colours[window.barIndex] = darkerColours[window.barIndex];
+    }
+
+    return colours;
+};
+
 function getBarBorderColours() {
     let colours = [];
     if ( window.accessibility == false ) {
@@ -502,8 +461,15 @@ function getBarBorderColours() {
         colours = ['rgba(108, 165, 214, 1)', 'rgba(112, 212, 229, 1)', 'rgba(254, 157, 133, 1)', 'rgba(236, 108, 113, 1)']
     }
 
-    if ( window.barIndex != null ) {
-        colours[window.barIndex] = 'rgba(102, 102, 102, 1)';
+    return colours;
+};
+
+function getHoverBackgroundColours() {
+    let colours = [];
+    if ( window.accessibility == false ) {
+        colours = ['rgba(118, 202, 236, 0.85)', 'rgba(254, 221, 128, 0.85)', 'rgba(254, 160, 128, 0.85)', 'rgba(254, 127, 127, 0.85)']; 
+    } else {
+        colours = ['rgba(108, 165, 214, 0.85)', 'rgba(112, 212, 229, 0.85)', 'rgba(254, 157, 133, 0.85)', 'rgba(236, 108, 113, 0.85)']; 
     }
 
     return colours;

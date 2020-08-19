@@ -65,14 +65,14 @@ function toggleAccessibility(on) {
 };
 
 function togglePage(e) {
-    if (e.id === "toggleAnalysis") {
-        showAnalysisPanel();
+    if (e.id === "analysisToggle") {
+        showPanel("analysis");
 
-    } else if (e.id === "toggleMarker") {
-        showDetailsPanel();
+    } else if (e.id === "markerToggle") {
+        showPanel("marker");
 
     } else {
-        showSUEPanel();
+        showPanel("chat");
     }
 };
 
@@ -85,10 +85,21 @@ $('.slider').mousedown( function( ev, handler ) {
     
     offset = offset < minOffset ? minOffset : offset;
     offset = offset > maxOffset ? maxOffset : offset;
+
+    let fontSize = Math.round((offset * 11) / 200);
     
     $('.sidebar').css('width', offset);
     $('.slider').css('marginLeft', offset);
+    $('.title').css({'font-size': Math.min(fontSize, 32), 'paddingTop': (32 - fontSize) / 2, 'paddingBottom': (32 - fontSize) / 2});
+    $('.title b').css('font-size', Math.min(Math.round((offset * 27) / 400), 38));
+    $('.sidebar-header h3').css({'font-size': Math.min(fontSize, 28), 'paddingTop': Math.max(5 + ((28 - fontSize) / 2), 5), 'paddingBottom': Math.max(5 + ((28 - fontSize) / 2), 5)});
+    $('.tcontainer').css('paddingLeft', Math.min(Math.round(offset / 30), 20));
+    $('.tcontainer').css('paddingRight', Math.min(Math.round(offset / 30), 20));
+    $('.content').css('paddingLeft', Math.min(Math.round(offset / 20), 30));
+    $('.content').css('paddingRight', Math.min(Math.round(offset / 20), 30));
     $('.map-wrapper').css('marginLeft', offset + 10);
+
+    window.leafletmap.invalidateSize()
   });
 });
 

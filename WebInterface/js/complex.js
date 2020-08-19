@@ -33,7 +33,7 @@ async function addComplexMarker(complex) {
         lat += coordinates[0];
         long += coordinates[1];
 
-        let obj = {datetime: item.datetime, name: item.eventName, description: item.eventType + " - " + item.description, coordinates: coordinates, priority: item.priority};
+        let obj = {datetime: item.datetime, name: item.eventName, description: item.eventType + " - " + item.description, coordinates: coordinates[0] + ", " + coordinates[1], priority: item.priority};
 
         eventCoordinates.push(coordinates);
         eventDetails.push(obj);

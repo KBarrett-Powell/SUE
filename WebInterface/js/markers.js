@@ -316,6 +316,9 @@ function compileProperties(properties, keys, time) {
                 if (item.events != null) {
                     fullProperties.events = item.events;
                 }
+                if (item.eventDetails != null) {
+                    fullProperties.eventDetails = item.eventDetails;
+                }
                 fullProperties.datetime = keys[i];
                 fullProperties.complexID = properties.id
             }

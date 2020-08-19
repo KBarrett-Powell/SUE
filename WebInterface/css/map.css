@@ -52,12 +52,15 @@ body {
 
 .title {
     max-height: 58px;
-    font-size: 2.3vw;
+    font-size: 32px;
     text-align: center;
+    margin: auto;
+    padding-top: 0px;
+    padding-bottom: 0px;
 }
 
 .title b {
-    font-size: 2.6vw;
+    font-size: 38px;
     font-weight: normal;
 }
 
@@ -72,25 +75,23 @@ body {
 }
 
 .sidebar-contents {
-    width: 86%;
+    width: 85%;
 }
 /* ******* END Overlay Styles ******* */
 
-/* ******* Full Page Editing ******* */
-div.hidden h3{
+/* ******* Hidden Items ******* */
+.hidden {
     display: none;
 }
 
-h3.hidden {
+.hidden h3{
     display: none;
 }
-/* ******* END Full Page Editing ******* */
 
-/* ******* Sidebar Sections ******* */
-div.hidden div.mapanalysis {
+.hidden div.mapanalysis {
     display: none;
 }
-/* ******* END Sidebar Sections ******* */
+/* ******* END Hidden Items ******* */
 
 /* ******* Toggle Button ******* */
 .toggle-btn {
@@ -136,13 +137,13 @@ div.hidden div.mapanalysis {
     writing-mode: vertical-lr;
     text-orientation: sideways;
     transform: rotate(180deg);
-    margin: 4px 6px;
+    margin: auto;
 }
 /* ******* END Toggle Button ******* */
 
 /* ******* Details Left Overlay ******* */
 .main-title {
-    padding: 17px 0px;
+    padding: 22px 0px;
     border-bottom-style: groove;
     border-color: hsl(210, 60%, 95%);
     color: hsl(210, 60%, 95%);
@@ -180,20 +181,17 @@ div.hidden div.mapanalysis {
 }
 
 .sidebar-header {
-    display: table;
+    display: initial;
     text-align: center;
     height: 30px;
     width: 100%;
 }
 
-.sidebar-header span {
-    display: table-cell;
-    vertical-align: middle;
-}
-
-.sidebar-header span h3 {
-    padding: 5px;
-    margin-bottom: 0px;
+.sidebar-header h3 {
+    font-size: 28px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin: auto;
     color: hsl(210, 100%, 15%);
 }
 
@@ -206,9 +204,9 @@ div.hidden div.mapanalysis {
 /* ******* Video Details ******* */
 .chart-container {
     position: relative;
-    width: 34vw;
-    height: 28.5vh;
-    margin-bottom: 40px;
+    height: 25.5vh;
+    width: 90%;
+    margin: 10px auto 30px auto;
 }
 
 .sidebar-main h4 {
@@ -217,15 +215,13 @@ div.hidden div.mapanalysis {
     color: hsl(210, 20%, 15%);
 }
 
-canvas#analysischart, canvas#carochart {
+canvas#analysisChart {
     background-color: hsl(210, 85%, 99%);
-    max-width: 33vw !important;
-    width: 500px !important;
-    height: 29vh !important;
     margin: 0 auto;
+    max-height: 29vh !important;
 }
 
-#videoPlayer, #videoAPlayer, #objDetPlayer {
+#videoPlayer, #analysisVideo, #objDetVideo {
     display: block;
     max-height: 30vh !important;
     max-width: 34vw;
@@ -233,14 +229,14 @@ canvas#analysischart, canvas#carochart {
     transition: width 1s;
 }
 
-video#videoPlayer.sensorVideo {
-    height: 40vh !important;
+#videoPlayer {
+    /* height: 40vh !important; */
     max-height: 40vh !important;
     max-width: 470px !important;
     margin-top: 10px;
 }
 
-.hidden #videoPlayer, .hidden #videoAPlayer, .hidden #objDetPlayer {
+.hidden #videoPlayer, .hidden #analysisVideo, .hidden #objDetVideo {
     width: 0%;
     transition: width 1s;
 }
@@ -248,6 +244,14 @@ video#videoPlayer.sensorVideo {
 audio#audioPlayer {
     width: 33vw;
     margin-left: 0.4vw;
+}
+
+.sensorFootage {
+    margin-top: 15px;
+}
+
+.sensorFootage h4 {
+    margin-bottom: 10px;
 }
 /* ******* END Video Details ******* */
 
@@ -258,7 +262,7 @@ audio#audioPlayer {
 
 .chat-container.cnlChat {
     margin: 10px auto;
-    width: 97%;
+    width: 100%;
     box-shadow: none;
     z-index: 3;
 }
@@ -313,6 +317,15 @@ audio#audioPlayer {
 /* ******* END Chatbox ******* */
 
 /* ******* Carousel ******** */
+.row.carouselRow {
+    width: 100%;
+    margin: 0px;
+}
+
+.col.carouselCol {
+    padding: 0px;
+}
+
 .carousel {
     width: 100%;
 }
@@ -482,13 +495,5 @@ audio#audioPlayer {
 @media screen and (min-width: 1000px) {
     .toggle-btn h4 {
        font-size: 18px;
-    }
-
-    .title {
-        font-size: 32px;
-    }
-
-    .title b {
-        font-size: 38px;
     }
 }

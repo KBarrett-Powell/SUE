@@ -1,40 +1,59 @@
 const videoLink = "http://localhost:8000/video/";
 const audioLink = "http://localhost:8000/audio/";
 
-const details = document.getElementById("detailspanel");
-const mainBar = document.getElementById("side-main");
+// Find Panel HTML Elements
+const chatPanel = document.getElementById("chatPanel");
+const chatToggle = document.getElementById("chatToggle");
+
+const analysisPanel = document.getElementById("analysisPanel");
+const analysisToggle = document.getElementById("analysisToggle");
+
+const markerPanel = document.getElementById("markerPanel");
+const markerToggle = document.getElementById("markerToggle");
+
+// * Find Details HTML Elements
+// General
+const markerDetails = document.getElementById("markerDetails");
 
 const detailsID = document.getElementById("detailsID");
 const detailsName = document.getElementById("detailsName");
 const detailsText = document.getElementById("detailsText");
 
+// Complex Event Specific
 const timeline = document.getElementById("eventTimeline");
 
+// Event Specific - Carousel
 const analysisCarousel = document.getElementById("analysisCarousel");
+const carouselItems = document.getElementById("carouselItems");
 
+const carouselPrev = document.getElementById("carouselPrev");
+const carouselNext = document.getElementById("carouselNext");
+
+const analysisChartDiv = document.getElementById("analysisChartDiv");
 const analysisChart = document.getElementById("analysisChart");
-const chartTitle = document.getElementById("chartTitle");
 
-const objDetSource = document.getElementById("objDetSource");
-const objDetPlayer = document.getElementById("objDetPlayer");
-
-const analysisVideo = document.getElementById("analysisVideo");
-const analysisSource = document.getElementById("videoASource");
-const analysisPlayer = document.getElementById("videoAPlayer");
-
-const analysisAudio = document.getElementById("analysisAudio");
-const detAudioSource = document.getElementById("detAudioSource");
-const detAudioPlayer = document.getElementById("audioPlayerDet");
-
+const analysisImageDiv = document.getElementById("analysisImageDiv");
 const analysisImage = document.getElementById("analysisImage");
-const detImageSource = document.getElementById("detImageSource");
 
-const mainVideo = document.getElementById("mainVideo");
+const objDetVideoDiv = document.getElementById("objDetVideoDiv");
+const objDetVideo = document.getElementById("objDetVideo");
+const objDetVideoSrc = document.getElementById("objDetVideoSrc");
+
+const analysisVideoDiv = document.getElementById("analysisVideoDiv");
+const analysisVideo = document.getElementById("analysisVideo");
+const analysisVideoSrc = document.getElementById("analysisVideoSrc");
+
+const analysisAudioDiv = document.getElementById("analysisAudioDiv");
+const analysisAudio = document.getElementById("analysisAudio");
+const analysisAudioSrc = document.getElementById("analysisAudioSrc");
+
+// Sensor Footage
+const sensorVideo = document.getElementById("sensorVideo");
 const videoDesc = document.getElementById("videoDesc");
 const videoSource = document.getElementById("videoSource");
 const videoPlayer = document.getElementById("videoPlayer");
 
-const mainAudio = document.getElementById("mainAudio");
+const sensorAudio = document.getElementById("sensorAudio");
 const audioDesc = document.getElementById("audioDesc");
 const audioSource = document.getElementById("audioSource");
 const audioPlayer = document.getElementById("audioPlayer");
@@ -47,7 +66,7 @@ async function toggleDetailsFromMap(e){
         this.options.open = true;
         if (window.prvClickedMarker != null) { window.prvClickedMarker.options.open = false; }
 
-        showDetailsPanel();
+        showPanel("marker");
         await toggleDetails(info, e.latlng.toString().slice(7, -1));
         window.prvClickedMarker = this;
 
@@ -55,73 +74,41 @@ async function toggleDetailsFromMap(e){
         this.options.open = false;
 
         await toggleDetails(info, e.latlng.toString().slice(7, -1));
-        showSUEPanel();
+        showPanel("chat");
         window.prvClickedMarker = null;
     }
 };
 
-function showSUEPanel() {
-    const panel = document.getElementById("searchpanel");
-    const toggle = document.getElementById("toggleSearch");
+function showPanel(selectedPanel) {
+    let panel = (selectedPanel.toLowerCase() == "chat" ? chatPanel : (selectedPanel == "analysis" ? analysisPanel : markerPanel));
+    let toggle = (selectedPanel.toLowerCase() == "chat" ? chatToggle : (selectedPanel == "analysis" ? analysisToggle : markerToggle));;
 
     if (panel.classList.contains("hidden")) {
-        if ( !document.getElementById("detailspanel").classList.contains("hidden") ) {
-            document.getElementById("detailspanel").classList.add("hidden")
-        }
-        if ( !document.getElementById("analysispanel").classList.contains("hidden") ) {
-            document.getElementById("analysispanel").classList.add("hidden")
-        }
-        if ( document.getElementById("toggleMarker").classList.contains("active") ) {
-            document.getElementById("toggleMarker").classList.remove("active")
-        }
-        if ( document.getElementById("toggleAnalysis").classList.contains("active") ) {
-            document.getElementById("toggleAnalysis").classList.remove("active")
+        if ( selectedPanel.toLowerCase() != "chat" ) {
+            if ( !chatPanel.classList.contains("hidden") ) {
+                chatPanel.classList.add("hidden")
+            }
+            if ( chatToggle.classList.contains("active") ) {
+                chatToggle.classList.remove("active")
+            }
         }
 
-        panel.classList.remove("hidden");
-        toggle.classList.add("active");
-    }
-};
-
-function showAnalysisPanel() {
-    const panel = document.getElementById("analysispanel");
-    const toggle = document.getElementById("toggleAnalysis");
-
-    if (panel.classList.contains("hidden")) {
-        if ( !document.getElementById("detailspanel").classList.contains("hidden") ) {
-            document.getElementById("detailspanel").classList.add("hidden")
-        }
-        if ( !document.getElementById("searchpanel").classList.contains("hidden") ) {
-            document.getElementById("searchpanel").classList.add("hidden")
-        }
-        if ( document.getElementById("toggleMarker").classList.contains("active") ) {
-            document.getElementById("toggleMarker").classList.remove("active")
-        }
-        if ( document.getElementById("toggleSearch").classList.contains("active") ) {
-            document.getElementById("toggleSearch").classList.remove("active")
+        if ( selectedPanel.toLowerCase() != "analysis" ) {
+            if ( !analysisPanel.classList.contains("hidden") ) {
+                analysisPanel.classList.add("hidden")
+            }
+            if ( analysisToggle.classList.contains("active") ) {
+                analysisToggle.classList.remove("active")
+            }
         }
 
-        panel.classList.remove("hidden");
-        toggle.classList.add("active");
-    }
-};
-
-function showDetailsPanel() {
-    const panel = document.getElementById("detailspanel");
-    const toggle = document.getElementById("toggleMarker");
-
-    if (panel.classList.contains("hidden")) {
-        if ( !document.getElementById("analysispanel").classList.contains("hidden") ) {
-            document.getElementById("analysispanel").classList.add("hidden")
-        }
-        if ( !document.getElementById("searchpanel").classList.contains("hidden") ) {
-            document.getElementById("searchpanel").classList.add("hidden")
-        }
-        if ( document.getElementById("toggleAnalysis").classList.contains("active") ) {
-            document.getElementById("toggleAnalysis").classList.remove("active")
-        }
-        if ( document.getElementById("toggleSearch").classList.contains("active") ) {
-            document.getElementById("toggleSearch").classList.remove("active")
+        if ( selectedPanel.toLowerCase() != "marker" ) {
+            if ( !markerPanel.classList.contains("hidden") ) {
+                markerPanel.classList.add("hidden")
+            }
+            if ( markerToggle.classList.contains("active") ) {
+                markerToggle.classList.remove("active")
+            }
         }
 
         panel.classList.remove("hidden");
@@ -159,21 +146,21 @@ async function toggleDetails(json, coordinates){
 
     let timelineInfo = json.eventDetails;
 
-    if (detailsID.innerHTML != id && details.classList.contains('hidden') === false) {
+    if (detailsID.innerHTML != id && markerPanel.classList.contains('hidden') === false) {
        
         clearDetailsMedia()
 
         AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, slctRevVideo, detImage, detAudio, videofile, audiofile, timelineInfo)
 
-    } else if (details.classList.contains('hidden') === false) {
+    } else if (markerPanel.classList.contains('hidden') === false) {
 
-        details.classList.add('hidden');
+        markerPanel.classList.add('hidden');
 
         clearDetailsMedia()
 
     } else {
 
-        details.classList.remove('hidden');
+        markerPanel.classList.remove('hidden');
 
         clearDetailsMedia()
 
@@ -187,53 +174,50 @@ function clearDetailsMedia() {
     detailsText.innerHTML = "";
 
     if (analysisCarousel.style.display != "none") {
+
         analysisCarousel.style.display = "none";
-        clearChart(true);
+
+        if (analysisChart.style.display != "none") {
+            analysisChart.style.display = "none";
+            clearChart();
+        }
+
+        analysisImage.setAttribute('src', '');
             
-        objDetSource.setAttribute('src', '');
-        objDetPlayer.load();
+        objDetVideoSrc.setAttribute('src', '');
+        objDetVideo.load();
+
+        analysisVideoSrc.setAttribute('src', '');
+        analysisVideo.load();
+
+        analysisAudioSrc.setAttribute('src', '');
+        analysisAudio.load();
     }
-    if (analysisChart.style.display != "none") {
-        analysisChart.style.display = "none";
-        clearChart(false);
-    }
-    if (analysisVideo.style.display != "none") {
-        analysisVideo.style.display = "none";
-        analysisSource.setAttribute('src', '');
-        analysisPlayer.load();
-    }
-    if (analysisAudio.style.display != "none") {
-        analysisAudio.style.display = "none";
-        detAudioSource.setAttribute('src', '');
-        detAudioPlayer.load();
-    }
-    if (analysisImage.style.display != "none") {
-        analysisImage.style.display = "none";
-        detImageSource.setAttribute('src', '');
-    }
+
     if (timeline.style.display != "none") {
         while (timeline.firstChild) {
             timeline.removeChild(timeline.lastChild);
         }
 
         timeline.style.display = "none";
-        mainBar.style.overflow = "hidden";
+        markerDetails.style.overflow = "hidden";
     }
-    if (mainVideo.style.display != "none") {
-        mainVideo.style.display = "none";
+
+    if (sensorVideo.style.display != "none") {
+        sensorVideo.style.display = "none";
         videoSource.setAttribute('src', '');
         videoPlayer.load();
         if (videoPlayer.classList.contains("sensorVideo")) { videoPlayer.classList.remove("sensorVideo"); }
     }
-    if (mainAudio.style.display != "none") {
-        mainAudio.style.display = "none";
+    if (sensorAudio.style.display != "none") {
+        sensorAudio.style.display = "none";
         audioSource.setAttribute('src', '');
         audioPlayer.load();
         if (audioPlayer.classList.contains("sensorAudio")) { videoPlayer.classList.remove("sensorAudio"); }
     }
 };
 
-function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, slctRevVideo, detImage, detAudio, videofile, audiofile, timelineInfo) {
+async function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, slctRevVideo, detImage, detAudio, videofile, audiofile, timelineInfo) {
 
     if (type === "Sensor" || type === "Event") {
         if (type === "Sensor") {
@@ -266,48 +250,95 @@ function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, slctRev
                 if (videoPlayer.classList.contains("sensorVideo")) { videoPlayer.classList.remove("sensorVideo"); }
             }
 
-            if (chartdata != null && objdetfile != null) {
-                analysisCarousel.style.display = "block";
-                createChart(chartdata, true);
+            analysisCarousel.style.display = "block";
+            let activeSet = false;
+            let totalCarousel = 0;
 
-                objDetSource.setAttribute('src', objdetfile);
-                objDetPlayer.load();
+            if (chartdata != null) {
+                createChart(chartdata);
+                totalCarousel ++;
 
-            } else if (chartdata != null) {
-                analysisChart.style.display = "block";
-                createChart(chartdata, false);
+                if ( !analysisChartDiv.classList.contains("carousel-item") ) { analysisChartDiv.classList.add("carousel-item"); analysisChartDiv.classList.remove("hidden"); }
+                if ( activeSet == false ) { activeSet = await setActive(analysisChartDiv); }
 
-            } else if (objdetfile != null) {
-                analysisVideo.style.display = "block";
-                analysisSource.setAttribute('src', objdetfile);
-                analysisPlayer.load();
+            } else {
+                if ( analysisChartDiv.classList.contains("carousel-item") ) { analysisChartDiv.classList.remove("carousel-item"); analysisChartDiv.classList.add("hidden"); }
+                if ( analysisChartDiv.classList.contains("active") ) { analysisChartDiv.classList.remove("active"); }
+            }
 
-            } else if (slctRevVideo != null) {
-                analysisVideo.style.display = "block";
-                analysisSource.setAttribute('src', slctRevVideo);
-                analysisPlayer.load();
-            } else if (detImage != null) {
-                analysisImage.style.display = "block";
-                detImageSource.setAttribute('src', detImage);
+            if (detImage != null) {
+                analysisImage.setAttribute('src', detImage);
+                totalCarousel ++;
 
+                if ( !analysisImageDiv.classList.contains("carousel-item") ) { analysisImageDiv.classList.add("carousel-item"); analysisImageDiv.classList.remove("hidden"); }
+                if ( activeSet == false ) { activeSet = await setActive(analysisImageDiv); }
+
+            } else {
+                if ( analysisImageDiv.classList.contains("carousel-item") ) { analysisImageDiv.classList.remove("carousel-item"); analysisImageDiv.classList.add("hidden"); }
+                if ( analysisImageDiv.classList.contains("active") ) { analysisImageDiv.classList.remove("active"); }
+            }
+
+            if (objdetfile != null) {
+                objDetVideoSrc.setAttribute('src', objdetfile);
+                objDetVideo.load();
+                totalCarousel ++;
+
+                if ( !objDetVideoDiv.classList.contains("carousel-item") ) { objDetVideoDiv.classList.add("carousel-item"); objDetVideoDiv.classList.remove("hidden"); }
+                if ( activeSet == false ) { activeSet = await setActive(objDetVideoDiv); }
+                
+            } else {
+                if ( objDetVideoDiv.classList.contains("carousel-item") ) { objDetVideoDiv.classList.remove("carousel-item"); objDetVideoDiv.classList.add("hidden"); }
+                if ( objDetVideoDiv.classList.contains("active") ) { objDetVideoDiv.classList.remove("active"); }
+            }
+
+            if (slctRevVideo != null) {
+                analysisVideoSrc.setAttribute('src', slctRevVideo);
+                analysisVideo.load();
+                totalCarousel ++;
+
+                if ( !analysisVideoDiv.classList.contains("carousel-item") ) { analysisVideoDiv.classList.add("carousel-item"); analysisVideoDiv.classList.remove("hidden"); }
+                if ( activeSet == false ) { activeSet = await setActive(analysisVideoDiv); }
+
+            } else {
+                if ( analysisVideoDiv.classList.contains("carousel-item") ) { analysisVideoDiv.classList.remove("carousel-item"); analysisVideoDiv.classList.add("hidden"); }
+                if ( analysisVideoDiv.classList.contains("active") ) { analysisVideoDiv.classList.remove("active"); }
             }
 
             if (detAudio != null) {
-                analysisAudio.style.display = "block";
-                detAudioSource.setAttribute('src', detAudio);
-                detAudioPlayer.load();
+                analysisAudioSrc.setAttribute('src', detAudio);
+                analysisAudio.load();
+                totalCarousel ++;
+
+                if ( !analysisAudioDiv.classList.contains("carousel-item") ) { analysisAudioDiv.classList.add("carousel-item"); analysisAudioDiv.classList.remove("hidden"); }
+                if ( activeSet == false ) { activeSet = await setActive(analysisAudioDiv); }
+
+            } else {
+                if ( analysisAudioDiv.classList.contains("carousel-item") ) { analysisAudioDiv.classList.remove("carousel-item"); analysisAudioDiv.classList.add("hidden"); }
+                if ( analysisAudioDiv.classList.contains("active") ) { analysisAudioDiv.classList.remove("active"); }
+            }
+
+            if (totalCarousel == 1) {
+                if ( !carouselPrev.classList.contains("hidden") ) {
+                    carouselPrev.classList.add("hidden");
+                    carouselNext.classList.add("hidden")
+                }
+            } else {
+                if ( carouselPrev.classList.contains("hidden") ) {
+                    carouselPrev.classList.remove("hidden");
+                    carouselNext.classList.remove("hidden")
+                }
             }
         }
 
         if (audiofile != null) {
-            mainVideo.style.display = "none";
-            mainAudio.style.display = "block";
+            sensorVideo.style.display = "none";
+            sensorAudio.style.display = "block";
             audioSource.setAttribute('src', audiofile);
             audioPlayer.load();
 
         } else {
-            mainAudio.style.display = "none";
-            mainVideo.style.display = "block";
+            sensorAudio.style.display = "none";
+            sensorVideo.style.display = "block";
             videoSource.setAttribute('src', videofile);
             videoPlayer.load();
         }
@@ -317,7 +348,7 @@ function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, slctRev
         detailsID.innerHTML = json.complexID;
         detailsName.innerHTML = json.complexName;
 
-        mainBar.style.overflow = "auto";
+        markerDetails.style.overflow = "auto";
 
         let i = 0;
         for (let item in timelineInfo) {
@@ -360,7 +391,23 @@ function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, slctRev
 
         timeline.style.display = "block";
 
-        mainVideo.style.display = "none";
-        mainAudio.style.display = "none";
+        sensorVideo.style.display = "none";
+        sensorAudio.style.display = "none";
     }
+};
+
+function setActive(element) {
+    element.classList.add("active"); 
+
+    return true;
+};
+
+function addToCarouselList(id, active) {
+    let item = document.createElement("li");
+    item.dataset.target = "#analysisCarousel";
+    item.setAttribute('data-slide-to', id);
+
+    if (active) { item.classList.add("active"); }
+
+    carouselItems.appendChild(item);
 };
