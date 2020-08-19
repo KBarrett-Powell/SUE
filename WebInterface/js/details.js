@@ -362,7 +362,12 @@ async function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, s
             div1.classList.add("content");
 
             let h2 = document.createElement("h2");
-            let time = document.createTextNode(timelineInfo[item].datetime);
+            let wbr = document.createElement("wbr");
+            let datetime = timelineInfo[item].datetime.split("T"); 
+            let date = document.createTextNode(datetime[0] + "T");
+            let time = document.createTextNode(datetime[1]);
+            h2.appendChild(date);
+            h2.appendChild(wbr);
             h2.appendChild(time);
 
             let p0 = document.createElement("p");

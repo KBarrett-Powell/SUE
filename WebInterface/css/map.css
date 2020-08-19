@@ -459,6 +459,13 @@ audio#audioPlayer {
     position: relative;
     border-radius: 6px;
 }
+
+.content h2 {
+    color: hsl(210, 20%, 10%);
+    border-bottom-color: hsl(220, 0%, 60%);
+    border-bottom-style: solid;
+    border-bottom-width: thin;
+}
   
 @media screen and (max-width: 600px) {
     .timeline::after {
