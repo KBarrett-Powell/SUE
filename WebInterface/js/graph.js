@@ -2,7 +2,7 @@ window.barIndex = null
 window.timePoint = null;
 
 function plotChartPoints(){
-    if (analysisCarousel.style.display != "none") {
+    if (analysisChartDiv.classList.contains("carousel-item")) {
         let duration = (sensorVideo.style.display != "none" ? videoPlayer.duration : audioPlayer.duration);
         let interval = (sensorAudio.style.display === "none" ? 270 : 1000);
 
