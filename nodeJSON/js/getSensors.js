@@ -103,8 +103,7 @@ module.exports = {
             "sensorUK": sensorUK,
             "sensorUS": sensorUS
         }
-
-        console.log("jsonResp: " + JSON.stringify(jsonResp));
+        
         return JSON.stringify(jsonResp);
     }, 
     postSensor: async function postSensor(request) {
