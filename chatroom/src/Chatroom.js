@@ -141,10 +141,12 @@ export default class Chatroom extends Component<ChatroomProps, ChatroomState> {
   };
 
   handleButtonClick = (message: string, payload: string) => {
-    if (this.props.onButtonClick != null) {
-      this.props.onButtonClick(message, payload);
+    if ( !payload.includes("openEventDetails") && !payload.includes("openComplexEventDetails") ) {
+      if (this.props.onButtonClick != null) {
+        this.props.onButtonClick(message, payload);
+      }
+      this.focusInput();
     }
-    this.focusInput();
   };
 
   groupMessages(messages: Array<ChatMessage>) {
@@ -175,7 +177,7 @@ export default class Chatroom extends Component<ChatroomProps, ChatroomState> {
 
         } else if (parsedMessage.type == "accessibility") {
           toggleAccessibility(parsedMessage.access);
-        
+         
         }
 
       } else if (

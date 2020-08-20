@@ -190,6 +190,8 @@ async function addMarker(json, sensor, layer) {
         } else {
             addMarkerToLayer(eventmarker, ranges, window.critPriorityEvent, window.critPriorityEventRange);
         }
+
+        await sendUpdateToChat("Event", objID, current.eventName);
     }
 
     // Update the analysis charts
@@ -421,4 +423,15 @@ function getIcon(properties, ownerSensor) {
     } else {
         return complexIcon;
     }
+};
+
+async function openEventDetails(id) {
+    let ids = [parseInt(id)];
+    let events = await findEvents(ids);
+    toggleDetailsFromFunction(events[0]);
+};
+
+async function openComplexEventDetails(id) {
+    let complex = await findComplex(parseInt(id));
+    toggleDetailsFromFunction(complex);
 };

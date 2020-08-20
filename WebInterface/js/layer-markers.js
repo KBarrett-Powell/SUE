@@ -284,14 +284,13 @@ async function findSensor(id) {
     return null;
 };
 
-// Find information on sensor with id - USED FOR COMPLEX EVENT DETAILS
+// Find information on events with id - USED FOR COMPLEX EVENT DETAILS AND CHATBOT VIEW DETAILS FUNCTIONALITY
 async function findEvents(list) {
     let discoveredItems = [];
 
     // Search through all event layers to try and find events with ids detailed in the list
     for ( let i in list ) {
         let found = [];
-
         found = await window.critPriorityEvent.getLayersByID(list[i]);
 
         if (found.length > 0 && found[0].options.hidden == false) { 
@@ -313,7 +312,7 @@ async function findEvents(list) {
                     found = await window.lowPriorityEvent.getLayersByID(list[i]);
         
                     if (found.length > 0 && found[0].options.hidden == false) {
-                        discoveredItems.push(found[0]); 
+                        discoveredItems.push(found[0]);
                      
                     }
                 }
@@ -322,4 +321,18 @@ async function findEvents(list) {
     }
 
     return discoveredItems;
+};
+
+// Find information on complex events with id - USED FOR CHATBOT VIEW DETAILS FUNCTIONALITY
+async function findComplex(id) {
+    let found = [];
+
+    // Search through complexEvent layer to try and find complex event with matching id
+    found = await window.complexEvent.getLayersByID(id);
+
+    if (found.length > 0) { 
+        return found[0];
+    }
+
+    return null;
 };

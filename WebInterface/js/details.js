@@ -63,9 +63,9 @@ async function toggleDetailsFromMap(e){
     let info = await getProperties(this, false);
 
     if (this.options.open == false) {
-        this.options.open = true;
         if (window.prvClickedMarker != null) { window.prvClickedMarker.options.open = false; }
-
+        this.options.open = true;
+ 
         showPanel("marker");
         await toggleDetails(info, e.latlng.toString().slice(7, -1));
         window.prvClickedMarker = this;
@@ -74,6 +74,29 @@ async function toggleDetailsFromMap(e){
         this.options.open = false;
 
         await toggleDetails(info, e.latlng.toString().slice(7, -1));
+        showPanel("chat");
+        window.prvClickedMarker = null;
+    }
+};
+
+async function toggleDetailsFromFunction(layer){
+
+    let info = await getProperties(layer, false);
+
+    if (layer.options.open == false) {
+        if (window.prvClickedMarker != null) { window.prvClickedMarker.options.open = false; }
+        layer.options.open = true;
+        layer.togglePopup();
+ 
+        showPanel("marker");
+        await toggleDetails(info, layer.getLatLng().toString().slice(7, -1));
+        window.prvClickedMarker = layer;
+
+    } else {
+        layer.options.open = false;
+        layer.togglePopup();
+
+        await toggleDetails(info, layer.getLatLng().toString().slice(7, -1));
         showPanel("chat");
         window.prvClickedMarker = null;
     }
@@ -177,8 +200,7 @@ function clearDetailsMedia() {
 
         analysisCarousel.style.display = "none";
 
-        if (analysisChart.style.display != "none") {
-            analysisChart.style.display = "none";
+        if (analysisChartDiv.classList.contains("carousel-item")) {
             clearChart();
         }
 

@@ -60,8 +60,10 @@ async function addComplexMarker(complex) {
         let finishedProperties = { [updateTime]: cmplxproperties };
 
         L.polyline(coordinates, {color: "#ee133b", properties: JSON.stringify(finishedProperties)}).addTo(window.complexEvent);
-        complexevent = L.marker(markerCoordinates, {icon: complexIcon, properties: JSON.stringify(finishedProperties), open: false}).on('click', toggleDetailsFromMap).addTo(window.complexEvent);
+        complexevent = L.marker(markerCoordinates, {id: complex.properties.complexID, icon: complexIcon, properties: JSON.stringify(finishedProperties), open: false}).on('click', toggleDetailsFromMap).addTo(window.complexEvent);
         complexevent.bindPopup(complex.properties.complexName)
+
+        await sendUpdateToChat("Complex Event", complex.properties.complexID, complex.properties.complexName);
     }
     
     toggleLayer(window.complexEvent);

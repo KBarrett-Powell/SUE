@@ -60,19 +60,30 @@ const Message = ({ chat, onButtonClick, voiceLang = null }: MessageProps) => {
 
   switch (message.type) {
     case "button":
+
+      let id = "";
+      try { 
+        id = message.buttons[0].payload.split("-")[1];
+      } catch (err) {
+        console.log(err);
+      }
+
       return (
         <ul className="chat-buttons">
           {message.buttons.map(({ payload, title, selected }) => (
             <li
               className={classnames("chat-button", {
-                "chat-button-selected": selected,
-                "chat-button-disabled": !onButtonClick
+                "chat-button-selected": selected
               })}
               key={payload}
               onClick={
-                onButtonClick != null
-                  ? () => onButtonClick(title, payload)
-                  : noop
+                payload.includes("openEventDetails")
+                  ? () => openEventDetails(id)
+                  : payload.includes("openComplexEventDetails")
+                    ? () => openComplexEventDetails(id)
+                    : onButtonClick != null
+                      ? () => onButtonClick(title, payload)
+                      : noop
               }
             >
               <Markdown
