@@ -5,7 +5,7 @@
 ### Sensors
 |Parameter name|Data type|Details|
 |--------------|---------|-------|
-|SensorID|Integer|The test sensors (ones already in SUE) have IDs in the range 1-9|
+|sensorID|Integer|The test sensors (ones already in SUE) have IDs in the range 1-9|
 |sensorName|String|String in structure: [sensor description] on [street name]|
 |sensorType|String|Camera / Microphone / Human|
 |video|String|Video file name e.g. MilitaryParade.mp4|
@@ -39,13 +39,21 @@
 |events|Array(String)|List of eventIDs of events within the complex event e.g. "events": [2,3]|
 |datetime|ISO Datetime|ISO Datetime string in form: "YYYY-MM-DDThh:mm:ssZ" e.g. "2020-03-04T16:10:20Z"|  
 
+### File
+|Parameter name|Data type|Details|
+|--------------|---------|-------|
+|name|String|Name of the media file|
+|type|String|MIME type of file e.g. video/mp4|
+|data|String|Base 64 encoded string representation of file|
+
 ## WebSocket Requests
 |Parameter name|Data type|Details|
 |--------------|---------|-------|
 |type|String|"post" / "get" / "delete"|
-|events|Array(Oobject)|OPTIONAL - List containing information of events to add to database/ update/ get/ delete|
-|sensors|Array(Oobject)|OPTIONAL - List containing information of sensors to add to database/ update/ get/ delete|
-|complex|Array(Oobject)|OPTIONAL - List containing information of complex events to add to database/ update/ get/ delete|  
+|events|Array(Object)|OPTIONAL - List containing information of events to add to database/ update/ get/ delete|
+|sensors|Array(Object)|OPTIONAL - List containing information of sensors to add to database/ update/ get/ delete|
+|complex|Array(Object)|OPTIONAL - List containing information of complex events to add to database/ update/ get/ delete|  
+|files|Array(Object)|OPTIONAL - List containing information of files to upload/ retrieve information about|
 
 ### POST Requests
 These requests cover adding a new item and updating an old one.  
@@ -115,4 +123,34 @@ The object structure in this will include the id of the object which the client 
        ]
 } 
 ```
+### FILE Requests
+These requests cover uploading and downloading media files from the WebSocket.  
+
+#### Upload File Structure
+The information required for this is a filename and a base 64 reprentation of the file data.  
+```
+{
+        "type": "file-upload",
+        "files": [
+              {
+                      "name": "StreetFight.mp4",
+		      "data": "AAAAIGZ0eXBpc29tAAACAG(...)"
+              }
+       ]
+} 
+```
+
+#### Download File Structure
+The only information needed for this is the name of the file to be downloaded.  
+```
+{
+        "type": "file-download",
+        "files": [
+              {
+                      "name": "MilitaryParade.mp4"
+              }
+       ]
+} 
+```
+
 *Credit to Jack Furby for converting my Word doc to markdown*
