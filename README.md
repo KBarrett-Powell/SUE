@@ -48,14 +48,8 @@ $ bash linux-run.sh
 View the dashboard by opening a web browser and going to **http://localhost:8082/map.html**
 
 ## On-Going Development
-### WebSocket File Uploads 
-File uploads have yet to be implemented through the WebSocket. When implmented a user should be able to upload a video file and create a new Event linked to that file.  
-
 ### Online Hosting
 Plans to host SUE online, so it can be quickly tested by anyone, are in motion.  
 
 ### Input Through the Chatbot
 Plans to allow users to enter json into the Chatbot, or a semantic description of 2 or more events being linked, and to see SUE be updated with this information. 
-
-### Highlight Events within a Complex Event
-On the hover of an event within a complex event timeline, the event should be highlighted on the map.
