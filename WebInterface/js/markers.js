@@ -435,3 +435,9 @@ async function openComplexEventDetails(id) {
     let complex = await findComplex(parseInt(id));
     toggleDetailsFromFunction(complex);
 };
+
+async function showHoveredEvent(id) {
+    let ids = [parseInt(id)];
+    let events = await findEvents(ids);
+    showPopup(events[0]);
+};

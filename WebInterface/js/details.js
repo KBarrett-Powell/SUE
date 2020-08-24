@@ -86,7 +86,7 @@ async function toggleDetailsFromFunction(layer){
     if (layer.options.open == false) {
         if (window.prvClickedMarker != null) { window.prvClickedMarker.options.open = false; }
         layer.options.open = true;
-        layer.togglePopup();
+        layer.openPopup();
  
         showPanel("marker");
         await toggleDetails(info, layer.getLatLng().toString().slice(7, -1));
@@ -94,12 +94,17 @@ async function toggleDetailsFromFunction(layer){
 
     } else {
         layer.options.open = false;
-        layer.togglePopup();
+        layer.closePopup();
 
         await toggleDetails(info, layer.getLatLng().toString().slice(7, -1));
         showPanel("chat");
         window.prvClickedMarker = null;
     }
+};
+
+async function showPopup(layer) {
+    if ( layer != null ) { layer.openPopup(); }
+    else { window.prvClickedMarker.openPopup(); }
 };
 
 function showPanel(selectedPanel) {
@@ -379,6 +384,9 @@ async function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, s
             div0.classList.add("tcontainer");
             div0.classList.add((timelineInfo[item].priority == 4) ? "blue" : ((timelineInfo[item].priority == 3) ? "yellow" : ((timelineInfo[item].priority == 2) ? "orange" : "red")));
             div0.classList.add((i%2 == 0) ? "left" : "right");
+            div0.setAttribute("onmouseover", "showHoveredEvent(" + timelineInfo[item].id + ")");
+            div0.setAttribute("onmouseout", "showHoveredEvent(null)");
+            div0.setAttribute("onclick", "openEventDetails(" + timelineInfo[item].id + ")");
 
             let div1 = document.createElement("div");
             div1.classList.add("content");
