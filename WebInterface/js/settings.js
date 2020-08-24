@@ -87,7 +87,8 @@ $('.slider').mousedown( function( ev, handler ) {
     offset = offset > maxOffset ? maxOffset : offset;
 
     let fontSize = Math.round((offset * 11) / 200);
-    let paddingSize = Math.round(offset * 3 / 80)
+    let paddingSize = Math.round(offset * 3 / 80);
+    let canvasHeight = $('canvas#analysisChart').height();
     
     $('.sidebar').css('width', offset);
     $('.slider').css('marginLeft', offset);
@@ -98,6 +99,7 @@ $('.slider').mousedown( function( ev, handler ) {
     $('.tcontainer').css('paddingRight', Math.min(paddingSize, 20));
     $('.content').css('paddingLeft', Math.min(paddingSize, 30));
     $('.content').css('paddingRight', Math.min(paddingSize, 30));
+    $('canvas#analysisChart').css('marginTop', -Math.min(canvasHeight / 2, 110));
     $('.map-wrapper').css('marginLeft', offset + 10);
 
     window.leafletmap.invalidateSize()

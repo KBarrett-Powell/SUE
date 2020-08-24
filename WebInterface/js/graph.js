@@ -440,10 +440,10 @@ function getBarBackgroundColours() {
     let darkerColours = [];
     if ( window.accessibility == false ) {
         colours = ['rgba(118, 202, 236, 0.5)', 'rgba(254, 221, 128, 0.5)', 'rgba(254, 160, 128, 0.5)', 'rgba(254, 127, 127, 0.5)'];
-        darkerColours = ['rgba(118, 202, 236, 0.85)', 'rgba(254, 221, 128, 0.85)', 'rgba(254, 160, 128, 0.85)', 'rgba(254, 127, 127, 0.85)']; 
+        darkerColours = ['rgba(118, 202, 236, 0.9)', 'rgba(254, 221, 128, 0.9)', 'rgba(254, 160, 128, 0.9)', 'rgba(254, 127, 127, 0.9)']; 
     } else {
         colours = ['rgba(108, 165, 214, 0.5)', 'rgba(112, 212, 229, 0.5)', 'rgba(254, 157, 133, 0.5)', 'rgba(236, 108, 113, 0.5)'];
-        darkerColours = ['rgba(108, 165, 214, 0.85)', 'rgba(112, 212, 229, 0.85)', 'rgba(254, 157, 133, 0.85)', 'rgba(236, 108, 113, 0.85)']; 
+        darkerColours = ['rgba(108, 165, 214, 0.9)', 'rgba(112, 212, 229, 0.9)', 'rgba(254, 157, 133, 0.9)', 'rgba(236, 108, 113, 0.9)']; 
     }
 
     if ( window.barIndex != null ) {
@@ -467,9 +467,9 @@ function getBarBorderColours() {
 function getHoverBackgroundColours() {
     let colours = [];
     if ( window.accessibility == false ) {
-        colours = ['rgba(118, 202, 236, 0.85)', 'rgba(254, 221, 128, 0.85)', 'rgba(254, 160, 128, 0.85)', 'rgba(254, 127, 127, 0.85)']; 
+        colours = ['rgba(118, 202, 236, 0.9)', 'rgba(254, 221, 128, 0.9)', 'rgba(254, 160, 128, 0.9)', 'rgba(254, 127, 127, 0.9)']; 
     } else {
-        colours = ['rgba(108, 165, 214, 0.85)', 'rgba(112, 212, 229, 0.85)', 'rgba(254, 157, 133, 0.85)', 'rgba(236, 108, 113, 0.85)']; 
+        colours = ['rgba(108, 165, 214, 0.9)', 'rgba(112, 212, 229, 0.9)', 'rgba(254, 157, 133, 0.9)', 'rgba(236, 108, 113, 0.9)']; 
     }
 
     return colours;
