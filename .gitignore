@@ -3,3 +3,6 @@ chatroom/node_modules
 Rasa/venv
 Rasa/models/*.tar.gz
 Rasa/__pycache__
+nodeJSON/json/sensors.json
+nodeJSON/json/events.json
+nodeJSON/json/complex.json
