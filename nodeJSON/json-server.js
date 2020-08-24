@@ -3,6 +3,8 @@ const SocketServer = require('ws').Server;
 const express = require('express');
 const path = require('path');
 
+const fsp = require('fs').promises;
+
 const app = express();
 
 const router = express.Router();
@@ -65,9 +67,8 @@ wsServer.on('connection', function (wsClient) {
   wsClient.sue = false;
 
   wsClient.on('message', async function (message) {
-    console.log('received: %s', message);
-
-    let parsedMessage
+  
+    let parsedMessage;
     let error = false;
 
     try {
@@ -78,6 +79,8 @@ wsServer.on('connection', function (wsClient) {
     }
 
     if (!error) {
+      console.log('received: %s', parsedMessage.type);
+
       if (parsedMessage.type.toLowerCase() == "add-sue-client") {
         wsClient.sue = true;
         SUEClients.push(wsClient);
@@ -227,9 +230,35 @@ wsServer.on('connection', function (wsClient) {
         }
 
         if ( Object.keys(deleteResponse).length > 0 ) {
-          wsClient.send(JSON.stringify({"DELETE - success": deleteResponse}));
         } else {
           wsClient.send(JSON.stringify({"DELETE - fail": "No Items Deleted"}));
+        }
+      } else if (parsedMessage.type.toLowerCase() == "file-upload") {
+
+        if (parsedMessage.files != null) {
+
+          for ( let i in parsedMessage.files) {
+
+            let file = parsedMessage.files[i];
+
+            base64ToFile(file.name, file.value);
+
+            wsClient.send(JSON.stringify({"file-upload": "Successful"}));
+
+          }  
+        } 
+      }  else if (parsedMessage.type.toLowerCase() == "file-download") {
+
+        if (parsedMessage.files != null) {
+
+          for ( let i in parsedMessage.files) {
+
+            let file = parsedMessage.files[i];
+            let base64File = await fileToBase64(file.name);
+
+            wsClient.send(JSON.stringify({"file-download": base64File}));
+
+          }  
         }
       }
     }
@@ -243,6 +272,17 @@ wsServer.on('connection', function (wsClient) {
     console.log('closed');
   });
 });
+
+async function fileToBase64(filename) {
+  let data = await fsp.readFile('./media/' + filename, {encoding: 'base64'});
+  return data;
+};
+
+function base64ToFile(name, b64) {
+  fsp.writeFile("./media/" + name, b64, 'base64', function(err) {
+    console.log(err);
+  });
+};
 
 function getUpdatedID(response) {
   let ids = [];
