@@ -16,6 +16,7 @@ sensors.refreshSensors();
 complex.refreshComplex();
 
 const wsServer = new SocketServer({ port: port });
+console.debug('Server running on port ' + port);
 
 wsServer.getUniqueID = function () {
   function s4() {
@@ -205,7 +206,7 @@ wsServer.on('connection', function (wsClient) {
 
             let file = parsedMessage.files[i];
 
-            base64ToFile(file.name, file.value);
+            base64ToFile(file.name, file.data);
 
             wsClient.send(JSON.stringify({"file-upload": "Successful"}));
 
@@ -227,7 +228,7 @@ wsServer.on('connection', function (wsClient) {
                 { 
                   "name": file.name,
                   "type": type,
-                  "value": base64File
+                  "data": base64File
                 }
               ]
             }

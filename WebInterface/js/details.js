@@ -180,7 +180,7 @@ async function showDetails(json, coordinates){
 };
 
 function clearDetailsMedia() {
-    
+
     detailsID.innerHTML = "";
     detailsName.innerHTML = "";
     detailsText.innerHTML = "";
@@ -434,7 +434,7 @@ async function fillInElement(parsedMessage) {
     let player = null;
     if ( window.elementToFill[file.name].player != null ) { player = document.getElementById(window.elementToFill[file.name].player); }
 
-    source.setAttribute('src', "data:" + file.type + ";base64," + file.value);
+    source.setAttribute('src', "data:" + file.type + ";base64," + file.data);
     if ( player != null ) { player.load(); }
 
     delete window.elementToFill[file.name];
