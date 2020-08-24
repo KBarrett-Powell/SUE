@@ -233,9 +233,6 @@ canvas#analysisChart {
 }
 
 #videoPlayer {
-    /* height: 40vh !important; */
-    max-height: 40vh !important;
-    max-width: 470px !important;
     margin-top: 10px;
 }
 
@@ -244,8 +241,8 @@ canvas#analysisChart {
     transition: width 1s;
 }
 
-audio#audioPlayer {
-    width: 33vw;
+#audioPlayer {
+    width: 95%;
     margin-left: 0.4vw;
 }
 
