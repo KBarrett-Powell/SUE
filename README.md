@@ -48,18 +48,14 @@ $ bash linux-run.sh
 View the dashboard by opening a web browser and going to **http://localhost:8082/map.html**
 
 ## On-Going Development
-### Timeline Functionality
-A dictionary of time stamps and properties will be stored with each marker, through the use of a timeline chart marking the number of events  
-found at each time point, users will be able to see previous points in time. Such as where a moving sensor was when it detected an event.  
+### WebSocket File Uploads 
+File uploads have yet to be implemented through the WebSocket. When implmented a user should be able to upload a video file and create a new Event linked to that file.  
 
 ### Online Hosting
 Plans to host SUE online, so it can be quickly tested by anyone, are in motion.  
 
-### WebSocket File Uploads 
-File uploads have yet to be implemented through the WebSocket. When implmented a user should be able to upload a video file and create a new Event linked to that file.  
-
 ### Input Through the Chatbot
-Plans to allow users to enter json into the Chatbot, or a semantic description of 2 or more events being linked, and to see SUE be updated with this information.  
+Plans to allow users to enter json into the Chatbot, or a semantic description of 2 or more events being linked, and to see SUE be updated with this information. 
 
 ### Highlight Events within a Complex Event
 On the hover of an event within a complex event timeline, the event should be highlighted on the map.
