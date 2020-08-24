@@ -1,4 +1,5 @@
 window.currentComplex = [];
+window.complexEventsAdded = [];
 
 async function processComplexEvent(json) {
     let currentComplexLst = window.currentComplex;
@@ -54,16 +55,20 @@ async function addComplexMarker(complex) {
         let cmplxproperties = complex.properties;
         cmplxproperties.eventDetails = eventDetails;
 
+        let id = complex.properties.complexID;
 
         let datetime = new Date(complex.properties.datetime);
         let updateTime = buildISOString( datetime, null );
         let finishedProperties = { [updateTime]: cmplxproperties };
 
         L.polyline(coordinates, {color: "#ee133b", properties: JSON.stringify(finishedProperties)}).addTo(window.complexEvent);
-        complexevent = L.marker(markerCoordinates, {id: complex.properties.complexID, icon: complexIcon, properties: JSON.stringify(finishedProperties), open: false}).on('click', toggleDetailsFromMap).addTo(window.complexEvent);
+        complexevent = L.marker(markerCoordinates, {id: id, icon: complexIcon, properties: JSON.stringify(finishedProperties), open: false}).on('click', toggleDetailsFromMap).addTo(window.complexEvent);
         complexevent.bindPopup(complex.properties.complexName)
 
-        await sendUpdateToChat("Complex Event", complex.properties.complexID, complex.properties.complexName);
+        if ( window.complexEventsAdded.indexOf(id) == -1 ) {
+            await sendUpdateToChat("Complex Event", id, complex.properties.complexName);
+            window.complexEventsAdded.push(id);
+        };
     }
     
     toggleLayer(window.complexEvent);
