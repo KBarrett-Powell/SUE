@@ -67,7 +67,7 @@ async function toggleDetailsFromMap(e){
         await showDetails(info, e.latlng.toString().slice(7, -1));
         window.prvClickedMarker = this;
 
-    } else {
+    } else if (e != null) {
         this.options.open = false;
 
         clearDetailsMedia();
@@ -180,6 +180,7 @@ async function showDetails(json, coordinates){
 };
 
 function clearDetailsMedia() {
+    
     detailsID.innerHTML = "";
     detailsName.innerHTML = "";
     detailsText.innerHTML = "";

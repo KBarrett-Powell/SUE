@@ -26,3 +26,7 @@ L.LayerGroup.include({
         return layers;
     }
 });
+
+window.leafletmap.on('click', function(e) {        
+    if ( window.prvClickedMarker != null ) { toggleDetailsFromFunction(window.prvClickedMarker); }
+});
