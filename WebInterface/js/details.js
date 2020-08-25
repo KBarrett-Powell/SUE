@@ -1,3 +1,6 @@
+const videoLink = "http://localhost:8000/video/";
+const audioLink = "http://localhost:8000/audio/";
+
 // Find Panel HTML Elements
 const chatPanel = document.getElementById("chatPanel");
 const chatToggle = document.getElementById("chatToggle");
@@ -148,10 +151,14 @@ async function showDetails(json, coordinates){
     let type = (json.eventID != null) ? "Event" : ((json.sensorID != null) ? "Sensor" : "Complex");
 
     let chartdata = json.chartPoints;
-    let objdetfile = ((json.objDetVideo != null) ? json.objDetVideo : null);
-    let slctRevVideo = ((json.slctRevVideo != null) ? json.slctRevVideo : null);
-    let detAudio = ((json.detAudio != null) ? json.detAudio : null);
-    let detImage = ((json.detImage != null) ? json.detImage : null);
+    let objdetfile = ((json.objDetVideo != null) ? videoLink + json.objDetVideo : null);
+    let slctRevVideo = ((json.slctRevVideo != null) ? videoLink + json.slctRevVideo : null);
+    let detAudio = ((json.detAudio != null) ? audioLink + json.detAudio : null);
+    let detImage = ((json.detImage != null) ? videoLink + json.detImage : null);
+    // let objdetfile = ((json.objDetVideo != null) ? json.objDetVideo : null);
+    // let slctRevVideo = ((json.slctRevVideo != null) ? json.slctRevVideo : null);
+    // let detAudio = ((json.detAudio != null) ? json.detAudio : null);
+    // let detImage = ((json.detImage != null) ? json.detImage : null);
 
     let videofile = null;
     let audiofile = null; 
@@ -161,14 +168,17 @@ async function showDetails(json, coordinates){
         let sensor = await getProperties(await findSensor(json.sensorID), false);
 
         if (sensor != null) {
-            videofile = ((sensor.video != null) ? sensor.video : null);
-            audiofile = ((sensor.audio != null) ? sensor.audio : null);
+            videofile = ((sensor.video != null) ? videoLink + sensor.video : null);
+            audiofile = ((sensor.audio != null) ? audioLink + sensor.audio : null);
+            // videofile = ((sensor.video != null) ? sensor.video : null);
+            // audiofile = ((sensor.audio != null) ? sensor.audio : null);
         }
 
     } else if (type == "Sensor") {
-
-        videofile = ((json.video != null) ? json.video : null);
-        audiofile = ((json.audio != null) ? json.audio : null);
+        videofile = ((json.video != null) ? videoLink + json.video : null);
+        audiofile = ((json.audio != null) ? audioLink + json.audio : null);
+        // videofile = ((json.video != null) ? json.video : null);
+        // audiofile = ((json.audio != null) ? json.audio : null);
     
     }
 
@@ -278,7 +288,8 @@ async function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, s
             }
 
             if (detImage != null) {
-                getFile(detImage, "analysisImage", null);
+                analysisImage.setAttribute('src', detImage);
+                //getFile(detImage, "analysisImage", null);
                 totalCarousel ++;
 
                 if ( !analysisImageDiv.classList.contains("carousel-item") ) { analysisImageDiv.classList.add("carousel-item"); analysisImageDiv.classList.remove("hidden"); }
@@ -290,7 +301,9 @@ async function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, s
             }
 
             if (objdetfile != null) {
-                getFile(objdetfile, "objDetVideoSrc", "objDetVideo");
+                objDetVideoSrc.setAttribute('src', objdetfile);
+                objDetVideo.load();
+                //getFile(objdetfile, "objDetVideoSrc", "objDetVideo");
                 totalCarousel ++;
 
                 if ( !objDetVideoDiv.classList.contains("carousel-item") ) { objDetVideoDiv.classList.add("carousel-item"); objDetVideoDiv.classList.remove("hidden"); }
@@ -302,7 +315,9 @@ async function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, s
             }
 
             if (slctRevVideo != null) {
-                getFile(slctRevVideo, "analysisVideoSrc", "analysisVideo");
+                analysisVideoSrc.setAttribute('src', slctRevVideo);
+                analysisVideo.load();
+                //getFile(slctRevVideo, "analysisVideoSrc", "analysisVideo");
                 totalCarousel ++;
 
                 if ( !analysisVideoDiv.classList.contains("carousel-item") ) { analysisVideoDiv.classList.add("carousel-item"); analysisVideoDiv.classList.remove("hidden"); }
@@ -314,7 +329,9 @@ async function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, s
             }
 
             if (detAudio != null) {
-                getFile(detAudio, "analysisAudioSrc", "analysisAudio");
+                analysisAudioSrc.setAttribute('src', detAudio);
+                analysisAudio.load();
+                //getFile(detAudio, "analysisAudioSrc", "analysisAudio");
                 totalCarousel ++;
 
                 if ( !analysisAudioDiv.classList.contains("carousel-item") ) { analysisAudioDiv.classList.add("carousel-item"); analysisAudioDiv.classList.remove("hidden"); }
@@ -341,12 +358,16 @@ async function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, s
         if (audiofile != null) {
             sensorVideo.style.display = "none";
             sensorAudio.style.display = "block";
-            getFile(audiofile, "audioSource", "audioPlayer");
+            audioSource.setAttribute('src', audiofile);
+            audioPlayer.load();
+            //getFile(audiofile, "audioSource", "audioPlayer");
 
         } else {
             sensorAudio.style.display = "none";
             sensorVideo.style.display = "block";
-            getFile(videofile, "videoSource", "videoPlayer");
+            videoSource.setAttribute('src', videofile);
+            videoPlayer.load();
+            //getFile(videofile, "videoSource", "videoPlayer");
         }
 
     } else {

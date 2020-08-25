@@ -3,11 +3,47 @@ const SocketServer = require('ws').Server;
 const fsp = require('fs').promises;
 const mime = require('mime-types');
 
+const express = require('express');
+const path = require('path');
+
+const app = express();
+const router = express.Router();
 const port = 8000;
 
 const sensors = require('./js/getSensors.js');
 const events = require('./js/getEvents.js');
 const complex = require('./js/getComplex.js');
+const video = require('./js/getVideo.js');
+const audio = require('./js/getAudio.js');
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", 'http://localhost:8082');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
+router.use('/json', express.static(__dirname + '/json'));
+router.use('/media', express.static(__dirname + '/media'));
+
+router.use('/video', video.router);
+router.use('/audio', audio.router);
+
+router.get('/status', function(req, res) {
+  res.json({ status: 'App is running!' });
+});
+
+app.use("/", router);
+app.use(express.static('static'));
+
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname + '/json-server.html'));
+});
+
+const server = app.listen(port, function () {
+  console.log('Node.js static server listening on port: ' + port + ", with websockets listener")
+});
 
 let SUEClients = [];
 
@@ -15,8 +51,9 @@ events.refreshEvents();
 sensors.refreshSensors();
 complex.refreshComplex();
 
-const wsServer = new SocketServer({ port: port });
-console.debug('Server running on port ' + port);
+//const wsServer = new SocketServer({ port: port });
+//console.log('WebSocket server running on port ' + port);
+const wsServer = new SocketServer({ server });
 
 wsServer.getUniqueID = function () {
   function s4() {
