@@ -47,9 +47,22 @@ $ bash linux-run.sh
 
 View the dashboard by opening a web browser and going to **http://localhost:8082/map.html**
 
-## On-Going Development
+## Further Development
 ### Online Hosting
-Plans to host SUE online, so it can be quickly tested by anyone, are in motion.  
+Plans to host SUE online, so it can be quickly tested by anyone.  
 
-### Input Through the Chatbot
-Plans to allow users to enter json into the Chatbot, or a semantic description of 2 or more events being linked, and to see SUE be updated with this information. 
+### Creation of a True Conversational Interface
+This functionality would allow users to enter a semantic description of an object into the Chatbot, and see SUE be updated with this information.  
+#### Accepted semantic descriptions could include:  
+* "event _ and event _ are linked" which would create a complex event link between the two  
+* "create a new event / sensor", with ability to click where this new object should be on the map  
+* other basic updates similar to those allowed through post on the websocket, name and priority changes, etc  
+  
+### Error Checks and Response 
+This functionality would add an error checking and response for all post requests to the WebSocket.
+They would check for missing information such as the name of an event, or anything else neede3d, and response to the client telling them that information was missing.  
+
+### Mobile Interface
+An interface accessibile through mobile devices which allows users to view events around them on the map, and send in a message describing an event they've witnessed, to appear on the map as human sensors.  
+These messages could include just a semantic description, or a video or audio recording.  
+This interface would use the user's GPS system to prevent them needing to enter a location manually.  
