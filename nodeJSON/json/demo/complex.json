@@ -2,8 +2,8 @@
 { 
     "connections": [
         {
+            "complexID": 1,
             "properties": {
-                "complexID": 1,
                 "complexName": "Complex Event 1",
                 "events": [
                     2,

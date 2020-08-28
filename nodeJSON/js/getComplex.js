@@ -40,7 +40,7 @@ module.exports = {
         
                     let complex  = data.connections[j];
             
-                    if ( complex.properties.complexID == req.complexID ) {
+                    if ( complex.complexID === req.complexID ) {
 
                         complexEvent.push(complex);
 
@@ -71,7 +71,7 @@ module.exports = {
 
         let complexEvent = [];
 
-        for (let req in request) {
+        for (let i in request) {
 
             let found = false;
             let maxId = 0;
@@ -79,31 +79,31 @@ module.exports = {
 
             let newComplex = null;
 
-            let complex = request[req];
+            let req = request[i];
         
-            for ( i in data.connections ) {
-                let item  = data.connections[i];
+            for ( let j in data.connections ) {
+                let complex  = data.connections[j];
 
-                maxId = item.properties.complexID;
+                maxId = complex.complexID;
 
-                if (complex.complexID != null) {
+                if (req.complexID != null) {
                     
-                    if ( item.properties.complexID == complex.complexID ) {
+                    if ( complex.complexID === req.complexID ) {
                         found = true;
 
-                        if (complex.complexName != null) {
-                            data.connections[i].properties.complexName = complex.complexName;
+                        if (req.complexName != null) {
+                            data.connections[j].properties.complexName = req.complexName;
                         }
-                        if (complex.events != null) {
-                            let a = data.connections[i].properties.events;
-                            let b = complex.events;
-                            data.connections[i].properties.events = a.concat(b.filter((item) => a.indexOf(item) < 0));
+                        if (req.events != null) {
+                            let a = data.connections[j].properties.events;
+                            let b = req.events;
+                            data.connections[j].properties.events = a.concat(b.filter((item) => a.indexOf(item) < 0));
                         }
-                        if (complex.datetime != null) {
-                            data.connections[i].properties.datetime = complex.datetime;
+                        if (req.datetime != null) {
+                            data.connections[j].properties.datetime = req.datetime;
                         }
 
-                        newComplex = data.connections[i];
+                        newComplex = data.connections[j];
 
                         break;
                     }
@@ -114,11 +114,11 @@ module.exports = {
                 Id = (maxId + 1); 
 
                 newComplex = {
+                    "complexID": Id,
                     "properties": {
-                        "complexID": Id,
-                        "complexName": complex.complexName,
-                        "events": complex.events,
-                        "datetime": complex.datetime
+                        "complexName": req.complexName,
+                        "events": req.events,
+                        "datetime": req.datetime
                     }
                 }
 
@@ -128,7 +128,7 @@ module.exports = {
             complexEvent.push(newComplex);
         }
 
-        fs.writeFile( complexsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
+        fs.writeFile( complexJsonFile, JSON.stringify(data, undefined, 4), function (err) {
             if (err) throw err;
         });
 
@@ -150,26 +150,26 @@ module.exports = {
          
         let complexEvent = [];
         
-        for (let i in request) {
+        for ( let i in request ) {
             if (request[i].complexID != null) { listOfIDs.push(request[i].complexID); }
         } 
 
         if (listOfIDs.length > 0) {
             for ( let i in data.connections ) {
-                let complex = data.connections[i].properties;
+                let complex = data.connections[i];
 
                 if ( listOfIDs.indexOf(complex.complexID) >= 0 ) {
-                    complexEvent.push(data.connections[i]);
+                    complexEvent.push(complex);
                     
                 } else {
-                    filteredList.push(data.connections[i]);
+                    filteredList.push(complex);
                 }
             }
             
             data.connections = filteredList;
         }
 
-        fs.writeFile( complexsJsonFile, JSON.stringify(data, undefined, 4), function (err) {
+        fs.writeFile( complexJsonFile, JSON.stringify(data, undefined, 4), function (err) {
             if (err) throw err;
         });
 
