@@ -1,11 +1,12 @@
 window.currentComplex = [];
 window.complexEventsAdded = [];
 
-async function processComplexEvent(json) {
+// Processes a list of complex events, only updating markers on the map if the list has changed from what is currently stored
+async function processComplexEvent(json, idList) {
     let currentComplexLst = window.currentComplex;
     if (json != null) { currentComplexLst.push(json); }
 
-    let refinedList = await refineList(currentComplexLst); 
+    let refinedList = await refineList(currentComplexLst, idList); 
     window.currentComplex = refinedList;
 
     if (refinedList != currentComplexLst) {
@@ -18,6 +19,7 @@ async function processComplexEvent(json) {
     }
 };
 
+// Adds a new marker to the map for the complex event described in the "complex" object
 async function addComplexMarker(complex) {
     let eventCoordinates = [];
     let eventDetails = [];
@@ -55,13 +57,13 @@ async function addComplexMarker(complex) {
         let cmplxproperties = complex.properties;
         cmplxproperties.eventDetails = eventDetails;
 
-        let id = complex.properties.complexID;
+        let id = complex.complexID;
 
         let datetime = new Date(complex.properties.datetime);
         let updateTime = buildISOString( datetime, null );
         let finishedProperties = { [updateTime]: cmplxproperties };
 
-        L.polyline(coordinates, {color: "#ee133b", properties: JSON.stringify(finishedProperties)}).addTo(window.complexEvent);
+        L.polyline(coordinates, {id: id, color: "#ee133b", properties: JSON.stringify(finishedProperties)}).addTo(window.complexEvent);
         complexevent = L.marker(markerCoordinates, {id: id, icon: complexIcon, properties: JSON.stringify(finishedProperties), open: false}).on('click', toggleDetailsFromMap).addTo(window.complexEvent);
         complexevent.bindPopup(complex.properties.complexName)
 
@@ -74,13 +76,18 @@ async function addComplexMarker(complex) {
     toggleLayer(window.complexEvent);
 };
 
-function refineList(list) {
+// Remove duplicates from the list of complex events
+function refineList(list, idList) {
     let refinedList = [];
     let complexList = [];
       
     for ( let i in list ) {
         let newEvents = list[i].properties.events;
         let okayToAdd = true;
+
+        if ( idList != null && idList.length > 0 && idList.indexOf(list[i].complexID) >= 0 ) {
+            okayToAdd = false;
+        }
 
         for ( let d in complexList ) {
             let prevEvents = complexList[d].properties.events;

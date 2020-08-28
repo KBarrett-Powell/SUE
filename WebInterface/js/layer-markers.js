@@ -41,6 +41,8 @@ async function updateMapMarkers(request) {
     for (let i in request.complexEvent) {
         await updateByLayer(request.complexEvent[i], "complexEvent", null, false);
     }
+
+    if (request.complexEvent == null) { processComplexEvent(null, null); }   
 };
 
 // Function to go through each object in the request and attempt to delete it from the appropriate map layer
@@ -84,46 +86,44 @@ function deleteMapMarkers(request) {
     if (request.complexEvent != null && request.complexEvent.length > 0) { 
         deleteByLayer(request.complexEvent, "complexEvent", null); 
     }
-}
 
-async function updateByLayer(req, win, ownerSensor, isRange) {
+    if (request.complexEvent == null) { processComplexEvent(null, null); } 
+};
+
+// Finds the relevant layer and updates its properties, and features of the map marker
+async function updateByLayer(request, layerGroup, ownerSensor, isRange) {
     
     let id = "";
     let type = "";
-    if ( req.properties.eventID != null ) { id = req.properties.eventID; type = "event"; } 
-    else if (req.properties.sensorID != null ) { id = req.properties.sensorID; type = "sensor"; } 
-    else { id = req.properties.complexID; type = "complex";}
+    if ( request.eventID != null ) { id = request.eventID; type = "event"; } 
+    else if (request.sensorID != null ) { id = request.sensorID; type = "sensor"; } 
+    else { id = request.complexID; type = "complex";}
     
-    let layers = await window[win].getLayersByID(id);
+    let layers = await window[layerGroup].getLayersByID(id);
 
     for ( let i in layers ) {
         let layer = layers[i];
-        let properties = await getProperties(layer, false);
+        let currentProperties = await getProperties(layer, false);
 
-        if (type != "complex") { req.properties.coordinates = req.geometry.coordinates; }
-
-        if (properties != null) {
+        if (currentProperties != null) {
             // Updating properties
-            let updatedProperties = await updateProperties(properties, req.properties, type, isRange);
-            let updateTime = await buildISOString( new Date(), null ); 
-            let allProperties = JSON.parse(layer.options.properties);
-            allProperties[updateTime] = updatedProperties;
-            layer.options.properties = JSON.stringify(allProperties);
+            layer.options.properties = JSON.stringify(request.properties);
+            let newProperties = await getProperties(layer, false);
         
             // Updating map marker information
             // Update popup content
             if (!isRange) { 
-                layer.setPopupContent((type == "event" ? req.properties.eventName : type == "sensor" ? req.properties.sensorName : req.properties.complexName)); 
+                layer.setPopupContent((type == "event" ? newProperties.eventName : type == "sensor" ? newProperties.sensorName : newProperties.complexName)); 
             }
 
             // Update location of object
-            if (req.geometry.coordinates != null && properties.coordinates != req.geometry.coordinates) { 
-                layer.setLatLng(req.geometry.coordinates); 
+            if (currentProperties.coordinates != newProperties.coordinates) { 
+                layer.setLatLng(newProperties.coordinates); 
             }
 
             // Update direction of sensor range
-            if (isRange && req.properties.rangeDirection != null && (properties.sensorType == "Camera" || req.properties.sensorType == "Camera") && properties.rangeDirection != req.properties.rangeDirection) { 
-                layer.setDirection(req.properties.rangeDirection, 90);
+            if (isRange && (currentProperties.sensorType == "Camera" || newProperties.sensorType == "Camera") && currentProperties.rangeDirection != newProperties.rangeDirection) { 
+                layer.setDirection(newProperties.rangeDirection, 90);
             }
 
             // Updates specific to just sensor and event markers
@@ -131,81 +131,87 @@ async function updateByLayer(req, win, ownerSensor, isRange) {
 
                 // Changing icon for sensor type, owner or event priority change
                 let currentIcon = layer.getIcon(); 
-                let icon = await getIcon(req.properties, ownerSensor);
+                let icon = await getIcon(newProperties, ownerSensor);
 
                 if (currentIcon != null && currentIcon != icon) {
                     layer.setIcon(icon); 
                 }
 
                 // Update range of sensor or event
-                updateByLayer(req, win + "Range", ownerSensor, true); 
+                updateByLayer(request, layerGroup + "Range", ownerSensor, true); 
             }
         }
     } 
     
     if (layers.length == 0 && !isRange) {
         // If layer is empty, like when the SUE interface has just been opened and is being initialised, do not attempt update just add new marker
-        if (req.properties.complexID != null) {
-            await processComplexEvent(req);
+        if (request.complexID != null) {
+            await processComplexEvent(request, null);
         } else {
-            addMarker(req, (req.properties.initial != null), win);
+            addMarker(request, (request.properties.initial != null), layerGroup);
         }
     }
 };
 
-async function deleteByLayer(request, win, idsLst) {
-    let layers = window[win].getLayers();
-    let type = (win.includes("sensor") ? "sensor" : (win.includes("complex") ? "complex" : "event"));
+// Attempts to find a map layer with a matching id to one specified in the passed list, deleting it from the layer group it’s stored in, when found
+async function deleteByLayer(request, layerGroup, idsList) {
+    let layers = window[layerGroup].getLayers();
+    let type = (layerGroup.includes("sensor") ? "sensor" : (layerGroup.includes("complex") ? "complex" : "event"));
 
     // Compile list of ids to delete from the layer
     let listOfIDs = [];
-    if (idsLst != null && idsLst.length > 0) {
-        listOfIDs = idsLst
+    if (idsList != null && idsList.length > 0) {
+        listOfIDs = idsList
     } else {
         for (let i in request) {
-            if (type == "event") { listOfIDs.push(request[i].properties.eventID); } 
-            else if (type == "sensor") { listOfIDs.push(request[i].properties.sensorID); } 
-            else if (type == "complex") { listOfIDs.push(request[i].properties.complexID); } 
+            if (type == "event") { listOfIDs.push(request[i].eventID); } 
+            else if (type == "sensor") { listOfIDs.push(request[i].sensorID); } 
+            else if (type == "complex") { listOfIDs.push(request[i].complexID); } 
         }
     }
-    
-    // Clear map layer of all markers
-    await window[win].clearLayers();
 
-    let updatedLayers = [];
+    if (type == "complex") {
+        processComplexEvent(null, listOfIDs);
+        
+    } else {
+        // Clear map layer of all markers
+        await window[layerGroup].clearLayers();
 
-    for ( let i in layers) {
-        let properties = await getProperties(layers[i], false);
-        let id = (type == "event" ? properties.eventID : (type == "sensor" ? properties.sensorID : properties.complexID));
+        let updatedLayers = [];
 
-        // Try to find index of marker id in the list of those to be deleted, return those that aren't in the list
-        if (listOfIDs.indexOf(id) < 0) {
-            updatedLayers.push(layers[i]);
+        for ( let i in layers) {
+            let properties = await getProperties(layers[i], false);
+            let id = (type == "event" ? properties.eventID : properties.sensorID);
+
+            // Try to find index of marker id in the list of those to be deleted, return those that aren't in the list
+            if ( listOfIDs.indexOf(id) < 0 ) {
+                updatedLayers.push(layers[i]);
+            }
+        };
+
+        // Add each marker which isn't in the list of ids back on the map layer
+        for (let i in updatedLayers) { 
+            updatedLayers[i].addTo(window[layerGroup]);
         }
-    };
 
-    // Add each marker which isn't in the list of ids back on the map layer
-    for (let i in updatedLayers) { 
-        updatedLayers[i].addTo(window[win]);
-    }
-
-    // Delete related ranges in same way
-    if (type != "complex" && !win.includes("Range")) { deleteByLayer(null, win  + "Range", listOfIDs); }
+        // Delete related ranges in same way
+        if (!layerGroup.includes("Range")) { deleteByLayer(null, layerGroup  + "Range", listOfIDs); }
+    } 
 };
 
-// Refresh markers on map to reflect their apperance at a certain time point
+// Refresh markers on map to reflect their appearance at a certain time point
 async function showTimePoint() {
 
-    let mapLayers = ["sensorCamera", "sensorMicrophone", "sensorHuman", "sensorCameraRange", "sensorMicrophoneRange", "sensorHumanRange", 
+    let layerGroups = ["sensorCamera", "sensorMicrophone", "sensorHuman", "sensorCameraRange", "sensorMicrophoneRange", "sensorHumanRange", 
         "sensorUK", "sensorUS", "sensorUKRange", "sensorUSRange", "critPriorityEvent", "highPriorityEvent", "medPriorityEvent", "lowPriorityEvent",
         "critPriorityEventRange", "highPriorityEventRange", "medPriorityEventRange", "lowPriorityEventRange"]
     
-    for (let i in mapLayers) {
-        let type = (mapLayers[i].includes("sensor") ? "sensor" : "event");
-        let isRange = mapLayers[i].includes("Range");
-        let ownerSensor = (mapLayers[i].includes("UK") || mapLayers[i].includes("US")) ? true : false;
+    for (let i in layerGroups) {
+        let type = (layerGroups[i].includes("sensor") ? "sensor" : "event");
+        let isRange = layerGroups[i].includes("Range");
+        let ownerSensor = (layerGroups[i].includes("UK") || layerGroups[i].includes("US")) ? true : false;
 
-        await window[mapLayers[i]].eachLayer( async function (layer) {
+        await window[layerGroups[i]].eachLayer( async function (layer) {
             let properties = await getProperties(layer, false);
 
             if (properties != null && Object.keys(properties).length > 0) {
@@ -224,6 +230,10 @@ async function showTimePoint() {
                         layer.setStyle({fillOpacity: 0.4});
                     }
                     layer.setStyle({weight: 3});
+                }
+
+                if (!isRange) { 
+                    layer.setPopupContent((type == "event" ? properties.eventName : type == "sensor" ? properties.sensorName : properties.complexName)); 
                 }
 
                 // Update location of object
@@ -260,7 +270,7 @@ async function showTimePoint() {
         });
     }
     
-    processComplexEvent(null);   
+    processComplexEvent(null, null);   
 };
 
 // Find information on sensor with id - USED FOR EVENT DETAILS
@@ -335,4 +345,11 @@ async function findComplex(id) {
     }
 
     return null;
+};
+
+// Opens the Popup of a selected event with specified id
+async function showHoveredEvent(id) {
+    let ids = [parseInt(id)];
+    let events = await findEvents(ids);
+    showPopup(events[0]);
 };

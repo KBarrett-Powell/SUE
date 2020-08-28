@@ -1,6 +1,7 @@
 window.barIndex = null
 window.timePoint = null;
 
+// While the correct chart is visible, and has not been filled, update its values in time with the video/audio track from the sensor
 function plotChartPoints(){
     if (analysisChartDiv.classList.contains("carousel-item")) {
         let duration = (sensorVideo.style.display != "none" ? videoPlayer.duration : audioPlayer.duration);
@@ -25,6 +26,7 @@ function plotChartPoints(){
     }
 };
 
+// Find the next points on the line chart to be added, and push them to the canvas
 function refreshChart() {
     window.analysisChart.config.data.datasets.forEach(function(dataset) {
         if (dataset.label === "videoOnly" && window.videoOnly.length > 0) {
@@ -60,6 +62,7 @@ function refreshChart() {
     window.analysisChart.update();
 };
 
+// Remove all data from the chart
 function clearChart() {
     window.analysisChart.config.data.datasets.forEach(function(dataset) {
         if (dataset.label == "videoOnly") {
@@ -82,6 +85,7 @@ function clearChart() {
     window.analysisChart.update();
 };
 
+// Build the analysis chart on the marker panel, resetting canvas and rebuilding with specified data
 async function createChart(chartData) {
     // operations on data
     // ' to "
@@ -173,6 +177,8 @@ async function createChart(chartData) {
     window.analysisChart = new Chart(ctx, config);
 };
 
+// Builds the priority chart on the analysis panel, resetting canvas, defining colours, and filling with information gathered from map layers
+// Priority chart shows the number of events of each priority currently on the map
 async function buildPriorityChart() {
     await resetCanvas("priorityChart");
 
@@ -241,6 +247,8 @@ async function buildPriorityChart() {
     });
 };
 
+// Builds the time chart on the analysis panel, resetting canvas and filling with information gathered from map layers
+// Time chart describes the timepoints at which events occured, allowing users to view previous points in time
 async function buildTimeChart() {
     await resetCanvas("timeChart");
 
@@ -251,8 +259,7 @@ async function buildTimeChart() {
     let highPriority = window.highPriorityEvent.getLayers();
     let critPriority = window.critPriorityEvent.getLayers();
 
-    let eventTimes = {};
-    eventTimes = buffEventTimes(eventTimes);
+    let eventTimes = buffEventTimes();
 
     eventTimes = await addTimeToDict(eventTimes, lowPriority);
     eventTimes = await addTimeToDict(eventTimes, medPriority);
@@ -338,6 +345,7 @@ async function buildTimeChart() {
     });
 };
 
+// Refresh time chart every 30 seconds
 function initiateTimeRefresh() {
     setInterval( function() { 
 
@@ -346,7 +354,10 @@ function initiateTimeRefresh() {
     }, 30 * 1000);
 };
 
-function buffEventTimes(eventTimes) {
+// Fills out dictionary with timepoints for the last 5 minutes with 30 second intervals
+function buffEventTimes() {
+    let eventTimes = {};
+
     let current = new Date();
     let updatedCurrent = new Date(Math.floor(current.getTime() / 30000) * 30000);
     
@@ -364,24 +375,26 @@ function buffEventTimes(eventTimes) {
     return eventTimes;
 };
 
-async function addTimeToDict(dict, list) {
-    for ( let i in list ) {
-        let datetime = await getProperties(list[i], true);
+// Increments value in dictionary, to indicate detection time of each layer in the specified layer group
+async function addTimeToDict(dict, layerGroup) {
+    for ( let i in layerGroup ) {
+        let datetime = await getProperties(layerGroup[i], true);
         let date = new Date(datetime);
-        let timestr = "";
+        let timeStr = "";
 
         if ( date.getSeconds() < 30 ) {
-            timestr = buildISOString(date, 30);
+            timeStr = buildISOString(date, 30);
         } else {
-            timestr = buildISOString(date, 60);
+            timeStr = buildISOString(date, 60);
         }
     
-        if ( dict[timestr] != null ) { dict[timestr] = dict[timestr] + 1; }
+        if ( dict[timeStr] != null ) { dict[timeStr] = dict[timeStr] + 1; }
     }
 
     return dict;
 };
 
+// Takes a date and returns a string in ISO form
 function buildISOString(date, seconds) {
 
     function pad(number) {
@@ -398,6 +411,7 @@ function buildISOString(date, seconds) {
         'T' + pad(date.getUTCHours()) + ':' + pad(minutes) + ':' + (seconds != null ? pad(seconds) : pad(date.getUTCSeconds())) + 'Z';
 };
 
+// Resets HTML canvas by removing and re-adding it to the page
 function resetCanvas(canvasName) {
     let containerName = canvasName  + "Container";
     let container = document.getElementById( containerName );
@@ -416,9 +430,10 @@ function resetCanvas(canvasName) {
     container.appendChild(newCanvas);
 };
 
-function handleBarClick(evt) {
+// Processes click on the priority bar chart, changes map view and bar colours as needed
+function handleBarClick(e) {
     const chart = window.priorityChart;
-    let activeElement = chart.getElementAtEvent(evt);
+    let activeElement = chart.getElementAtEvent(e);
 
     if (activeElement[0] != null) {
         window.barIndex = activeElement[0]._index;
@@ -435,6 +450,7 @@ function handleBarClick(evt) {
     }
 };
 
+// Returns bar background colours based on accessibility mode being active or not, and whether any bars are selected
 function getBarBackgroundColours() {
     let colours = [];
     let darkerColours = [];
@@ -453,6 +469,7 @@ function getBarBackgroundColours() {
     return colours;
 };
 
+// Returns bar chart border colours based on accessibility mode being active or not
 function getBarBorderColours() {
     let colours = [];
     if ( window.accessibility == false ) {
@@ -464,6 +481,7 @@ function getBarBorderColours() {
     return colours;
 };
 
+// Returns bar chart hover background colours based on accessibility mode being active or not
 function getHoverBackgroundColours() {
     let colours = [];
     if ( window.accessibility == false ) {
@@ -475,6 +493,26 @@ function getHoverBackgroundColours() {
     return colours;
 };
 
+// Processes click on the time line chart, changes markers on map and point size/ colour as needed.
+function handleTimeClick(e) {
+    const chart = window.timeChart;
+    let activeElement = chart.getElementAtEvent(e);
+
+    if ( activeElement[0] != null ) {
+        window.timePoint = chart.data.labels[activeElement[0]._index];
+
+        buildTimeChart();
+        showTimePoint();
+
+    } else {
+        window.timePoint = null;
+        
+        buildTimeChart();
+        showTimePoint();
+    }
+};
+
+// Returns the radius of the points on the graph, based on whether they're selected or not
 function getTimeLineRadi(labels) {
     let radi = [];
     for ( let i = 0; i < 11; i ++ ) {
@@ -491,6 +529,7 @@ function getTimeLineRadi(labels) {
     return radi;
 };
 
+// Returns the colours of the points on the graph, based on whether they're selected or not
 function getTimeLineColour(labels) {
     let colours = [];
     for ( let i = 0; i < 11; i ++ ) {
@@ -505,22 +544,4 @@ function getTimeLineColour(labels) {
     }
 
     return colours;
-};
-
-function handleTimeClick(evt) {
-    const chart = window.timeChart;
-    let activeElement = chart.getElementAtEvent(evt);
-
-    if ( activeElement[0] != null ) {
-        window.timePoint = chart.data.labels[activeElement[0]._index];
-
-        buildTimeChart();
-        showTimePoint();
-
-    } else {
-        window.timePoint = null;
-        
-        buildTimeChart();
-        showTimePoint();
-    }
 };

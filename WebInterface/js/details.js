@@ -1,20 +1,5 @@
-const videoLink = "http://localhost:8000/video/";
-const audioLink = "http://localhost:8000/audio/";
-
-// Find Panel HTML Elements
-const chatPanel = document.getElementById("chatPanel");
-const chatToggle = document.getElementById("chatToggle");
-
-const analysisPanel = document.getElementById("analysisPanel");
-const analysisToggle = document.getElementById("analysisToggle");
-
-const markerPanel = document.getElementById("markerPanel");
-const markerToggle = document.getElementById("markerToggle");
-
 // * Find Details HTML Elements
 // General
-const markerDetails = document.getElementById("markerDetails");
-
 const detailsID = document.getElementById("detailsID");
 const detailsName = document.getElementById("detailsName");
 const detailsText = document.getElementById("detailsText");
@@ -58,6 +43,7 @@ const audioDesc = document.getElementById("audioDesc");
 const audioSource = document.getElementById("audioSource");
 const audioPlayer = document.getElementById("audioPlayer");
 
+// Toggles marker page with information from selected map marker - sent from map
 async function toggleDetailsFromMap(e){
 
     let info = await getProperties(this, false);
@@ -79,6 +65,7 @@ async function toggleDetailsFromMap(e){
     }
 };
 
+// Toggles marker page with information from selected map marker - sent from function
 async function toggleDetailsFromFunction(layer){
 
     let info = await getProperties(layer, false);
@@ -102,93 +89,44 @@ async function toggleDetailsFromFunction(layer){
     }
 };
 
-async function showPopup(layer) {
-    if ( layer != null ) { layer.openPopup(); }
-    else { window.prvClickedMarker.openPopup(); }
-};
-
-function showPanel(selectedPanel) {
-    let panel = (selectedPanel.toLowerCase() == "chat" ? chatPanel : (selectedPanel == "analysis" ? analysisPanel : markerPanel));
-    let toggle = (selectedPanel.toLowerCase() == "chat" ? chatToggle : (selectedPanel == "analysis" ? analysisToggle : markerToggle));;
-
-    if ( selectedPanel.toLowerCase() != "chat" ) {
-        if ( !chatPanel.classList.contains("hidden") ) {
-            chatPanel.classList.add("hidden")
-        }
-        if ( chatToggle.classList.contains("active") ) {
-            chatToggle.classList.remove("active")
-        }
-    }
-
-    if ( selectedPanel.toLowerCase() != "analysis" ) {
-        if ( !analysisPanel.classList.contains("hidden") ) {
-            analysisPanel.classList.add("hidden")
-        }
-        if ( analysisToggle.classList.contains("active") ) {
-            analysisToggle.classList.remove("active")
-        }
-    }
-
-    if ( selectedPanel.toLowerCase() != "marker" ) {
-        if ( !markerPanel.classList.contains("hidden") ) {
-            markerPanel.classList.add("hidden")
-        }
-        if ( markerToggle.classList.contains("active") ) {
-            markerToggle.classList.remove("active")
-        }
-    }
-
-    if ( panel.classList.contains("hidden") ) {
-        panel.classList.remove("hidden")
-    }
-    if ( !toggle.classList.contains("active") ) {
-        toggle.classList.add("active")
-    }
-};
-
+// Fills marker page with information from selected map marker
 async function showDetails(json, coordinates){
+    const videoLink = "http://localhost:8000/video/";
+    const audioLink = "http://localhost:8000/audio/";
 
     let type = (json.eventID != null) ? "Event" : ((json.sensorID != null) ? "Sensor" : "Complex");
 
-    let chartdata = json.chartPoints;
-    let objdetfile = ((json.objDetVideo != null) ? videoLink + json.objDetVideo : null);
-    let slctRevVideo = ((json.slctRevVideo != null) ? videoLink + json.slctRevVideo : null);
-    let detAudio = ((json.detAudio != null) ? audioLink + json.detAudio : null);
-    let detImage = ((json.detImage != null) ? videoLink + json.detImage : null);
-    // let objdetfile = ((json.objDetVideo != null) ? json.objDetVideo : null);
-    // let slctRevVideo = ((json.slctRevVideo != null) ? json.slctRevVideo : null);
-    // let detAudio = ((json.detAudio != null) ? json.detAudio : null);
-    // let detImage = ((json.detImage != null) ? json.detImage : null);
+    let chartData = json.chartPoints;
+    let objDetFile = ((json.objDetVideo != null) ? videoLink + json.objDetVideo : null);
+    let slctRevFile = ((json.slctRevVideo != null) ? videoLink + json.slctRevVideo : null);
+    let analysisAudioFile = ((json.detAudio != null) ? audioLink + json.detAudio : null);
+    let analysisImgFile = ((json.detImage != null) ? videoLink + json.detImage : null);
 
-    let videofile = null;
-    let audiofile = null; 
+    let sensorVideoFile = null;
+    let sensorAudiofile = null; 
 
     if (type == "Event") {
 
         let sensor = await getProperties(await findSensor(json.sensorID), false);
 
         if (sensor != null) {
-            videofile = ((sensor.video != null) ? videoLink + sensor.video : null);
-            audiofile = ((sensor.audio != null) ? audioLink + sensor.audio : null);
-            // videofile = ((sensor.video != null) ? sensor.video : null);
-            // audiofile = ((sensor.audio != null) ? sensor.audio : null);
+            sensorVideoFile = ((sensor.video != null) ? videoLink + sensor.video : null);
+            sensorAudiofile = ((sensor.audio != null) ? audioLink + sensor.audio : null);
         }
 
     } else if (type == "Sensor") {
-        videofile = ((json.video != null) ? videoLink + json.video : null);
-        audiofile = ((json.audio != null) ? audioLink + json.audio : null);
-        // videofile = ((json.video != null) ? json.video : null);
-        // audiofile = ((json.audio != null) ? json.audio : null);
-    
+        sensorVideoFile = ((json.video != null) ? videoLink + json.video : null);
+        sensorAudiofile = ((json.audio != null) ? audioLink + json.audio : null);
     }
 
     let timelineInfo = json.eventDetails;
        
-    clearDetailsMedia()
+    clearDetailsMedia();
 
-    AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, slctRevVideo, detImage, detAudio, videofile, audiofile, timelineInfo)
+    addDetailsMedia(json, coordinates, type, chartData, analysisImgFile, objDetFile, slctRevFile, analysisAudioFile, sensorVideoFile, sensorAudiofile, timelineInfo);
 };
 
+// Clears all media sources
 function clearDetailsMedia() {
 
     detailsID.innerHTML = "";
@@ -200,6 +138,7 @@ function clearDetailsMedia() {
         analysisCarousel.style.display = "none";
 
         if (analysisChartDiv.classList.contains("carousel-item")) {
+            removeCarouselItem(analysisChartDiv);
             clearChart();
         }
 
@@ -221,7 +160,6 @@ function clearDetailsMedia() {
         }
 
         timeline.style.display = "none";
-        markerDetails.style.overflow = "hidden";
     }
 
     if (sensorVideo.style.display != "none") {
@@ -238,7 +176,8 @@ function clearDetailsMedia() {
     }
 };
 
-async function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, slctRevVideo, detImage, detAudio, videofile, audiofile, timelineInfo) {
+// Fills in all media sources with information from a map marker
+async function addDetailsMedia(json, coordinates, type, chartData, analysisImgFile, objDetFile, slctRevFile, analysisAudioFile, sensorVideoFile, sensorAudioFile, timelineInfo) {
 
     if (type === "Sensor" || type === "Event") {
         if (type === "Sensor") {
@@ -247,7 +186,7 @@ async function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, s
             detailsName.innerHTML = json.sensorName;
             detailsText.innerHTML = "Lat/Long: " + coordinates;
 
-            if (audiofile != null) {
+            if (sensorAudioFile != null) {
                 audioDesc.innerHTML = "Captured Audio :";
                 if (!audioPlayer.classList.contains("sensorAudio")) { audioPlayer.classList.add("sensorAudio"); }
 
@@ -262,7 +201,7 @@ async function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, s
             detailsName.innerHTML = json.eventName;
             detailsText.innerHTML = "Description: " + json.description + "<br>Datetime: " + json.datetime + "<br>Lat/Long: " + coordinates;
 
-            if (audiofile != null) {
+            if (sensorAudioFile != null) {
                 audioDesc.innerHTML = "Audio From Microphone :";
                 if (audioPlayer.classList.contains("sensorAudio")) { audioPlayer.classList.remove("sensorAudio"); }
 
@@ -275,71 +214,57 @@ async function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, s
             let activeSet = false;
             let totalCarousel = 0;
 
-            if (chartdata != null) {
-                createChart(chartdata);
+            if (chartData != null) {
+                createChart(chartData);
                 totalCarousel ++;
 
-                if ( !analysisChartDiv.classList.contains("carousel-item") ) { analysisChartDiv.classList.add("carousel-item"); analysisChartDiv.classList.remove("hidden"); }
-                if ( activeSet == false ) { activeSet = await setActive(analysisChartDiv); }
+                activeSet = await setCarouselItem(analysisChartDiv, activeSet);
 
             } else {
-                if ( analysisChartDiv.classList.contains("carousel-item") ) { analysisChartDiv.classList.remove("carousel-item"); analysisChartDiv.classList.add("hidden"); }
-                if ( analysisChartDiv.classList.contains("active") ) { analysisChartDiv.classList.remove("active"); }
+                removeCarouselItem(analysisChartDiv);
             }
 
-            if (detImage != null) {
-                analysisImage.setAttribute('src', detImage);
-                //getFile(detImage, "analysisImage", null);
+            if (analysisImgFile != null) {
+                analysisImage.setAttribute('src', analysisImgFile);
                 totalCarousel ++;
 
-                if ( !analysisImageDiv.classList.contains("carousel-item") ) { analysisImageDiv.classList.add("carousel-item"); analysisImageDiv.classList.remove("hidden"); }
-                if ( activeSet == false ) { activeSet = await setActive(analysisImageDiv); }
+                activeSet = await setCarouselItem(analysisImageDiv, activeSet);
 
             } else {
-                if ( analysisImageDiv.classList.contains("carousel-item") ) { analysisImageDiv.classList.remove("carousel-item"); analysisImageDiv.classList.add("hidden"); }
-                if ( analysisImageDiv.classList.contains("active") ) { analysisImageDiv.classList.remove("active"); }
+                removeCarouselItem(analysisImageDiv);
             }
 
-            if (objdetfile != null) {
-                objDetVideoSrc.setAttribute('src', objdetfile);
+            if (objDetFile != null) {
+                objDetVideoSrc.setAttribute('src', objDetFile);
                 objDetVideo.load();
-                //getFile(objdetfile, "objDetVideoSrc", "objDetVideo");
                 totalCarousel ++;
 
-                if ( !objDetVideoDiv.classList.contains("carousel-item") ) { objDetVideoDiv.classList.add("carousel-item"); objDetVideoDiv.classList.remove("hidden"); }
-                if ( activeSet == false ) { activeSet = await setActive(objDetVideoDiv); }
+                activeSet = await setCarouselItem(objDetVideoDiv, activeSet);
                 
             } else {
-                if ( objDetVideoDiv.classList.contains("carousel-item") ) { objDetVideoDiv.classList.remove("carousel-item"); objDetVideoDiv.classList.add("hidden"); }
-                if ( objDetVideoDiv.classList.contains("active") ) { objDetVideoDiv.classList.remove("active"); }
+                removeCarouselItem(objDetVideoDiv);
             }
 
-            if (slctRevVideo != null) {
-                analysisVideoSrc.setAttribute('src', slctRevVideo);
+            if (slctRevFile != null) {
+                analysisVideoSrc.setAttribute('src', slctRevFile);
                 analysisVideo.load();
-                //getFile(slctRevVideo, "analysisVideoSrc", "analysisVideo");
                 totalCarousel ++;
 
-                if ( !analysisVideoDiv.classList.contains("carousel-item") ) { analysisVideoDiv.classList.add("carousel-item"); analysisVideoDiv.classList.remove("hidden"); }
-                if ( activeSet == false ) { activeSet = await setActive(analysisVideoDiv); }
+                activeSet = await setCarouselItem(analysisVideoDiv, activeSet);
 
             } else {
-                if ( analysisVideoDiv.classList.contains("carousel-item") ) { analysisVideoDiv.classList.remove("carousel-item"); analysisVideoDiv.classList.add("hidden"); }
-                if ( analysisVideoDiv.classList.contains("active") ) { analysisVideoDiv.classList.remove("active"); }
+                removeCarouselItem(analysisVideoDiv);
             }
 
-            if (detAudio != null) {
-                analysisAudioSrc.setAttribute('src', detAudio);
+            if (analysisAudioFile != null) {
+                analysisAudioSrc.setAttribute('src', analysisAudioFile);
                 analysisAudio.load();
-                //getFile(detAudio, "analysisAudioSrc", "analysisAudio");
                 totalCarousel ++;
 
-                if ( !analysisAudioDiv.classList.contains("carousel-item") ) { analysisAudioDiv.classList.add("carousel-item"); analysisAudioDiv.classList.remove("hidden"); }
-                if ( activeSet == false ) { activeSet = await setActive(analysisAudioDiv); }
+                activeSet = await setCarouselItem(analysisAudioDiv, activeSet);
 
             } else {
-                if ( analysisAudioDiv.classList.contains("carousel-item") ) { analysisAudioDiv.classList.remove("carousel-item"); analysisAudioDiv.classList.add("hidden"); }
-                if ( analysisAudioDiv.classList.contains("active") ) { analysisAudioDiv.classList.remove("active"); }
+                removeCarouselItem(analysisAudioDiv);
             }
 
             if (totalCarousel == 1) {
@@ -355,27 +280,23 @@ async function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, s
             }
         }
 
-        if (audiofile != null) {
+        if (sensorAudioFile != null) {
             sensorVideo.style.display = "none";
             sensorAudio.style.display = "block";
-            audioSource.setAttribute('src', audiofile);
+            audioSource.setAttribute('src', sensorAudioFile);
             audioPlayer.load();
-            //getFile(audiofile, "audioSource", "audioPlayer");
 
         } else {
             sensorAudio.style.display = "none";
             sensorVideo.style.display = "block";
-            videoSource.setAttribute('src', videofile);
+            videoSource.setAttribute('src', sensorVideoFile);
             videoPlayer.load();
-            //getFile(videofile, "videoSource", "videoPlayer");
         }
 
     } else {
 
         detailsID.innerHTML = json.complexID;
         detailsName.innerHTML = json.complexName;
-
-        markerDetails.style.overflow = "auto";
 
         let i = 0;
         for (let item in timelineInfo) {
@@ -431,32 +352,53 @@ async function AddDetailsMedia(json, coordinates, type, chartdata, objdetfile, s
     }
 };
 
-function setActive(element) {
-    element.classList.add("active"); 
+// Add hidden class to element
+function hideElement(element) {
+    if ( !element.classList.contains("hidden") ) {
+        element.classList.add("hidden")
+    }
+};
 
+// Remove active class form element
+function removeActive(element) {
+    if ( element.classList.contains("active") ) {
+        element.classList.remove("active")
+    }
+};
+
+// Add element to the media carousel
+function setCarouselItem(element, activeSet) {
+    if ( !element.classList.contains("carousel-item") ) { 
+        element.classList.add("carousel-item"); 
+        element.classList.remove("hidden"); 
+    }
+                
+    if ( activeSet == false ) { element.classList.add("active"); }
+    
     return true;
 };
 
-function addToCarouselList(id, active) {
-    let item = document.createElement("li");
-    item.dataset.target = "#analysisCarousel";
-    item.setAttribute('data-slide-to', id);
+// Remove element from the media carousel
+function removeCarouselItem(element) {
+    if ( element.classList.contains("carousel-item") ) { 
+        element.classList.remove("carousel-item"); 
+        element.classList.add("hidden"); 
+    }
 
-    if (active) { item.classList.add("active"); }
-
-    carouselItems.appendChild(item);
+    if ( element.classList.contains("active") ) { 
+        element.classList.remove("active"); 
+    }
 };
 
-async function fillInElement(parsedMessage) {
+// Show details of an event map marker with specified id
+async function openEventDetails(id) {
+    let ids = [parseInt(id)];
+    let events = await findEvents(ids);
+    toggleDetailsFromFunction(events[0]);
+};
 
-    let file = parsedMessage.files[0];
-
-    let source = document.getElementById(window.elementToFill[file.name].source);
-    let player = null;
-    if ( window.elementToFill[file.name].player != null ) { player = document.getElementById(window.elementToFill[file.name].player); }
-
-    source.setAttribute('src', "data:" + file.type + ";base64," + file.data);
-    if ( player != null ) { player.load(); }
-
-    delete window.elementToFill[file.name];
+// Show details of a complex event map marker with specified id
+async function openComplexEventDetails(id) {
+    let complex = await findComplex(parseInt(id));
+    toggleDetailsFromFunction(complex);
 };

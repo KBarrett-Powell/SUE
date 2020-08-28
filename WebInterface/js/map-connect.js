@@ -15,6 +15,7 @@ L.control.zoom({
     position:'bottomright'
 }).addTo(window.leafletmap);
 
+// Finds and returns any layers within a layer group with an id that matches the specified value
 L.LayerGroup.include({
     getLayersByID: function (id) {
         let layers = [];
@@ -27,6 +28,7 @@ L.LayerGroup.include({
     }
 });
 
+// Tracks clicks on map which aren't on a map marker, closes marker panel on one of these clicks
 window.leafletmap.on('click', function(e) {        
     if ( window.prvClickedMarker != null ) { toggleDetailsFromFunction(window.prvClickedMarker); }
 });

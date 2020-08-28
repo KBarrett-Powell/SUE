@@ -6,6 +6,7 @@ window.chatroom = new window.Chatroom({
 });
 window.chatroom.openChat();
 
+// Send messages directly to chat, without going through the Rasa AI
 function sendUpdateToChat(type, id, name) {
     let messages = window.chatroom.ref.state.messages;
     let botId = messages[0].uuid;

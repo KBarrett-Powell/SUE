@@ -25,6 +25,7 @@ window.lowPriorityEventRange = L.layerGroup();
 
 window.complexEvent = L.layerGroup();
 
+// Removes all layer groups from the map and adds the original set back
 function initializeLayers() {
     removeAllLayers();
     
@@ -47,6 +48,7 @@ function initializeLayers() {
     window.complexEvent.addTo(window.leafletmap);
 };
 
+// Removes all layer groups and adds back the ones specified in the passed dictionary
 function alterLayers(dict) {
     removeAllLayers();
     
@@ -57,6 +59,7 @@ function alterLayers(dict) {
     }; 
 };
 
+// Attempts to remove all layer groups from the map
 function removeAllLayers() {
     window.leafletmap.removeLayer(window.sensorCamera);
     window.leafletmap.removeLayer(window.sensorMicrophone);
@@ -85,29 +88,15 @@ function removeAllLayers() {
     window.leafletmap.removeLayer(window.complexEvent);
 };
 
-function removeSensorLayers() {
-    window.leafletmap.removeLayer(window.sensorCamera);
-    window.leafletmap.removeLayer(window.sensorMicrophone);
-    window.leafletmap.removeLayer(window.sensorHuman);
-
-    window.leafletmap.removeLayer(window.sensorCameraRange);
-    window.leafletmap.removeLayer(window.sensorMicrophoneRange);
-    window.leafletmap.removeLayer(window.sensorHumanRange);
-
-    window.leafletmap.removeLayer(window.sensorUK);
-    window.leafletmap.removeLayer(window.sensorUS);
-
-    window.leafletmap.removeLayer(window.sensorUKRange);
-    window.leafletmap.removeLayer(window.sensorUSRange);
-};
-
-function toggleLayer(layer) {
-    if (window.leafletmap.hasLayer(layer)) {
-        layer.removeFrom(window.leafletmap);
-        layer.addTo(window.leafletmap);
+// If a layer group is currently on the map, removes and adds it back
+function toggleLayer(layerGroup) {
+    if (window.leafletmap.hasLayer(layerGroup)) {
+        layerGroup.removeFrom(window.leafletmap);
+        layerGroup.addTo(window.leafletmap);
     }
 };
 
+// Removes all layers from each layer group, and clears the marker sidebar
 function clearMap() {
 
     const details = document.getElementById("markerPanel");
@@ -146,6 +135,7 @@ function clearMap() {
     window.complexEvent.clearLayers();
 };
 
+// Removes all layer groups from the map, and adds back those related to the event priority selected
 function showOnlyEvents(lowPri, medPri, highPri, critPri) {
     removeAllLayers();
 
@@ -167,6 +157,7 @@ function showOnlyEvents(lowPri, medPri, highPri, critPri) {
     }
 };
 
+// Clears just the complex event layer
 function refreshComplex() {
     window.complexEvent.clearLayers();
 };
