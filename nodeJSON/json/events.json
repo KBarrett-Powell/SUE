@@ -3,7 +3,7 @@
         {
             "eventID": 1,
             "properties": {
-                "2020-08-21T16:45:20Z": {
+                "2020-08-28T14:07:20Z": {
                     "eventName": "Shooting on Kristian IVs Gate",
                     "eventType": "Person",
                     "description": "Shooting",
@@ -85,7 +85,7 @@
         {
             "eventID": 2,
             "properties": {
-                "2020-08-21T16:46:10Z": {
+                "2020-08-28T14:08:10Z": {
                     "eventName": "Abuse In Kristiansand Cathedral",
                     "eventType": "Person",
                     "description": "Abuse",
@@ -848,7 +848,7 @@
         {
             "eventID": 3,
             "properties": {
-                "2020-08-21T16:46:25Z": {
+                "2020-08-28T14:08:25Z": {
                     "eventName": "Fighting In NAV Kristiansand",
                     "eventType": "Person",
                     "description": "Fighting",
@@ -1338,7 +1338,7 @@
         {
             "eventID": 4,
             "properties": {
-                "2020-08-21T16:46:50Z": {
+                "2020-08-28T14:08:50Z": {
                     "eventName": "Road Accident On Holbergs Gate",
                     "eventType": "Vehicle",
                     "description": "Road Accident",
@@ -2008,7 +2008,7 @@
         {
             "eventID": 5,
             "properties": {
-                "2020-08-21T16:47:20Z": {
+                "2020-08-28T14:09:20Z": {
                     "eventName": "Military Parade on Vestre Strandgate",
                     "eventType": "Planned",
                     "description": "Military Parade",

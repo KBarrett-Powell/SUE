@@ -52,21 +52,21 @@ module.exports = {
         
                     let sensor  = data.sensors[j];
             
-                    if ( sensor.sensorID == req.sensorID ) {
+                    if ( sensor.sensorID === req.sensorID ) {
                         let properties = await functions.compileProperties(sensor.properties, "sensor");
             
                         if (properties.sensorType == "Camera") {
-                            sensorCamera.push(data.sensors[i]);
+                            sensorCamera.push(data.sensors[j]);
                         } else if (properties.sensorType == "Microphone") {
-                            sensorMicrophone.push(data.sensors[i]);
+                            sensorMicrophone.push(data.sensors[j]);
                         } else {
-                            sensorHuman.push(data.sensors[i]);
+                            sensorHuman.push(data.sensors[j]);
                         } 
                         
                         if (properties.owner == "UK") {
-                            sensorUK.push(data.sensors[i]);
+                            sensorUK.push(data.sensors[j]);
                         } else {
-                            sensorUS.push(data.sensors[i]);
+                            sensorUS.push(data.sensors[j]);
                         }
 
                         break;
@@ -79,15 +79,15 @@ module.exports = {
                 let sensor = data.sensors[i];
                 let properties = await functions.compileProperties(sensor.properties, "sensor");
 
-                if (properties.sensorType == "Camera") {
+                if (properties.sensorType === "Camera") {
                     sensorCamera.push(data.sensors[i]);
-                } else if (properties.sensorType == "Microphone") {
+                } else if (properties.sensorType === "Microphone") {
                     sensorMicrophone.push(data.sensors[i]);
                 } else {
                     sensorHuman.push(data.sensors[i]);
                 } 
                 
-                if (properties.owner == "UK") {
+                if (properties.owner === "UK") {
                     sensorUK.push(data.sensors[i]);
                 } else {
                     sensorUS.push(data.sensors[i]);
@@ -137,7 +137,7 @@ module.exports = {
 
                 if (req.sensorID != null) {
                     
-                    if ( sensor.sensorID == req.sensorID ) {
+                    if ( sensor.sensorID === req.sensorID ) {
                         found = true;
                         let newObject = {};
 
@@ -200,15 +200,15 @@ module.exports = {
                 data.sensors.push(newSensor);
             }
 
-            if (newSensor.properties.initial.sensorType == "Camera") {
+            if (newSensor.properties.initial.sensorType === "Camera") {
                 sensorCamera.push(newSensor);
-            } else if (newSensor.properties.initial.sensorType == "Microphone") {
+            } else if (newSensor.properties.initial.sensorType === "Microphone") {
                 sensorMicrophone.push(newSensor);
             } else {
                 sensorHuman.push(newSensor);
             } 
             
-            if (newSensor.properties.initial.owner == "UK") {
+            if (newSensor.properties.initial.owner === "UK") {
                 sensorUK.push(newSensor);
             } else {
                 sensorUS.push(newSensor);
@@ -255,28 +255,28 @@ module.exports = {
         } 
 
         if (listOfIDs.length > 0) {
-            for ( let i in data.sensors ) {
-                let sensor = data.sensors[i];
+            for ( let j in data.sensors ) {
+                let sensor = data.sensors[j];
                 let properties = await functions.compileProperties(sensor.properties, "sensor");
 
                 if ( listOfIDs.indexOf(sensor.sensorID) >= 0 ) {
 
                     if (properties.sensorType == "Camera") {
-                        sensorCamera.push(data.sensors[i]);
+                        sensorCamera.push(data.sensors[j]);
                     } else if (properties.sensorType == "Microphone") {
-                        sensorMicrophone.push(data.sensors[i]);
+                        sensorMicrophone.push(data.sensors[j]);
                     } else {
-                        sensorHuman.push(data.sensors[i]);
+                        sensorHuman.push(data.sensors[j]);
                     } 
                     
                     if (properties.owner == "UK") {
-                        sensorUK.push(data.sensors[i]);
+                        sensorUK.push(data.sensors[j]);
                     } else {
-                        sensorUS.push(data.sensors[i]);
+                        sensorUS.push(data.sensors[j]);
                     }
 
                 } else {
-                    filteredList.push(data.sensors[i]);
+                    filteredList.push(data.sensors[j]);
                 }
             }
 

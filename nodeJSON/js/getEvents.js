@@ -43,7 +43,6 @@ module.exports = {
         if (request != null && request.length < data.events.length) {
             
             for ( let i in request ) {
-                let found = false;
                 let req = request[i];
         
                 for ( let j in data.events ) {
@@ -51,17 +50,17 @@ module.exports = {
                     let event  = data.events[j];
                     let properties = await functions.compileProperties(event.properties, "event");
             
-                    if ( event.eventID == req.eventID ) {
+                    if ( event.eventID === req.eventID ) {
                         found = true;
             
-                        if (properties.priority == 1) {
-                            critPriorityEvent.push(data.events[i]);
-                        } else if (properties.priority == 2) {
-                            highPriorityEvent.push(data.events[i]);
-                        } else if (properties.priority == 3) {
-                            medPriorityEvent.push(data.events[i]);
+                        if (properties.priority === 1) {
+                            critPriorityEvent.push(data.events[j]);
+                        } else if (properties.priority === 2) {
+                            highPriorityEvent.push(data.events[j]);
+                        } else if (properties.priority === 3) {
+                            medPriorityEvent.push(data.events[j]);
                         } else {
-                            lowPriorityEvent.push(data.events[i]);
+                            lowPriorityEvent.push(data.events[j]);
                         }
 
                         break;
@@ -73,11 +72,11 @@ module.exports = {
                 let event = data.events[i];
                 let properties = await functions.compileProperties(event.properties, "event");
 
-                if (properties.priority == 1) {
+                if (properties.priority === 1) {
                     critPriorityEvent.push(data.events[i]);
-                } else if (properties.priority == 2) {
+                } else if (properties.priority === 2) {
                     highPriorityEvent.push(data.events[i]);
-                } else if (properties.priority == 3) {
+                } else if (properties.priority === 3) {
                     medPriorityEvent.push(data.events[i]);
                 } else {
                     lowPriorityEvent.push(data.events[i]);
@@ -126,7 +125,7 @@ module.exports = {
 
                 if (req.eventID != null) {
                     
-                    if ( event.eventID == req.eventID ) {
+                    if ( event.eventID === req.eventID ) {
                         found = true;
                         let newObject = {};
 
@@ -214,11 +213,13 @@ module.exports = {
                 if (newEvent.type != "Invalid Event Error") { data.events.push(newEvent); }
             }
 
-            if (newEvent.properties.priority == 1) {
+            let updatedProperties = await functions.compileProperties(newEvent.properties, "event");
+
+            if (updatedProperties.priority === 1) {
                 critPriorityEvent.push(newEvent);
-            } else if (newEvent.properties.priority == 2) {
+            } else if (updatedProperties.priority === 2) {
                 highPriorityEvent.push(newEvent);
-            } else if (newEvent.properties.priority == 3) {
+            } else if (updatedProperties.priority === 3) {
                 medPriorityEvent.push(newEvent);
             } else {
                 lowPriorityEvent.push(newEvent);
@@ -259,28 +260,28 @@ module.exports = {
         let medPriorityEvent = [];
         let lowPriorityEvent = [];
         
-        for (let i in request) {
+        for ( let i in request ) {
             if (request[i].eventID != null) { listOfIDs.push(request[i].eventID); }
         } 
 
         if (listOfIDs.length > 0) {
-            for ( let i in data.events ) {
-                let event = data.events[i];
+            for ( let j in data.events ) {
+                let event = data.events[j];
                 let properties = await functions.compileProperties(event.properties, "event");
 
                 if ( listOfIDs.indexOf(event.eventID) >= 0 ) {
-                    if (properties.priority == 1) {
-                        critPriorityEvent.push(data.events[i]);
-                    } else if (properties.priority == 2) {
-                        highPriorityEvent.push(data.events[i]);
-                    } else if (properties.priority == 3) {
-                        medPriorityEvent.push(data.events[i]);
+                    if (properties.priority === 1) {
+                        critPriorityEvent.push(data.events[j]);
+                    } else if (properties.priority === 2) {
+                        highPriorityEvent.push(data.events[j]);
+                    } else if (properties.priority === 3) {
+                        medPriorityEvent.push(data.events[j]);
                     } else {
-                        lowPriorityEvent.push(data.events[i]);
+                        lowPriorityEvent.push(data.events[j]);
                     }
 
                 } else {
-                    filteredList.push(data.events[i]);
+                    filteredList.push(data.events[j]);
                 }
             }
             

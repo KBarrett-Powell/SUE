@@ -51,8 +51,6 @@ events.refreshEvents();
 sensors.refreshSensors();
 complex.refreshComplex();
 
-//const wsServer = new SocketServer({ port: port });
-//console.log('WebSocket server running on port ' + port);
 const wsServer = new SocketServer({ server });
 
 wsServer.getUniqueID = function () {
@@ -187,7 +185,7 @@ wsServer.on('connection', function (wsClient) {
         let deleteResponse = {};
           
         if (parsedMessage.events != null) {
-          let response = await events.deleteEvent(parsedMessage.events,);
+          let response = await events.deleteEvent(parsedMessage.events, true);
           
           sendAll(SUEClients, response);
 
@@ -232,6 +230,7 @@ wsServer.on('connection', function (wsClient) {
         }
 
         if ( Object.keys(deleteResponse).length > 0 ) {
+          wsClient.send(JSON.stringify({"DELETE - success": deleteResponse}));
         } else {
           wsClient.send(JSON.stringify({"DELETE - fail": "No Items Deleted"}));
         }
@@ -346,6 +345,9 @@ function getUpdatedObjects(response) {
   }
   for ( let i in response.lowPriorityEvent ) {
     objects.push(response.lowPriorityEvent[i]);
+  }
+  for ( let i in response.complexEvent ) {
+    objects.push(response.complexEvent[i]);
   }
 
   return objects;
