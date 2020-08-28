@@ -45,7 +45,10 @@ In a terminal in the SUE folder, run
 $ bash linux-run.sh  
 *These scripts have set ports (8000, 8080, 8081, and 8082)*  
 
-View the dashboard by opening a web browser and going to **http://localhost:8082/map.html**
+View the dashboard by opening a web browser and going to **http://localhost:8082/map.html**  
+
+## Devlopment
+A description of every function used in the web interface side of SUE can be found in **Functions.md**
 
 ## Further Development
 ### Online Hosting
