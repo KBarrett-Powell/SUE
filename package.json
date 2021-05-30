@@ -18,7 +18,7 @@
     "moment": "^2.27.0",
     "popper.js": "^1.16.1",
     "websocket": "^1.0.31",
-    "ws": "^7.3.0"
+    "ws": "^7.4.6"
   },
   "description": "map dashboard with rasa ce chat intergration",
   "main": "http-server.js",
