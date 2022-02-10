@@ -23,7 +23,7 @@
     "@babel/preset-react": "^7.9.4",
     "flow-bin": "^0.122.0",
     "http-server": "^0.12.1",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "parcel-bundler": "^1.12.4",
     "prettier": "^2.0.2"
   },
